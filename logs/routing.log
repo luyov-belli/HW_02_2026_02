@@ -1,0 +1,73 @@
+2026-09-06 22:01:45,733 | INFO    | hw02.routing           | motor de ruteo: graph
+2026-09-06 22:01:45,814 | INFO    | hw02.routing           | alcance dev: 198 orígenes, 3 resolutivas, 31 candidatas I-3/I-4
+2026-09-06 22:01:46,305 | INFO    | hw02.routing           | Overpass: 4 mosaicos de 1.0° sobre el alcance
+2026-09-06 22:01:52,112 | INFO    | hw02.routing           |   mosaico 1/4 -> 0 vías acumuladas
+2026-09-06 22:02:17,271 | INFO    | hw02.routing           |   mosaico 2/4 -> 0 vías acumuladas
+2026-09-06 22:02:54,510 | INFO    | hw02.routing           |   mosaico 3/4 -> 0 vías acumuladas
+2026-09-06 22:03:28,709 | INFO    | hw02.routing           |   mosaico 4/4 -> 0 vías acumuladas
+2026-09-06 22:03:55,379 | INFO    | hw02.routing           | motor de ruteo: graph
+2026-09-06 22:03:55,458 | INFO    | hw02.routing           | alcance dev: 198 orígenes, 3 resolutivas, 31 candidatas I-3/I-4
+2026-09-06 22:03:55,781 | INFO    | hw02.routing           | Overpass: 4 mosaicos de 1.0° sobre el alcance
+2026-09-06 22:04:01,578 | INFO    | hw02.routing           |   mosaico 1/4 -> 9355 vías acumuladas
+2026-09-06 22:04:22,745 | INFO    | hw02.routing           |   mosaico 2/4 -> 11640 vías acumuladas
+2026-09-06 22:05:15,564 | INFO    | hw02.routing           |   mosaico 3/4 -> 11640 vías acumuladas
+2026-09-06 22:06:16,351 | INFO    | hw02.routing           |   mosaico 4/4 -> 11640 vías acumuladas
+2026-09-06 22:06:16,520 | INFO    | hw02.routing           | vías guardadas en caché: roads_overpass_dev.parquet (11640 vías)
+2026-09-06 22:06:16,860 | INFO    | hw02.routing           | vías utilizables para 'car': 11185
+2026-09-06 22:06:17,121 | INFO    | hw02.routing           | grafo 'car': 20525 nodos, 27949 arcos
+2026-09-06 22:06:17,155 | INFO    | hw02.routing           | Dijkstra desde 3 destinos en bloques de 40
+2026-09-06 22:06:17,166 | INFO    | hw02.routing           |   destinos 3/3
+2026-09-06 22:06:17,168 | INFO    | hw02.routing           | matriz graph/car calculada en 141.7 s y guardada en table_graph_car_08019f843ca3435b.npz
+2026-09-06 22:06:17,174 | INFO    | hw02.routing           | Dijkstra desde 31 destinos en bloques de 40
+2026-09-06 22:06:17,238 | INFO    | hw02.routing           |   destinos 31/31
+2026-09-06 22:06:17,241 | INFO    | hw02.routing           | matriz graph/car calculada en 0.1 s y guardada en table_graph_car_cdd517adeec6e7c8.npz
+2026-09-06 22:06:17,254 | INFO    | hw02.routing           | escrito snapping_dev.csv
+2026-09-06 22:06:17,258 | INFO    | hw02.routing           | escrito od_car_matrix_dev.parquet
+2026-09-06 22:06:17,261 | INFO    | hw02.routing           | escrito od_dist_car_matrix_dev.parquet
+2026-09-06 22:06:17,265 | INFO    | hw02.routing           | escrito od_imputed_car_matrix_dev.parquet
+2026-09-06 22:06:17,269 | INFO    | hw02.routing           | escrito od_candidates_dev_car.parquet
+2026-09-06 22:06:17,271 | INFO    | hw02.routing           | escrito straight_vs_network_dev.csv
+2026-09-06 22:07:28,075 | INFO    | hw02.routing           | motor de ruteo: graph
+2026-09-06 22:07:28,161 | INFO    | hw02.routing           | alcance dev: 198 orígenes, 3 resolutivas, 31 candidatas I-3/I-4
+2026-09-06 22:07:28,168 | INFO    | hw02.routing           | matriz graph/car desde caché en disco (table_graph_car_08019f843ca3435b.npz)
+2026-09-06 22:07:28,177 | INFO    | hw02.routing           | matriz graph/car desde caché en disco (table_graph_car_cdd517adeec6e7c8.npz)
+2026-09-06 22:07:28,187 | INFO    | hw02.routing           | escrito snapping_dev.csv
+2026-09-06 22:07:28,191 | INFO    | hw02.routing           | escrito od_car_matrix_dev.parquet
+2026-09-06 22:07:28,194 | INFO    | hw02.routing           | escrito od_dist_car_matrix_dev.parquet
+2026-09-06 22:07:28,197 | INFO    | hw02.routing           | escrito od_imputed_car_matrix_dev.parquet
+2026-09-06 22:07:28,201 | INFO    | hw02.routing           | escrito od_candidates_dev_car.parquet
+2026-09-06 22:07:28,204 | INFO    | hw02.routing           | escrito straight_vs_network_dev.csv
+2026-09-06 22:09:44,378 | INFO    | hw02.routing           | motor de ruteo: graph
+2026-09-06 22:09:44,455 | INFO    | hw02.routing           | alcance dev: 198 orígenes, 3 resolutivas, 31 candidatas I-3/I-4
+2026-09-06 22:09:44,459 | INFO    | hw02.routing           | matriz graph/car desde caché en disco (table_graph_car_08019f843ca3435b.npz)
+2026-09-06 22:09:44,463 | INFO    | hw02.routing           | matriz graph/car desde caché en disco (table_graph_car_cdd517adeec6e7c8.npz)
+2026-09-06 22:09:44,473 | INFO    | hw02.routing           | escrito snapping_dev.csv (0.0 MB)
+2026-09-06 22:09:44,480 | INFO    | hw02.routing           | escrito od_car_matrix_dev.parquet (0.0 MB)
+2026-09-06 22:09:44,486 | INFO    | hw02.routing           | escrito od_dist_car_matrix_dev.parquet (0.0 MB)
+2026-09-06 22:09:44,490 | INFO    | hw02.routing           | escrito od_imputed_car_matrix_dev.parquet (0.0 MB)
+2026-09-06 22:09:44,494 | INFO    | hw02.routing           | escrito od_candidates_dev_car.parquet (0.0 MB)
+2026-09-06 22:09:44,498 | INFO    | hw02.routing           | escrito straight_vs_network_dev.csv (0.0 MB)
+2026-09-06 22:09:44,543 | INFO    | hw02.routing           | motor de ruteo: graph
+2026-09-06 22:09:44,567 | INFO    | hw02.routing           | perfil foot: 198 orígenes × 3 destinos (unión de los 15 más cercanos en auto)
+2026-09-06 22:09:44,924 | INFO    | hw02.routing           | vías de Overpass desde caché: roads_overpass_dev.parquet
+2026-09-06 22:09:45,402 | INFO    | hw02.routing           | vías utilizables para 'foot': 11330
+2026-09-06 22:09:45,666 | INFO    | hw02.routing           | grafo 'foot': 20989 nodos, 27833 arcos
+2026-09-06 22:09:45,693 | INFO    | hw02.routing           | Dijkstra desde 3 destinos en bloques de 40
+2026-09-06 22:09:45,696 | INFO    | hw02.routing           |   destinos 3/3
+2026-09-06 22:09:45,700 | INFO    | hw02.routing           | matriz graph/foot calculada en 1.1 s y guardada en table_graph_foot_9fee4b12e8041aa5.npz
+2026-09-06 22:09:45,707 | INFO    | hw02.routing           | escrito od_foot_matrix_dev.parquet (0.0 MB)
+2026-09-06 22:09:45,709 | INFO    | hw02.routing           | escrito snapping_foot_dev.csv (0.0 MB)
+2026-09-06 22:09:45,714 | INFO    | hw02.routing           | motor de ruteo: graph
+2026-09-06 22:09:45,736 | INFO    | hw02.routing           | perfil bike: 198 orígenes × 3 destinos (unión de los 15 más cercanos en auto)
+2026-09-06 22:09:45,738 | INFO    | hw02.routing           | vías de Overpass desde caché: roads_overpass_dev.parquet
+2026-09-06 22:09:46,205 | INFO    | hw02.routing           | vías utilizables para 'bike': 11625
+2026-09-06 22:09:46,491 | INFO    | hw02.routing           | grafo 'bike': 21288 nodos, 28879 arcos
+2026-09-06 22:09:46,515 | INFO    | hw02.routing           | Dijkstra desde 3 destinos en bloques de 40
+2026-09-06 22:09:46,522 | INFO    | hw02.routing           |   destinos 3/3
+2026-09-06 22:09:46,524 | INFO    | hw02.routing           | matriz graph/bike calculada en 0.8 s y guardada en table_graph_bike_b1d20505ad2ceffc.npz
+2026-09-06 22:09:46,531 | INFO    | hw02.routing           | escrito od_bike_matrix_dev.parquet (0.0 MB)
+2026-09-06 22:09:46,533 | INFO    | hw02.routing           | escrito snapping_bike_dev.csv (0.0 MB)
+2026-09-06 22:09:46,559 | INFO    | hw02.routing           | cargada matriz car: (198, 3)
+2026-09-06 22:09:46,566 | INFO    | hw02.routing           | cargada matriz foot: (198, 3)
+2026-09-06 22:09:46,572 | INFO    | hw02.routing           | cargada matriz bike: (198, 3)
+2026-09-06 22:09:46,582 | INFO    | hw02.routing           | escrito cross_mode_dev.csv (0.0 MB)

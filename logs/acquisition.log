@@ -1,0 +1,16 @@
+2026-09-06 21:37:34,235 | INFO    | hw02.acquisition       | RENIPRESS_2026_v6.csv ya presente (17.7 MB), se reutiliza
+2026-09-06 21:37:34,268 | INFO    | hw02.acquisition       | ListadoCentroPobladosMTC.xlsx ya presente (11.2 MB), se reutiliza
+2026-09-06 21:37:34,288 | INFO    | hw02.acquisition       | descargando https://data.humdata.org/dataset/54fc7f4d-f4c0-4892-91f6-2fe7c1ecf363/resource/61faa8d6-fbfa-4d44-a94d-8f3b0241277a/download/per_admin_boundaries.shp.zip -> per_admin_boundaries.shp.zip
+2026-09-06 21:37:40,345 | INFO    | hw02.acquisition       | per_admin_boundaries.shp.zip listo (42.9 MB)
+2026-09-06 21:37:40,360 | INFO    | hw02.acquisition       | extrayendo 30 miembros de per_admin_boundaries.shp.zip
+2026-09-06 21:37:41,746 | INFO    | hw02.acquisition       | sin snapshot de RENIPRESS para 2021
+2026-09-06 21:37:42,603 | INFO    | hw02.acquisition       | sin snapshot de RENIPRESS para 2023
+2026-09-06 21:37:42,706 | INFO    | hw02.acquisition       | manifiesto escrito con 3 fuentes
+2026-09-06 21:38:33,211 | INFO    | hw02.acquisition       | descargando https://download.geofabrik.de/south-america/peru-latest-free.shp.zip -> peru-latest-free.shp.zip
+2026-09-06 21:39:04,287 | WARNING | hw02.acquisition       | intento 1 falló para https://download.geofabrik.de/south-america/peru-latest-free.shp.zip: 503 Server Error: Service Unavailable for url: https://download.geofabrik.de/south-america/peru-latest-free.shp.zip
+2026-09-06 21:39:05,995 | WARNING | hw02.acquisition       | intento 2 falló para https://download.geofabrik.de/south-america/peru-latest-free.shp.zip: 502 Server Error: Bad Gateway for url: https://download.geofabrik.de/south-america/peru-latest-free.shp.zip
+2026-09-06 21:39:06,835 | WARNING | hw02.acquisition       | intento 3 falló para https://download.geofabrik.de/south-america/peru-latest-free.shp.zip: 502 Server Error: Bad Gateway for url: https://download.geofabrik.de/south-america/peru-latest-free.shp.zip
+2026-09-06 21:40:22,196 | INFO    | hw02.acquisition       | descargando https://download.geofabrik.de/south-america/peru-latest-free.shp.zip -> peru-latest-free.shp.zip
+2026-09-06 21:40:24,021 | WARNING | hw02.acquisition       | intento 1 falló para https://download.geofabrik.de/south-america/peru-latest-free.shp.zip: 502 Server Error: Bad Gateway for url: https://download.geofabrik.de/south-america/peru-latest-free.shp.zip
+2026-09-06 21:40:24,834 | WARNING | hw02.acquisition       | intento 2 falló para https://download.geofabrik.de/south-america/peru-latest-free.shp.zip: 502 Server Error: Bad Gateway for url: https://download.geofabrik.de/south-america/peru-latest-free.shp.zip
+2026-09-06 21:40:25,698 | WARNING | hw02.acquisition       | intento 3 falló para https://download.geofabrik.de/south-america/peru-latest-free.shp.zip: 502 Server Error: Bad Gateway for url: https://download.geofabrik.de/south-america/peru-latest-free.shp.zip

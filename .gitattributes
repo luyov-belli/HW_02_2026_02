@@ -1,0 +1,13 @@
+# Los scripts y workflows se ejecutan en Linux (runners de GitHub Actions):
+# con CRLF, bash falla con "\r: command not found". Se fuerza LF aunque el
+# desarrollo sea en Windows.
+*.sh   text eol=lf
+*.yml  text eol=lf
+*.yaml text eol=lf
+
+# Binarios: sin normalización de fin de línea.
+*.parquet binary
+*.gpkg    binary
+*.npz     binary
+*.pdf     binary
+*.xlsx    binary

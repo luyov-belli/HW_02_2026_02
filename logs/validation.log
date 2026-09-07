@@ -1,0 +1,50 @@
+2026-09-06 21:47:30,829 | INFO    | hw02.validation        | RENIPRESS_2026_v6.csv leído con codificación utf-8 (26850 filas)
+2026-09-06 21:47:43,358 | INFO    | hw02.validation        | coordenadas recuperadas por centroide distrital: 7061 de 7067 faltantes
+2026-09-06 21:48:02,064 | INFO    | hw02.validation        | centros poblados: 99937 filas, columnas ['UBIGEO', 'IDDD', 'DEPARTAMENTO', 'IDPP', 'PROVINCIA', 'IDDIS', 'DISTRITO', 'IDCCPP', 'CCPP', 'CATEGORÍA', 'CATEGORÍA 2', 'CAPITAL', 'Viviendas', 'Habitantes', 'Latitud  (coord X)', 'Longitud  (coord Y)', 'CLASIFICACIÓN INEI']
+2026-09-06 21:48:02,238 | WARNING | hw02.validation        | centros poblados: encabezado invertido: se ignoran las etiquetas (lat=Longitud  (coord Y), lon=Latitud  (coord X))
+2026-09-06 21:48:16,763 | INFO    | hw02.validation        | muestra: 5000 puntos (2003 certeza), pesos suman 27776818 de 27776818 hab.
+2026-09-06 21:48:16,951 | INFO    | hw02.validation        | escrito facilities_national.parquet (26850 filas, 52 columnas)
+2026-09-06 21:48:36,193 | INFO    | hw02.validation        | RENIPRESS_2026_v6.csv leído con codificación utf-8 (26850 filas)
+2026-09-06 21:48:48,782 | INFO    | hw02.validation        | coordenadas recuperadas por centroide distrital: 7061 de 7067 faltantes
+2026-09-06 21:49:06,927 | INFO    | hw02.validation        | centros poblados: 99937 filas, columnas ['UBIGEO', 'IDDD', 'DEPARTAMENTO', 'IDPP', 'PROVINCIA', 'IDDIS', 'DISTRITO', 'IDCCPP', 'CCPP', 'CATEGORÍA', 'CATEGORÍA 2', 'CAPITAL', 'Viviendas', 'Habitantes', 'Latitud  (coord X)', 'Longitud  (coord Y)', 'CLASIFICACIÓN INEI']
+2026-09-06 21:49:07,108 | WARNING | hw02.validation        | centros poblados: encabezado invertido: se ignoran las etiquetas (lat=Longitud  (coord Y), lon=Latitud  (coord X))
+2026-09-06 21:49:21,761 | INFO    | hw02.validation        | muestra: 5000 puntos (2003 certeza), pesos suman 27776818 de 27776818 hab.
+2026-09-06 21:49:21,920 | INFO    | hw02.validation        | escrito facilities_national.parquet (26850 filas, 52 columnas)
+2026-09-06 21:49:22,312 | INFO    | hw02.validation        | escrito demand_points_national.parquet (87504 filas, 34 columnas)
+2026-09-06 21:49:22,353 | INFO    | hw02.validation        | escrito demand_sample_national.parquet (5000 filas, 39 columnas)
+2026-09-06 21:49:22,767 | INFO    | hw02.validation        | Fase 1 completa. Archivos en C:\Users\AdriánLeoLuyoVargas\Desktop\HW_02_Luyo\HW_02_2026_02\data\processed
+2026-09-06 21:51:14,468 | INFO    | hw02.validation        | RENIPRESS_2026_v6.csv leído con codificación utf-8 (26850 filas)
+2026-09-06 21:51:29,183 | INFO    | hw02.validation        | coordenadas recuperadas por centroide distrital: 7061 de 7067 faltantes
+2026-09-06 21:51:48,806 | INFO    | hw02.validation        | centros poblados: 99937 filas, columnas ['UBIGEO', 'IDDD', 'DEPARTAMENTO', 'IDPP', 'PROVINCIA', 'IDDIS', 'DISTRITO', 'IDCCPP', 'CCPP', 'CATEGORIA', 'CATEGORIA 2', 'CAPITAL', 'Viviendas', 'Habitantes', 'Latitud (coord X)', 'Longitud (coord Y)', 'CLASIFICACION INEI']
+2026-09-06 21:51:48,993 | WARNING | hw02.validation        | centros poblados: encabezado invertido: se ignoran las etiquetas (lat=Longitud (coord Y), lon=Latitud (coord X))
+2026-09-06 21:52:11,716 | INFO    | hw02.validation        | muestra: 4804 puntos (2003 certeza), pesos suman 27776818 de 27776818 hab.
+2026-09-06 21:52:12,011 | INFO    | hw02.validation        | escrito facilities_national.parquet (26850 filas, 52 columnas)
+2026-09-06 21:52:12,475 | INFO    | hw02.validation        | escrito demand_points_national.parquet (87504 filas, 34 columnas)
+2026-09-06 21:52:12,705 | INFO    | hw02.validation        | escrito demand_sample_national.parquet (4804 filas, 39 columnas)
+2026-09-06 21:52:13,589 | INFO    | hw02.validation        | Fase 1 completa. Archivos en C:\Users\AdriánLeoLuyoVargas\Desktop\HW_02_Luyo\HW_02_2026_02\data\processed
+2026-09-06 21:53:22,937 | INFO    | hw02.validation        | RENIPRESS_2026_v6.csv leído con codificación utf-8 (26850 filas)
+2026-09-06 21:53:36,594 | INFO    | hw02.validation        | coordenadas recuperadas por centroide distrital: 7061 de 7067 faltantes
+2026-09-06 21:53:55,878 | INFO    | hw02.validation        | centros poblados: 99937 filas, columnas ['UBIGEO', 'IDDD', 'DEPARTAMENTO', 'IDPP', 'PROVINCIA', 'IDDIS', 'DISTRITO', 'IDCCPP', 'CCPP', 'CATEGORIA', 'CATEGORIA 2', 'CAPITAL', 'Viviendas', 'Habitantes', 'Latitud (coord X)', 'Longitud (coord Y)', 'CLASIFICACION INEI']
+2026-09-06 21:53:56,057 | WARNING | hw02.validation        | centros poblados: encabezado invertido: se ignoran las etiquetas (lat=Longitud (coord Y), lon=Latitud (coord X))
+2026-09-06 21:54:19,245 | INFO    | hw02.validation        | muestra: 5000 puntos (2003 certeza), pesos suman 27776818 de 27776818 hab.
+2026-09-06 21:54:19,582 | INFO    | hw02.validation        | escrito facilities_national.parquet (26850 filas, 52 columnas)
+2026-09-06 21:54:20,021 | INFO    | hw02.validation        | escrito demand_points_national.parquet (87504 filas, 34 columnas)
+2026-09-06 21:54:20,230 | INFO    | hw02.validation        | escrito demand_sample_national.parquet (5000 filas, 40 columnas)
+2026-09-06 21:54:21,112 | INFO    | hw02.validation        | Fase 1 completa. Archivos en C:\Users\AdriánLeoLuyoVargas\Desktop\HW_02_Luyo\HW_02_2026_02\data\processed
+2026-09-06 22:01:23,001 | INFO    | hw02.validation        | RENIPRESS_2026_v6.csv leído con codificación utf-8 (26850 filas)
+2026-09-06 22:01:23,486 | INFO    | hw02.validation        | coordenadas recuperadas por centroide distrital: 8 de 8 faltantes
+2026-09-06 22:01:42,969 | INFO    | hw02.validation        | centros poblados: 99937 filas, columnas ['UBIGEO', 'IDDD', 'DEPARTAMENTO', 'IDPP', 'PROVINCIA', 'IDDIS', 'DISTRITO', 'IDCCPP', 'CCPP', 'CATEGORIA', 'CATEGORIA 2', 'CAPITAL', 'Viviendas', 'Habitantes', 'Latitud (coord X)', 'Longitud (coord Y)', 'CLASIFICACION INEI']
+2026-09-06 22:01:43,150 | WARNING | hw02.validation        | centros poblados: encabezado invertido: se ignoran las etiquetas (lat=Longitud (coord Y), lon=Latitud (coord X))
+2026-09-06 22:01:44,478 | INFO    | hw02.validation        | escrito facilities_dev.parquet (118 filas, 52 columnas)
+2026-09-06 22:01:44,495 | INFO    | hw02.validation        | escrito demand_points_dev.parquet (198 filas, 34 columnas)
+2026-09-06 22:01:44,509 | INFO    | hw02.validation        | escrito demand_sample_dev.parquet (198 filas, 40 columnas)
+2026-09-06 22:01:44,637 | INFO    | hw02.validation        | Fase 1 completa. Archivos en C:\Users\AdriánLeoLuyoVargas\Desktop\HW_02_Luyo\HW_02_2026_02\data\processed
+2026-09-06 22:12:39,796 | INFO    | hw02.validation        | RENIPRESS_2026_v6.csv leído con codificación utf-8 (26850 filas)
+2026-09-06 22:12:52,274 | INFO    | hw02.validation        | coordenadas recuperadas por centroide distrital: 7061 de 7067 faltantes
+2026-09-06 22:13:10,765 | INFO    | hw02.validation        | centros poblados: 99937 filas, columnas ['UBIGEO', 'IDDD', 'DEPARTAMENTO', 'IDPP', 'PROVINCIA', 'IDDIS', 'DISTRITO', 'IDCCPP', 'CCPP', 'CATEGORIA', 'CATEGORIA 2', 'CAPITAL', 'Viviendas', 'Habitantes', 'Latitud (coord X)', 'Longitud (coord Y)', 'CLASIFICACION INEI']
+2026-09-06 22:13:10,951 | WARNING | hw02.validation        | centros poblados: encabezado invertido: se ignoran las etiquetas (lat=Longitud (coord Y), lon=Latitud (coord X))
+2026-09-06 22:13:31,546 | INFO    | hw02.validation        | muestra: 5000 puntos (2003 certeza), pesos suman 27776818 de 27776818 hab.
+2026-09-06 22:13:31,868 | INFO    | hw02.validation        | escrito facilities_national.parquet (26850 filas, 52 columnas)
+2026-09-06 22:13:32,261 | INFO    | hw02.validation        | escrito demand_points_national.parquet (87504 filas, 34 columnas)
+2026-09-06 22:13:32,478 | INFO    | hw02.validation        | escrito demand_sample_national.parquet (5000 filas, 40 columnas)
+2026-09-06 22:13:33,249 | INFO    | hw02.validation        | Fase 1 completa. Archivos en C:\Users\AdriánLeoLuyoVargas\Desktop\HW_02_Luyo\HW_02_2026_02\data\processed
