@@ -33,7 +33,7 @@ import pandas as pd
 
 from .acquisition import fetch_elevation
 from .config import CFG
-from .utils import DecisionLog, get_logger
+from .utils import DecisionLog, get_logger, safe_row_idxmin
 
 LOG = get_logger("metrics")
 
@@ -123,7 +123,7 @@ def load_access(profile: str | None = None) -> pd.DataFrame:
     mat = pd.read_parquet(mpath).set_index("demand_id")
 
     t_min = mat.min(axis=1).rename("t_min")
-    nearest = mat.idxmin(axis=1).rename("nearest_facility")
+    nearest = safe_row_idxmin(mat).rename("nearest_facility")
     df = demand.merge(
         pd.concat([t_min, nearest], axis=1), left_on="demand_id", right_index=True,
         how="left",

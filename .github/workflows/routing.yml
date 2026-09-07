@@ -160,7 +160,13 @@ jobs:
           retention-days: 30
           if-no-files-found: warn
 
+      # Se commitea aunque un paso posterior al ruteo haya fallado. Construir los
+      # tres grafos de OSRM cuesta ~27 minutos de runner y las matrices son
+      # válidas por sí mismas: si lo que falla es un resumen, una figura o el PDF,
+      # descartar el ruteo obliga a repetir todo para arreglar algo que no tiene
+      # relación. El job sigue marcándose en rojo, así que el fallo no se oculta.
       - name: Commit de resultados
+        if: ${{ !cancelled() }}
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -168,7 +174,8 @@ jobs:
           if git diff --cached --quiet; then
             echo "sin cambios que commitear"
           else
-            git commit -m "ci: matriz OD y validación (OSRM, alcance ${HW02_SCOPE})"
+            estado="${{ job.status }}"
+            git commit -m "ci: matriz OD y validación (OSRM, alcance ${HW02_SCOPE}, job ${estado})"
             git pull --rebase origin "${GITHUB_REF_NAME}"
             git push origin "HEAD:${GITHUB_REF_NAME}"
           fi

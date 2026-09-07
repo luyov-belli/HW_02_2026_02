@@ -40,7 +40,7 @@ import pandas as pd
 import requests
 
 from .config import CFG, PROJECT_ROOT
-from .utils import DecisionLog, get_logger
+from .utils import DecisionLog, get_logger, safe_row_idxmin
 
 LOG = get_logger("routing")
 
@@ -1018,8 +1018,10 @@ def cross_mode_analysis(
         a = alt.loc[common]
         t_b = b.min(axis=1)
         t_a = a.min(axis=1)
-        near_b = b.idxmin(axis=1)
-        near_a = a.idxmin(axis=1)
+        near_b = safe_row_idxmin(b)
+        near_a = safe_row_idxmin(a)
+        # Solo se compara el establecimiento más cercano donde ambos modos llegan
+        # a alguno; a pie hay orígenes sin ningún resolutivo alcanzable.
         differs = (near_b != near_a) & t_b.notna() & t_a.notna()
         ratio = (t_a / t_b).replace([np.inf, -np.inf], np.nan)
         rows.append(

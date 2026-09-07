@@ -21,7 +21,12 @@ from src.config import CFG
 from src.metrics import gini, lorenz_curve, weighted_mean, weighted_quantile
 from src.models import recompute_coverage
 from src.routing import haversine_matrix
-from src.utils import coerce_id_columns, lossy_ascii_score, mojibake_score
+from src.utils import (
+    coerce_id_columns,
+    lossy_ascii_score,
+    mojibake_score,
+    safe_row_idxmin,
+)
 from src.validation import (
     _allocate_quota,
     _resolve_ccpp_coord_columns,
@@ -213,6 +218,32 @@ def test_detecta_perdida_de_caracteres_no_ascii():
     s = pd.Series(["SE?OR DE LUREN", "I?APARI", "HOSPITAL REGIONAL", "¿ES ASI?"])
     # Los dos primeros perdieron la eñe; el último tiene interrogación legítima.
     assert lossy_ascii_score(s) == 2
+
+
+def test_idxmin_tolera_filas_sin_ningun_valor():
+    """Regresión: la corrida nacional de OSRM murió aquí tras 27 min de ruteo.
+
+    ``DataFrame.idxmin(axis=1)`` lanza ValueError desde pandas 2.1 cuando una fila
+    es toda NaN, y eso ocurre legítimamente: los orígenes sin acceso vial y los
+    que no alcanzan ningún establecimiento a pie tienen la fila vacía.
+    """
+    mat = pd.DataFrame(
+        [[30.0, 12.0], [np.nan, np.nan], [np.nan, 5.0]],
+        index=["a", "b", "c"],
+        columns=["IPRESS_1", "IPRESS_2"],
+    )
+    with pytest.raises(ValueError):
+        mat.idxmin(axis=1)
+
+    out = safe_row_idxmin(mat)
+    assert out["a"] == "IPRESS_2"
+    assert pd.isna(out["b"])
+    assert out["c"] == "IPRESS_2"
+
+
+def test_idxmin_seguro_devuelve_todo_na_si_la_matriz_esta_vacia_de_valores():
+    mat = pd.DataFrame(np.nan, index=["a", "b"], columns=["x", "y"])
+    assert safe_row_idxmin(mat).isna().all()
 
 
 def test_detecta_doble_codificacion():
