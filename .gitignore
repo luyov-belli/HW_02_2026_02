@@ -16,6 +16,16 @@ data/raw/*
 # y sí se versionan.
 data/cache/
 
+# Salidas del alcance "dev" (un solo departamento). Existe para probar el
+# pipeline completo en segundos y sus resultados NO son resultados del estudio;
+# versionarlos invitaría a confundir metrics_national_dev.csv con la corrida
+# nacional. Los alcances "national" y "regions" sí se versionan.
+data/outputs/*_dev.csv
+data/outputs/*_dev.json
+data/outputs/*_dev*.parquet
+data/processed/*_dev.parquet
+data/processed/*_dev.gpkg
+
 # Artefactos de OSRM generados por osrm-extract/partition/customize
 osrm/
 *.osrm*
