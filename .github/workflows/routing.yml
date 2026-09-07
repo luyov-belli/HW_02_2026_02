@@ -8,6 +8,10 @@ name: Fase 2 — OSRM en Docker (matriz OD)
 #
 # Se dispara tocando .github/routing.trigger (para no reconstruir el grafo en
 # cada commit de código) o a mano desde la pestaña Actions.
+#
+# Cada paso vuelca su diagnóstico al resumen del job ($GITHUB_STEP_SUMMARY),
+# que es público: quien no tenga permisos para leer los logs igual puede ver
+# qué pasó.
 
 on:
   workflow_dispatch:
@@ -37,9 +41,9 @@ jobs:
       PRIMARY_PROFILE: car
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
           cache: pip
@@ -47,13 +51,43 @@ jobs:
       - name: Instalar dependencias
         run: pip install -r requirements.txt
 
-      - name: Espacio en disco disponible
-        run: df -h /
-
-      - name: Fase 1 — adquisición y validación
+      - name: Entorno
         run: |
-          python -m src.acquisition --with-osm-pbf
-          python -m src.validation
+          {
+            echo "## Entorno"
+            echo '```'
+            python -VV
+            python -c "import pandas, numpy, geopandas, scipy, pyogrio; \
+              print('pandas', pandas.__version__); print('numpy', numpy.__version__); \
+              print('geopandas', geopandas.__version__); print('scipy', scipy.__version__); \
+              print('pyogrio', pyogrio.__version__)"
+            echo "alcance: $HW02_SCOPE"
+            df -h / | tail -1
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Fase 1a — descarga de fuentes tabulares y límites
+        run: python -m src.acquisition
+
+      - name: Fase 1b — validación y muestreo
+        run: python -m src.validation
+
+      - name: Fase 1c — descarga de la red vial (OSM PBF)
+        run: python -m src.acquisition --only osm_pbf
+
+      - name: Resumen de la Fase 1
+        if: always()
+        run: |
+          {
+            echo "## Fase 1"
+            echo '```'
+            ls -lh data/raw 2>/dev/null || echo "(sin data/raw)"
+            echo "---"
+            ls -lh data/processed 2>/dev/null || echo "(sin data/processed)"
+            echo "---- tail logs ----"
+            tail -n 25 logs/*.log 2>/dev/null || echo "(sin logs)"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Perfil car (principal)
         run: bash scripts/osrm_build_and_route.sh car
@@ -69,20 +103,34 @@ jobs:
       - name: Análisis multimodal
         run: python -m src.routing --stage combine
 
-      - name: Resumen
+      - name: Resumen de la Fase 2
+        if: always()
         run: |
-          python - <<'PY'
-          import pandas as pd, os, glob
+          {
+            echo "## Fase 2"
+            echo '```'
+            python - <<'PY'
+          import glob, os
+          import pandas as pd
           scope = os.environ["HW02_SCOPE"]
-          m = pd.read_parquet(f"data/outputs/od_car_matrix_{scope}.parquet").set_index("demand_id")
-          t = m.min(axis=1)
-          print(f"matriz {m.shape[0]}x{m.shape[1]}")
-          print(f"mediana {t.median():.1f} min | p90 {t.quantile(.9):.1f} | max {t.max():.1f}")
+          path = f"data/outputs/od_car_matrix_{scope}.parquet"
+          if os.path.exists(path):
+              m = pd.read_parquet(path).set_index("demand_id")
+              t = m.min(axis=1)
+              print(f"matriz {m.shape[0]}x{m.shape[1]}")
+              print(f"mediana {t.median():.1f} min | p90 {t.quantile(.9):.1f} | max {t.max():.1f}")
+          else:
+              print(f"no se generó {path}")
           for f in sorted(glob.glob("data/outputs/*")):
               print(f"{os.path.getsize(f)/1e6:8.2f} MB  {f}")
           PY
+            echo "---- tail logs ----"
+            tail -n 20 logs/routing*.log 2>/dev/null || echo "(sin logs de ruteo)"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Publicar artefactos
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: matrices-od-${{ env.HW02_SCOPE }}
@@ -91,6 +139,7 @@ jobs:
             data/processed/
             logs/
           retention-days: 30
+          if-no-files-found: warn
 
       - name: Commit de resultados
         run: |
@@ -101,5 +150,6 @@ jobs:
             echo "sin cambios que commitear"
           else
             git commit -m "ci: matriz OD y validación (OSRM, alcance ${HW02_SCOPE})"
-            git push origin HEAD:${GITHUB_REF_NAME}
+            git pull --rebase origin "${GITHUB_REF_NAME}"
+            git push origin "HEAD:${GITHUB_REF_NAME}"
           fi

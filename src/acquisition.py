@@ -27,6 +27,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 import time
 import zipfile
 from pathlib import Path
@@ -150,6 +151,59 @@ def find_layer(folder: Path, pattern: str, suffix: str = ".shp") -> Path:
             f"no se encontró ninguna capa '{pattern}{suffix}' en {folder}"
         )
     return matches[0]
+
+
+def fetch_elevation(
+    lats: list[float], lons: list[float], cache_path: Path
+) -> "pd.Series":
+    """Altitud SRTM 30 m para una lista de puntos, con caché en disco.
+
+    Se consulta OpenTopoData en lotes respetando su límite de una petición por
+    segundo. El resultado se versiona en ``data/processed``, de modo que ni CI ni
+    una segunda corrida vuelven a llamar al servicio. Si el servicio no responde,
+    se devuelven NaN y el análisis cruzado reporta la altitud como no disponible
+    en lugar de fallar.
+    """
+    import pandas as pd
+
+    spec = CFG["sources"]["elevation"]
+    if cache_path.exists():
+        cached = pd.read_parquet(cache_path)
+        LOG.info("altitud desde caché: %s (%d puntos)", cache_path.name, len(cached))
+        return cached.set_index("point_key")["elevation_m"]
+
+    keys = [f"{la:.5f},{lo:.5f}" for la, lo in zip(lats, lons, strict=True)]
+    unique_keys = list(dict.fromkeys(keys))
+    batch = int(spec["batch"])
+    values: dict[str, float] = {}
+    LOG.info(
+        "consultando altitud de %d puntos únicos en %d lotes",
+        len(unique_keys), math.ceil(len(unique_keys) / batch),
+    )
+    for i in range(0, len(unique_keys), batch):
+        chunk = unique_keys[i : i + batch]
+        try:
+            resp = requests.get(
+                spec["url"],
+                params={"locations": "|".join(chunk)},
+                timeout=90,
+                headers={"User-Agent": "HW02-accesibilidad-salud/1.0"},
+            )
+            resp.raise_for_status()
+            for key, item in zip(chunk, resp.json()["results"], strict=True):
+                values[key] = item.get("elevation")
+        except Exception as err:  # noqa: BLE001
+            LOG.warning("lote de altitud %d falló: %s", i // batch, err)
+            for key in chunk:
+                values.setdefault(key, None)
+        time.sleep(float(spec["rate_limit_s"]))
+
+    series = pd.Series(values, name="elevation_m", dtype="float64")
+    series.index.name = "point_key"
+    series.reset_index().to_parquet(cache_path, index=False)
+    ok = int(series.notna().sum())
+    LOG.info("altitud resuelta para %d de %d puntos", ok, len(series))
+    return series
 
 
 def probe_wayback_renipress() -> dict[str, Any]:

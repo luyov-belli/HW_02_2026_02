@@ -253,6 +253,23 @@ aggregation_levels  = ["district", "province", "department", "natural_region", "
 worst_districts_n   = 25
 urban_rule          = "inei_classification"
 
+# Variables del análisis cruzado (Fase 3). No incluye pobreza monetaria porque el
+# portal del INEI no respondió en la fecha de acceso y el mapa de pobreza distrital
+# no está publicado como descarga automatizable en ningún espejo verificado; se
+# declara en Limitaciones y se usan sus dos proxies habituales en la literatura
+# peruana: ruralidad y altitud.
+cross_variables = [
+  "altitude_m",              # SRTM 30 m, mediana ponderada del distrito
+  "rural_share",             # % de población distrital en centros poblados rurales
+  "population",              # tamaño del distrito
+  "population_density",      # hab/km² con el área del polígono
+  "settlement_dispersion",   # % de población fuera de la capital distrital
+  "ccpp_count",              # número de centros poblados
+  "primary_care_per_10k",    # IPRESS I-1/I-2/I-3/I-4 operativas por 10 000 hab.
+]
+# Umbral de |rho| a partir del cual se comenta una asociación en el informe.
+correlation_report_threshold = 0.15
+
 [innovation]
 run_2sfca            = true
 run_mclp             = true
@@ -288,7 +305,11 @@ license   = "OCHA / HDX Common Operational Datasets, fuente INEI."
 [sources.osm_pbf]
 # Insumo de OSRM (motor oficial). Se descarga dentro del workflow de CI.
 url       = "https://download.geofabrik.de/south-america/peru-latest.osm.pbf"
-mirrors   = ["https://osm.download.movisda.io/south-america/peru-latest.osm.pbf"]
+# No hay espejo verificado de los extractos de Geofabrik para Perú (se probaron
+# openstreetmap.fr, movisda y ftp.gwdg.de: 404). Geofabrik devolvió 502/503 de
+# forma intermitente durante el desarrollo, así que la resiliencia se apoya en
+# los reintentos con espera creciente de src.acquisition._download.
+mirrors   = []
 filename  = "peru-latest.osm.pbf"
 license   = "OpenStreetMap contributors, ODbL 1.0."
 [sources.osm_shp]
@@ -312,6 +333,27 @@ highway_regex   = "^(motorway|trunk|primary|secondary|tertiary|unclassified|resi
 bbox_pad_deg    = 0.15
 tile_size_deg   = 1.0
 license         = "OpenStreetMap contributors, ODbL 1.0."
+[sources.elevation]
+# Altitud para el análisis cruzado (Fase 3). SRTM 30 m servido por OpenTopoData.
+# Se consulta una sola vez y el resultado se versiona en data/processed/, así que
+# ni CI ni una segunda corrida vuelven a golpear la API.
+url          = "https://api.opentopodata.org/v1/srtm30m"
+dataset      = "srtm30m"
+batch        = 100      # máximo de ubicaciones por petición
+rate_limit_s = 1.1      # la política del servicio es 1 petición por segundo
+license      = "NASA SRTM, dominio público. Servido por OpenTopoData (ODbL para el servicio)."
+
+[sources.population_age]
+# Estructura etaria para el análisis cruzado. IMPORTANTE: la versión vigente en
+# HDX solo publica adm0 y adm1, no distritos. Se usa como control departamental y
+# la limitación (falacia ecológica) se declara en el informe.
+url        = "https://data.humdata.org/dataset/0d8f2f78-cb46-4eb8-94eb-100b5388c3ff/resource/6355bd07-91e8-49e0-abbf-4de4036271a9/download/per_admpop_2024.xlsx"
+filename   = "per_admpop_2024.xlsx"
+sheet_adm1 = "per_admpop_adm1_2024"
+under5_col = "T_00_04"
+total_col  = "T_TL"
+license    = "OCHA / HDX Common Operational Datasets — Population Statistics 2024."
+
 [sources.renipress_historic]
 # Innovación (comparación temporal). El Internet Archive no conserva snapshots de
 # los CSV de datos.susalud.gob.pe (verificado con la CDX API: 0 resultados), así que
