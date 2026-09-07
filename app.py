@@ -325,8 +325,24 @@ with TABS[0]:
         center = [float(access["lat"].median()), float(access["lon"].median())]
         fmap = folium.Map(
             location=center, zoom_start=5 if not sel_dep else 7,
-            tiles="CartoDB positron", control_scale=True,
+            tiles=None, control_scale=True,
         )
+        # Se declara el proveedor de mosaicos explícitamente en lugar de usar el
+        # alias "CartoDB positron" de folium: ese alias resuelve a un dominio
+        # heredado que ahora devuelve mosaicos con marca de agua «API key
+        # required». Este endpoint es el vigente y es de uso libre con atribución.
+        folium.TileLayer(
+            tiles="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
+            attr=(
+                '&copy; <a href="https://www.openstreetmap.org/copyright">'
+                "OpenStreetMap</a> contributors &copy; "
+                '<a href="https://carto.com/attributions">CARTO</a>'
+            ),
+            name="Mapa base",
+            control=False,
+            subdomains="abcd",
+            max_zoom=19,
+        ).add_to(fmap)
 
         def style_fn(feature: dict) -> dict:
             rec = by_ubigeo.get(feature["properties"]["ubigeo"])
@@ -623,15 +639,19 @@ with TABS[3]:
                 "Resuelto con el problema de cobertura máxima (MCLP). El algoritmo "
                 "voraz garantiza al menos el 63,2 % del óptimo teórico."
             )
-            n_auto = st.number_input(
-                "Número de ascensos a sugerir", min_value=0, max_value=50, value=0, step=5
+            # Slider y no number_input: este último exige pulsar Enter para
+            # aplicar, que es fricción innecesaria en una demostración en vivo.
+            max_auto = int(min(50, len(mclp_seq))) if not mclp_seq.empty else 0
+            n_auto = (
+                st.slider("Número de ascensos a sugerir", 0, max_auto, 0)
+                if max_auto > 0
+                else 0
             )
             auto_ids = (
-                mclp_seq.head(int(n_auto))["COD_IPRESS"].tolist()
-                if not mclp_seq.empty and n_auto else []
+                mclp_seq.head(int(n_auto))["COD_IPRESS"].tolist() if n_auto else []
             )
             if auto_ids:
-                st.success(f"{len(auto_ids)} establecimientos precargados abajo.")
+                st.success(f"{len(auto_ids)} establecimientos precargados al costado.")
 
         with col_a:
             default_labels = [
@@ -641,7 +661,15 @@ with TABS[3]:
                 "Establecimientos a ascender",
                 options=sorted(label_to_id),
                 default=default_labels,
-                help="Escribir para buscar por nombre, distrito o departamento.",
+                help=(
+                    "Escribir para buscar por nombre, distrito o departamento. "
+                    "Mover el control de la derecha reemplaza la selección por la "
+                    "óptima de ese tamaño."
+                ),
+                # La clave depende de n_auto a propósito. Un multiselect conserva
+                # su estado entre reejecuciones e ignora un `default` nuevo, así
+                # que sin esto mover el control no cambiaría la selección.
+                key=f"upgrade_pick_{n_auto}",
             )
         selected = [label_to_id[p] for p in picked]
 

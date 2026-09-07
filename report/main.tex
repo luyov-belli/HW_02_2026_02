@@ -34,6 +34,16 @@
 % Cifras generadas por el pipeline.
 \input{tables/kpis}
 
+% Las tablas también las genera src/export.py. Una corrida acotada puede no
+% producir alguna (p. ej. el análisis cruzado necesita un mínimo de distritos),
+% así que se insertan de forma tolerante: el informe compila igual y deja
+% constancia visible de lo que falta, en lugar de abortar.
+\newcommand{\inputtable}[1]{%
+  \IfFileExists{tables/#1.tex}{\input{tables/#1}}{%
+    \begin{center}\footnotesize\itshape
+      [La tabla \texttt{#1} no se generó en esta corrida.]
+    \end{center}}}
+
 \title{\bfseries Acceso vial a establecimientos de salud resolutivos en el
 Perú\\[0.35em]\large Una medición nacional sobre red vial real, con análisis de
 brechas y optimización de cobertura}
@@ -349,7 +359,7 @@ diagonal es la concentración de la carga de desplazamiento en una minoría.}
 \label{fig:lorenz}
 \end{figure}
 
-\input{tables/tab_cobertura_departamento}
+\inputtable{tab_cobertura_departamento}
 
 \subsection{Brechas críticas}
 
@@ -361,7 +371,7 @@ distintos, y la decisión de dónde invertir se ordena por el segundo. El distri
 con mayor brecha absoluta es \kpiPeorDistrito{} (\kpiPeorDistritoDep{}), con
 \kpiPeorDistritoPob{} habitantes fuera del umbral.
 
-\input{tables/tab_peores_distritos}
+\inputtable{tab_peores_distritos}
 
 \subsection{Análisis cruzado}
 
@@ -373,7 +383,7 @@ natural. El área de cada punto es la población distrital.}
 \label{fig:altitud}
 \end{figure}
 
-\input{tables/tab_analisis_cruzado}
+\inputtable{tab_analisis_cruzado}
 
 \textbf{Ninguna de estas asociaciones identifica un efecto causal.} El diseño es
 transversal y no hay variación exógena en la ubicación de los hospitales. Más
@@ -386,7 +396,7 @@ porque la altitud correlaciona con pobreza y dispersión del poblamiento.
 
 \subsection{Contraste multimodal}
 
-\input{tables/tab_multimodal}
+\inputtable{tab_multimodal}
 
 \subsection{Evolución en el tiempo}
 
@@ -406,7 +416,7 @@ porque la matriz ya cubre todos los establecimientos actuales. El supuesto es qu
 ningún resolutivo cerró —RENIPRESS publicado no lo registra—, de modo que la cifra
 \textbf{subestima} la mejora real.
 
-\input{tables/tab_temporal}
+\inputtable{tab_temporal}
 
 \subsection{Dónde conviene invertir: cobertura máxima}
 
@@ -426,7 +436,7 @@ habitantes. La forma decreciente de la figura~\ref{fig:mclp} es el resultado
 accionable: los primeros ascensos rinden mucho más que los siguientes, lo que
 argumenta a favor de priorizar y en contra de repartir de manera pareja.
 
-\input{tables/tab_mclp}
+\inputtable{tab_mclp}
 
 % ============================================================= 6. DISCUSIÓN
 \section{Discusión}

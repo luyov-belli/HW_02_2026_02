@@ -1,0 +1,141 @@
+name: Fases 3-5 — métricas, modelos e informe
+
+# Recalcula métricas, modelos e informe **reutilizando la matriz OD versionada**,
+# sin reconstruir el grafo de OSRM. Corre en menos de cinco minutos.
+#
+# Es la pieza que hace que el informe no se desactualice: cualquier cambio en el
+# código de análisis o en el texto del informe regenera figuras, tablas, macros
+# de cifras y el PDF, y los commitea. Ninguna cifra del informe está escrita a
+# mano, así que el texto se actualiza solo.
+#
+# El ciclo completo (que incluye rehacer el ruteo) está en routing.yml.
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "src/metrics.py"
+      - "src/models.py"
+      - "src/export.py"
+      - "report/main.tex"
+      - "config.md"
+
+concurrency:
+  group: analysis-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  analysis:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    permissions:
+      contents: write
+    env:
+      HW02_SCOPE: national
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Instalar dependencias
+        run: pip install -r requirements.txt
+
+      - name: Verificar que existe la matriz OD
+        id: check
+        run: |
+          MATRIX="data/outputs/od_car_matrix_${HW02_SCOPE}.parquet"
+          if [ -f "$MATRIX" ]; then
+            echo "existe=si" >> "$GITHUB_OUTPUT"
+            ls -lh "$MATRIX"
+          else
+            echo "existe=no" >> "$GITHUB_OUTPUT"
+            {
+              echo "## ⏭️ Análisis omitido"
+              echo
+              echo "No hay \`$MATRIX\` en el repositorio. Ejecutar primero el"
+              echo "workflow \`Fase 2 — OSRM en Docker\`, que la genera y la commitea."
+            } >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Fase 1 — validación (necesaria para los puntos de demanda)
+        if: steps.check.outputs.existe == 'si'
+        run: |
+          bash scripts/run_step.sh "Fase 1a" python -m src.acquisition
+          bash scripts/run_step.sh "Fase 1b" python -m src.validation
+
+      - name: Fase 3 — métricas
+        if: steps.check.outputs.existe == 'si'
+        run: bash scripts/run_step.sh "Fase 3" python -m src.metrics
+
+      - name: Innovación — 2SFCA y MCLP
+        if: steps.check.outputs.existe == 'si'
+        run: bash scripts/run_step.sh "Innovación" python -m src.models
+
+      - name: Fase 5 — figuras y tablas
+        if: steps.check.outputs.existe == 'si'
+        run: bash scripts/run_step.sh "Fase 5" python -m src.export
+
+      - name: Compilar el informe
+        if: steps.check.outputs.existe == 'si'
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: main.tex
+          working_directory: report
+
+      - name: Resumen
+        if: always() && steps.check.outputs.existe == 'si'
+        run: |
+          {
+            echo "## Resultados"
+            echo '```'
+            python - <<'PY'
+          import os
+          import pandas as pd
+          scope = os.environ["HW02_SCOPE"]
+          nat = pd.read_csv(f"data/outputs/metrics_national_{scope}.csv").iloc[0]
+          print(f"población representada : {nat['poblacion']:,.0f}")
+          print(f"tiempo medio           : {nat['t_medio_min']:.1f} min")
+          print(f"mediana                : {nat['t_mediano_min']:.1f} min")
+          for b in (30, 60, 120):
+              col = f"share_hasta_{b}min"
+              if col in nat:
+                  print(f"cobertura <= {b:3d} min   : {nat[col]:.2%}")
+          PY
+            echo '```'
+            echo
+            echo "### Archivos generados"
+            echo '```'
+            ls -lh report/figures report/tables report/main.pdf 2>/dev/null || true
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Publicar informe y salidas
+        if: always() && steps.check.outputs.existe == 'si'
+        uses: actions/upload-artifact@v4
+        with:
+          name: informe-${{ env.HW02_SCOPE }}
+          path: |
+            report/main.pdf
+            report/figures/
+            report/tables/
+            data/outputs/
+          retention-days: 30
+          if-no-files-found: warn
+
+      - name: Commit de resultados
+        if: steps.check.outputs.existe == 'si'
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -f data/outputs data/processed logs report
+          if git diff --cached --quiet; then
+            echo "sin cambios que commitear"
+          else
+            git commit -m "ci: métricas, modelos e informe (alcance ${HW02_SCOPE})"
+            git pull --rebase origin "${GITHUB_REF_NAME}"
+            git push origin "HEAD:${GITHUB_REF_NAME}"
+          fi

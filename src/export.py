@@ -553,6 +553,26 @@ def _table_data_quality() -> None:
 
 
 # ---------------------------------------------------------------------- KPIs
+#: Macros que ``report/main.tex`` cita en su prosa. Sirven de contrato: si una
+#: corrida no puede calcular alguna, se emite un marcador visible y el informe
+#: compila igual, en lugar de que pdflatex aborte con "undefined control
+#: sequence" a mitad del documento.
+REQUIRED_KPIS: tuple[str, ...] = (
+    "PoblacionTotal", "TiempoMedio", "TiempoMediano", "TiempoPnoventa",
+    "ShareHasta30", "ShareHasta60", "ShareHasta120",
+    "PobHasta30", "PobHasta60", "PobHasta120",
+    "ShareMas120", "PobMas120",
+    "Gini", "GiniUrbano", "GiniRural",
+    "TiempoMedioUrbano", "TiempoMedioRural",
+    "PeorDistrito", "PeorDistritoDep", "PeorDistritoPob",
+    "IndiceDesvio", "PobReclasificada", "ShareCambiaCercano",
+    "MclpPresupuesto", "MclpGanancia", "MclpPresupuestoMax", "MclpGananciaMax",
+    "TemporalAnioIni", "TemporalAnioFin", "TemporalDelta", "TemporalNuevos",
+    "QRenipressRowsRaw", "QCcppValid", "QFacilitiesResolutive",
+    "QFacilitiesResolutiveByCategory", "QFacilitiesResolutiveOnRecoveredCoords",
+)
+
+
 def kpis() -> dict[str, float]:
     """Macros LaTeX con las cifras clave, para que el texto se actualice solo."""
     bands = list(CFG["metrics"]["time_bands_min"])
@@ -635,9 +655,26 @@ def kpis() -> dict[str, float]:
         "% Generado por src/export.py — no editar a mano.",
         "% Cada macro proviene de data/outputs/; recompilar tras una corrida nueva",
         "% actualiza el texto del informe automáticamente.",
+        "",
     ]
     for key, value in vals.items():
         lines.append(f"\\newcommand{{\\kpi{key}}}{{{value}}}")
+
+    # Red de seguridad: si una corrida no produce algún insumo (p. ej. no se
+    # ejecutó el MCLP), la macro correspondiente quedaría indefinida y pdflatex
+    # abortaría. \providecommand no hace nada si la macro ya existe, así que las
+    # que falten se imprimen como marcador visible en lugar de romper el informe.
+    lines += [
+        "",
+        "% Marcadores para las macros que esta corrida no pudo calcular.",
+    ]
+    for key in REQUIRED_KPIS:
+        lines.append(
+            f"\\providecommand{{\\kpi{key}}}{{\\textbf{{[sin dato: {key}]}}}}"
+        )
+        if key not in vals:
+            LOG.warning("KPI sin dato en esta corrida: %s", key)
+
     (CFG.path("tables") / "kpis.tex").write_text("\n".join(lines) + "\n", encoding="utf-8")
     (CFG.path("outputs") / f"kpis_{CFG.mode}.json").write_text(
         json.dumps(vals, indent=2, ensure_ascii=False), encoding="utf-8"
