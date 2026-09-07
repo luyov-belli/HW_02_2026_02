@@ -371,6 +371,45 @@ def test_toda_figura_generada_se_usa_en_el_informe():
     assert not sin_usar, f"figuras generadas pero no incluidas: {sin_usar}"
 
 
+#: T1 + inputenc cubre en la práctica Latin-1 más unos pocos signos tipográficos.
+_TEX_SEGUROS = set("—–‘’“”…")
+
+
+def _caracteres_no_compilables(texto: str) -> set[str]:
+    return {c for c in texto if ord(c) > 0xFF and c not in _TEX_SEGUROS}
+
+
+def test_las_tablas_generadas_no_traen_caracteres_que_rompan_latex():
+    """Regresión: «≤» (U+2264) en tres encabezados abortaba pdflatex.
+
+    ``inputenc`` con T1 no puede representar U+2264 y detiene la compilación con
+    "Unicode character ≤ not set up for use with LaTeX". En las figuras el mismo
+    símbolo es correcto, porque matplotlib no tiene esa limitación; el error solo
+    aparece al pasar por LaTeX, y el log de pdflatex no es público en CI.
+    """
+    from src.config import PROJECT_ROOT
+
+    culpables: dict[str, set[str]] = {}
+    for path in (PROJECT_ROOT / "report" / "tables").glob("*.tex"):
+        malos = _caracteres_no_compilables(path.read_text(encoding="utf-8"))
+        if malos:
+            culpables[path.name] = malos
+    malos_tex = _caracteres_no_compilables(_tex())
+    if malos_tex:
+        culpables["main.tex"] = malos_tex
+    assert not culpables, f"caracteres no representables en T1: {culpables}"
+
+
+def test_los_encabezados_de_banda_son_texto_plano():
+    """El encabezado no debe llevar LaTeX: df.to_latex(escape=True) lo escaparía."""
+    from src.export import _header_hasta
+
+    h = _header_hasta(60)
+    assert "≤" not in h
+    assert "\\" not in h
+    assert "%" in h and "60" in h
+
+
 def test_las_corridas_de_prueba_no_escriben_en_los_artefactos_oficiales():
     """Regresión: pytest dejaba líneas dentro de logs/validation.log, un entregable.
 

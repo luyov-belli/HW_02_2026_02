@@ -393,6 +393,21 @@ def fig_cross_mode() -> None:
 
 
 # -------------------------------------------------------------------- tablas
+def _header_hasta(band: int) -> str:
+    """Encabezado de una banda de cobertura, en texto plano.
+
+    Dice "hasta N min" y no "≤N min" a propósito. ``≤`` es U+2264, que no existe
+    en la codificación T1 de LaTeX: ``inputenc`` aborta la compilación con
+    "Unicode character ≤ not set up for use with LaTeX". En las figuras sí se usa
+    el símbolo, porque matplotlib no tiene esa limitación.
+
+    Tampoco lleva ``\\%`` escapado a mano: :func:`_to_latex` pasa ``escape=True``
+    a ``df.to_latex``, que ya convierte ``%`` en ``\\%``. Escaparlo aquí lo
+    escapaba dos veces y el encabezado salía como ``\\textbackslash \\%``.
+    """
+    return f"hasta {band} min (%)"
+
+
 def _to_latex(
     df: pd.DataFrame, name: str, caption: str, label: str, floatfmt: str = "%.1f"
 ) -> None:
@@ -422,7 +437,7 @@ def tables(bands: list[int]) -> None:
         for b in bands:
             t[f"share_hasta_{b}min"] = t[f"share_hasta_{b}min"] * 100
         t.columns = ["Departamento", "Población", "Media", "Mediana", "p90"] + [
-            f"≤{b} min (\\%)" for b in bands
+            _header_hasta(b) for b in bands
         ]
         _to_latex(
             t, "tab_cobertura_departamento",
@@ -443,7 +458,7 @@ def tables(bands: list[int]) -> None:
         if "high_variance" in t:
             t["high_variance"] = np.where(t["high_variance"].fillna(False), "sí", "no")
         t.columns = ["Departamento", "Distrito", "Población", "Media (min)",
-                     f"≤{band} min (\\%)", "Pob. fuera", "Alta var."][: len(t.columns)]
+                     _header_hasta(band), "Pob. fuera", "Alta var."][: len(t.columns)]
         _to_latex(
             t, "tab_peores_distritos",
             f"Brechas críticas: 15 distritos con más población fuera de {band} minutos "
@@ -470,7 +485,8 @@ def tables(bands: list[int]) -> None:
     if cross is not None:
         t = cross[["variable", "n_distritos", "spearman_rho",
                    "t_medio_quintil_inferior", "t_medio_quintil_superior"]].copy()
-        t.columns = ["Variable", "Distritos", "Spearman $\\rho$",
+        # Texto plano: con escape=True, "$\rho$" saldría como "$\textbackslash rho$".
+        t.columns = ["Variable", "Distritos", "Rho de Spearman",
                      "Quintil inferior", "Quintil superior"]
         _to_latex(
             t, "tab_analisis_cruzado",
@@ -511,7 +527,7 @@ def tables(bands: list[int]) -> None:
         t = mclp[["presupuesto", "ganancia_vs_base", "share_cubierta",
                   "cota_superior_optimo", "brecha_maxima_vs_cota"]].copy()
         t["share_cubierta"] *= 100
-        t.columns = ["Ascensos", "Población ganada", "Cobertura (\\%)",
+        t.columns = ["Ascensos", "Población ganada", "Cobertura (%)",
                      "Cota superior", "Brecha máx."]
         _to_latex(
             t, "tab_mclp",
@@ -527,7 +543,7 @@ def tables(bands: list[int]) -> None:
         t = tmp[["anio", "n_resolutivas"] + [f"share_hasta_{b}min" for b in bands]].copy()
         for b in bands:
             t[f"share_hasta_{b}min"] *= 100
-        t.columns = ["Año", "Resolutivos"] + [f"≤{b} min (\\%)" for b in bands]
+        t.columns = ["Año", "Resolutivos"] + [_header_hasta(b) for b in bands]
         _to_latex(
             t, "tab_temporal",
             "Cobertura reconstruida con el conjunto de establecimientos resolutivos "
@@ -548,7 +564,10 @@ def _table_data_quality() -> None:
     keep = df[df["n_affected"] > 0][["dataset", "check", "n_affected", "share_affected"]]
     keep = keep.copy()
     keep["share_affected"] = keep["share_affected"].astype(float) * 100
-    keep.columns = ["Fuente", "Verificación", "Registros", "\\% del total"]
+    # Sin barra invertida: _to_latex llama a df.to_latex(escape=True), que ya
+    # convierte "%" en "\%". Escaparlo aquí lo escapaba dos veces y el encabezado
+    # salía como "\textbackslash \%", es decir un "\%" literal en el PDF.
+    keep.columns = ["Fuente", "Verificación", "Registros", "% del total"]
     _to_latex(
         keep, "tab_calidad_datos",
         "Reporte de calidad de datos: verificaciones que detectaron al menos un "
