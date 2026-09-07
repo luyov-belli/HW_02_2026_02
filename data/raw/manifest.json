@@ -1,5 +1,5 @@
 {
-  "generated_at_utc": "2026-09-07T03:53:12+00:00",
+  "generated_at_utc": "2026-09-07T04:13:54+00:00",
   "sources": [
     {
       "key": "renipress",
@@ -10,10 +10,49 @@
       "path": "data\\raw\\RENIPRESS_2026_v6.csv",
       "bytes": 17685986,
       "sha256": "0817a7e15273a2aeff44b502518f73c30268b525eb76159a5455dd1b0269b6f9",
-      "downloaded_at_utc": "2026-09-07T03:53:13+00:00",
+      "downloaded_at_utc": "reutilizado",
+      "attempts": 0,
+      "origin": "cache_local"
+    },
+    {
+      "key": "ccpp",
+      "url": "https://www.datosabiertos.gob.pe/sites/default/files/ListadoCentroPobladosMTC.xlsx",
+      "filename": "ListadoCentroPobladosMTC.xlsx",
+      "license": "Datos Abiertos del Estado Peruano. MTC, sobre base INEI.",
+      "note": "El encabezado del archivo tiene invertidas las etiquetas de latitud y longitud; ver src/validation.py.",
+      "path": "data\\raw\\ListadoCentroPobladosMTC.xlsx",
+      "bytes": 11194978,
+      "sha256": "e2565e6f6d798313bb044fff34b5e09a0e5610cc66bcde02c70f38c11840937d",
+      "downloaded_at_utc": "reutilizado",
+      "attempts": 0,
+      "origin": "cache_local"
+    },
+    {
+      "key": "boundaries",
+      "url": "https://data.humdata.org/dataset/54fc7f4d-f4c0-4892-91f6-2fe7c1ecf363/resource/61faa8d6-fbfa-4d44-a94d-8f3b0241277a/download/per_admin_boundaries.shp.zip",
+      "filename": "per_admin_boundaries.shp.zip",
+      "license": "OCHA / HDX Common Operational Datasets, fuente INEI.",
+      "note": null,
+      "path": "data\\raw\\per_admin_boundaries.shp.zip",
+      "bytes": 42928872,
+      "sha256": "1d143891d3bd1392dfe2d006f4f913b0b01290a448b9aee4189a718613706ef8",
+      "downloaded_at_utc": "2026-09-07T04:13:59+00:00",
       "attempts": 1,
-      "source_url": "http://datos.susalud.gob.pe/sites/default/files/RENIPRESS_2026_v6.csv",
+      "source_url": "https://data.humdata.org/dataset/54fc7f4d-f4c0-4892-91f6-2fe7c1ecf363/resource/61faa8d6-fbfa-4d44-a94d-8f3b0241277a/download/per_admin_boundaries.shp.zip",
       "origin": "descarga"
+    },
+    {
+      "key": "population_age",
+      "url": "https://data.humdata.org/dataset/0d8f2f78-cb46-4eb8-94eb-100b5388c3ff/resource/6355bd07-91e8-49e0-abbf-4de4036271a9/download/per_admpop_2024.xlsx",
+      "filename": "per_admpop_2024.xlsx",
+      "license": "OCHA / HDX Common Operational Datasets — Population Statistics 2024.",
+      "note": null,
+      "path": "data\\raw\\per_admpop_2024.xlsx",
+      "bytes": 24752,
+      "sha256": "f7e922e57579f11c7f9b2d6404beb570051cda13b91406a3a558f7c3d534a897",
+      "downloaded_at_utc": "reutilizado",
+      "attempts": 0,
+      "origin": "cache_local"
     }
   ],
   "renipress_historic": {

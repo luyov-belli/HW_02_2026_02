@@ -22,3 +22,4 @@ Corridas
    publica la cola del error como anotación pública para que un fallo en CI sea
    diagnosticable sin permisos sobre el repositorio.
    Corrida nacional completa: 25 departamentos, perfiles car / foot / bike.
+5. 2026-09-06 23:15 - la anotacion publica revelo el error real: el bucle de descarga incluia las fuentes que son servicios (altitud, Overpass) y reventaba con KeyError. HDX descarga bien desde el runner. Corrida nacional completa.

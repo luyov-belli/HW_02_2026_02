@@ -305,7 +305,9 @@ def probe_wayback_renipress() -> dict[str, Any]:
                 "collapse": "urlkey",
                 "limit": "50",
             },
-            timeout=60,
+            # Sondeo informativo: no vale la pena colgar la corrida un minuto
+            # esperando al Internet Archive, que además responde solo por HTTP.
+            timeout=20,
         )
         resp.raise_for_status()
         rows = resp.json()
@@ -355,7 +357,11 @@ def main(argv: list[str] | None = None) -> int:
 
     for key in keys:
         spec = sources[key]
-        if "url" not in spec:
+        # No todas las entradas de [sources] son archivos que se descarguen: la
+        # altitud y Overpass son servicios que se consultan por punto y los
+        # resuelven src.metrics y src.routing cuando los necesitan.
+        if "url" not in spec or "filename" not in spec:
+            LOG.info("fuente '%s' es un servicio, no un archivo: se omite aquí", key)
             continue
         entry = fetch_source(key, spec, force=args.force)
         manifest["sources"].append(entry)
