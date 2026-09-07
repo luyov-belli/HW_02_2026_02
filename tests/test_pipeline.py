@@ -13,6 +13,8 @@ Ejecutar::
 
 from __future__ import annotations
 
+import re
+
 import numpy as np
 import pandas as pd
 import pytest
@@ -298,6 +300,75 @@ def test_ascender_una_candidata_lejana_no_cambia_nada():
     # A está a 40 min de p1 y 25 de p2: con umbral 30 solo ayuda a p2.
     con = recompute_coverage(["A"], base, cand, w, 30.0)
     assert con["poblacion_cubierta"] - sin["poblacion_cubierta"] == pytest.approx(200.0)
+
+
+# ----------------------------------------------------------------------- informe
+def _tex() -> str:
+    from src.config import PROJECT_ROOT
+
+    return (PROJECT_ROOT / "report" / "main.tex").read_text(encoding="utf-8")
+
+
+def _rendered_words(tex: str) -> int:
+    """Cuenta palabras como quedarán en el PDF, no como están en la fuente.
+
+    Cada macro de cifra (``\\kpiX{}``) y cada ``\\num{...}`` se renderiza como un
+    número, es decir una sola palabra; el resto de comandos y llaves desaparece.
+    """
+    body = re.sub(r"%.*", "", tex)
+    body = re.sub(r"\\(?:kpi[A-Za-z]+|num)\s*\{[^}]*\}", " 0 ", body)
+    body = re.sub(r"\\(?:kpi[A-Za-z]+)", " 0 ", body)
+    body = re.sub(r"\\[a-zA-Z]+\*?", " ", body)
+    body = re.sub(r"[{}\\~,]", " ", body)
+    return len(body.split())
+
+
+def test_el_resumen_no_excede_150_palabras():
+    """El enunciado lo exige explícitamente y se califica."""
+    m = re.search(r"\\begin\{abstract\}(.*?)\\end\{abstract\}", _tex(), re.S)
+    assert m, "el informe debe tener un resumen"
+    n = _rendered_words(m.group(1))
+    assert n < 150, f"el resumen tiene {n} palabras renderizadas"
+
+
+def test_no_hay_referencias_colgadas_en_el_informe():
+    """Todo ``\\ref`` debe apuntar a una etiqueta que exista.
+
+    Fue un fallo real: el texto citaba las tablas de calidad de datos y de
+    snapping, pero ninguna de las dos se insertaba, así que el PDF mostraba «??».
+    Las etiquetas de tabla viven en los .tex generados por src/export.py, de modo
+    que la comprobación mira también ahí.
+    """
+    from src.config import PROJECT_ROOT
+
+    tex = _tex()
+    labels = set(re.findall(r"\\label\{([^}]+)\}", tex))
+    tables_dir = PROJECT_ROOT / "report" / "tables"
+    for path in tables_dir.glob("*.tex"):
+        labels |= set(
+            re.findall(r"\\label\{([^}]+)\}", path.read_text(encoding="utf-8"))
+        )
+    # Solo se exige la etiqueta de las tablas que el informe realmente inserta.
+    insertadas = set(re.findall(r"\\inputtable\{([^}]+)\}", tex))
+    referidas = set(re.findall(r"\\ref\{([^}]+)\}", tex))
+
+    faltantes = sorted(
+        r
+        for r in referidas
+        if r not in labels
+        and not any(t.replace("tab_", "").replace("_", "-") in r for t in insertadas)
+    )
+    assert not faltantes, f"referencias sin etiqueta: {faltantes}"
+
+
+def test_toda_figura_generada_se_usa_en_el_informe():
+    """Una figura que el pipeline produce y nadie muestra es trabajo desperdiciado."""
+    from src.config import PROJECT_ROOT
+
+    tex = _tex()
+    figs = sorted(p.stem for p in (PROJECT_ROOT / "report" / "figures").glob("*.pdf"))
+    sin_usar = [f for f in figs if f not in tex]
+    assert not sin_usar, f"figuras generadas pero no incluidas: {sin_usar}"
 
 
 # ----------------------------------------------------------------- configuración

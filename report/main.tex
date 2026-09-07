@@ -54,25 +54,26 @@ brechas y optimización de cobertura}
 \maketitle
 
 % =============================================================== 1. RESUMEN
+% El enunciado limita el resumen a menos de 150 palabras. La prueba
+% test_el_resumen_no_excede_150_palabras lo verifica en cada corrida de CI, así
+% que ampliar este bloque rompe la suite a propósito.
 \begin{abstract}
 \noindent
-Se mide el tiempo de viaje por carretera desde \num{5000} puntos de demanda
-poblacional hasta el establecimiento de salud resolutivo más cercano
-(categoría II-1 o superior, operativo) en los 25 departamentos del Perú,
-ruteando sobre la red vial de OpenStreetMap con OSRM. Los puntos representan
-\kpiPoblacionTotal{} habitantes mediante un diseño muestral con pesos. El
-tiempo mediano ponderado por población es de \kpiTiempoMediano{} minutos y el
-percentil 90 llega a \kpiTiempoPnoventa{} minutos. El \kpiShareHasta30\,\% de
-la población está a 30 minutos o menos, el \kpiShareHasta60\,\% a una hora, y
-\kpiPobMas120{} personas (\kpiShareMas120\,\%) viven a más de dos horas. El
-Gini del tiempo de acceso es \kpiGini{}. La población rural tarda
-\kpiTiempoMedioRural{} minutos en promedio frente a
-\kpiTiempoMedioUrbano{} minutos de la urbana. Un análisis con distancia en
-línea recta declararía cubierta dentro de una hora a \kpiPobReclasificada{}
-personas que no lo están, y elegiría un establecimiento más cercano distinto en
-el \kpiShareCambiaCercano\,\% de los casos. Ascender
-\kpiMclpPresupuesto{} establecimientos I-3/I-4 seleccionados por cobertura
-máxima incorporaría \kpiMclpGanancia{} habitantes al umbral de una hora.
+Se mide el tiempo de viaje por carretera desde \num{5000} puntos de demanda, que
+representan \kpiPoblacionTotal{} habitantes mediante un diseño muestral con
+pesos, hasta el establecimiento de salud resolutivo más cercano (categoría II-1
+o superior, operativo) en los 25 departamentos del Perú, ruteando sobre
+OpenStreetMap con OSRM. El tiempo mediano ponderado es \kpiTiempoMediano{}
+minutos y el percentil 90, \kpiTiempoPnoventa{}. El \kpiShareHasta30\,\% de la
+población está a 30 minutos o menos y el \kpiShareHasta60\,\% a una hora;
+\kpiPobMas120{} personas (\kpiShareMas120\,\%) viven a más de dos horas. El Gini
+del acceso es \kpiGini{}. La población rural tarda \kpiTiempoMedioRural{}
+minutos frente a \kpiTiempoMedioUrbano{} de la urbana. Un análisis en línea
+recta declararía cubierta dentro de una hora a \kpiPobReclasificada{} personas
+que no lo están y elegiría otro establecimiento en el
+\kpiShareCambiaCercano\,\% de los casos. Ascender \kpiMclpPresupuesto{}
+establecimientos I-3/I-4 por cobertura máxima incorporaría \kpiMclpGanancia{}
+habitantes al umbral de una hora.
 \end{abstract}
 
 % ========================================================== 2. INTRODUCCIÓN
@@ -224,6 +225,8 @@ es \texttt{CONDICION}. En consecuencia, \textbf{RENIPRESS publicado no permite
 identificar cierres}, y la oferta medida es un límite superior.
 \end{description}
 
+\inputtable{tab_calidad_datos}
+
 \subsection{Diseño muestral de los puntos de demanda}
 
 El análisis está limitado a \num{5000} puntos ruteables y el universo nacional
@@ -298,6 +301,8 @@ a más de \SI{20}{\km} de cualquier vía, \textbf{no se imputa}: se marca como
 imputar nada dejaría distritos enteros fuera de los agregados y sesgaría la
 cobertura al alza; imputar un tiempo de auto a un punto que no tiene carretera
 a \SI{20}{\km} inventaría infraestructura inexistente.
+
+\inputtable{tab_snapping}
 
 \subsection{Métricas}
 
@@ -397,6 +402,16 @@ porque la altitud correlaciona con pobreza y dispersión del poblamiento.
 \subsection{Contraste multimodal}
 
 \inputtable{tab_multimodal}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.86\textwidth]{fig8_multimodal}
+\caption{Distribución del tiempo al establecimiento resolutivo más cercano por
+modo de transporte. Los perfiles a pie y en bicicleta se calculan sobre una
+submuestra que privilegia los puntos urbanos, porque es donde el supuesto de
+desplazamiento no motorizado es realista.}
+\label{fig:multimodal}
+\end{figure}
 
 \subsection{Evolución en el tiempo}
 
