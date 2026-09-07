@@ -1,0 +1,20 @@
+2026-09-06 22:58:32,013 | INFO    | hw02.metrics           | variable 'altitude_m' omitida: 13 distritos con dato, mínimo 30
+2026-09-06 22:58:32,014 | INFO    | hw02.metrics           | variable 'rural_share' omitida: 13 distritos con dato, mínimo 30
+2026-09-06 22:58:32,015 | INFO    | hw02.metrics           | variable 'population' omitida: 13 distritos con dato, mínimo 30
+2026-09-06 22:58:32,016 | INFO    | hw02.metrics           | variable 'population_density' omitida: 13 distritos con dato, mínimo 30
+2026-09-06 22:58:32,017 | INFO    | hw02.metrics           | variable 'settlement_dispersion' omitida: 13 distritos con dato, mínimo 30
+2026-09-06 22:58:32,017 | INFO    | hw02.metrics           | variable 'ccpp_count' omitida: 13 distritos con dato, mínimo 30
+2026-09-06 22:58:32,020 | INFO    | hw02.metrics           | variable 'primary_care_per_10k' omitida: 13 distritos con dato, mínimo 30
+2026-09-06 22:58:32,020 | WARNING | hw02.metrics           | análisis cruzado omitido: ninguna variable alcanza 30 distritos
+2026-09-06 22:58:32,049 | INFO    | hw02.metrics           | escrito access_points_dev.csv (198 filas)
+2026-09-06 22:58:32,052 | INFO    | hw02.metrics           | escrito metrics_district_dev.csv (13 filas)
+2026-09-06 22:58:32,054 | INFO    | hw02.metrics           | escrito metrics_province_dev.csv (3 filas)
+2026-09-06 22:58:32,055 | INFO    | hw02.metrics           | escrito metrics_department_dev.csv (1 filas)
+2026-09-06 22:58:32,056 | INFO    | hw02.metrics           | escrito metrics_natural_region_dev.csv (1 filas)
+2026-09-06 22:58:32,057 | INFO    | hw02.metrics           | escrito metrics_national_dev.csv (1 filas)
+2026-09-06 22:58:32,059 | INFO    | hw02.metrics           | escrito urban_rural_dev.csv (2 filas)
+2026-09-06 22:58:32,060 | INFO    | hw02.metrics           | escrito worst_districts_dev.csv (13 filas)
+2026-09-06 22:58:32,066 | INFO    | hw02.metrics           | escrito inequality_dev.csv (1 filas)
+2026-09-06 22:58:32,067 | INFO    | hw02.metrics           | escrito lorenz_dev.csv (101 filas)
+2026-09-06 22:58:32,069 | INFO    | hw02.metrics           | escrito district_context_dev.csv (13 filas)
+2026-09-06 22:58:32,071 | INFO    | hw02.metrics           | escrito temporal_dev.csv (4 filas)

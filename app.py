@@ -27,6 +27,7 @@ import streamlit as st
 from src.config import CFG
 from src.metrics import gini, weighted_mean, weighted_quantile
 from src.models import recompute_coverage
+from src.utils import read_output_csv
 
 # --- paleta de referencia (la misma del informe) ----------------------------
 INK, INK_2, MUTED = "#0b0b0b", "#52514e", "#898781"
@@ -53,7 +54,9 @@ st.set_page_config(
 def load_all(scope: str) -> dict[str, object]:
     def csv(name: str) -> pd.DataFrame:
         path = OUT / f"{name}_{scope}.csv"
-        return pd.read_csv(path) if path.exists() else pd.DataFrame()
+        # read_output_csv preserva los ceros a la izquierda de ubigeo y
+        # COD_IPRESS, que pandas convertiría en enteros y rompería los cruces.
+        return read_output_csv(path) if path.exists() else pd.DataFrame()
 
     data: dict[str, object] = {
         "access": csv("access_points"),

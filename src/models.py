@@ -30,7 +30,7 @@ import numpy as np
 import pandas as pd
 
 from .config import CFG
-from .utils import DecisionLog, get_logger
+from .utils import DecisionLog, get_logger, read_output_csv
 
 LOG = get_logger("models")
 
@@ -41,7 +41,7 @@ def load_model_inputs() -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, pd.Da
     proc, out = CFG.path("processed"), CFG.path("outputs")
     profile = CFG["routing"]["primary_profile"]
 
-    access = pd.read_csv(out / f"access_points_{CFG.mode}.csv")
+    access = read_output_csv(out / f"access_points_{CFG.mode}.csv")
     od = pd.read_parquet(
         out / f"od_{profile}_matrix_{CFG.mode}.parquet"
     ).set_index("demand_id")

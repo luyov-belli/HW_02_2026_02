@@ -31,7 +31,7 @@ from matplotlib.lines import Line2D  # noqa: E402
 from matplotlib.patches import Patch  # noqa: E402
 
 from .config import CFG  # noqa: E402
-from .utils import get_logger  # noqa: E402
+from .utils import get_logger, read_output_csv  # noqa: E402
 
 LOG = get_logger("export")
 
@@ -48,6 +48,7 @@ CAT = ["#2a78d6", "#eb6834", "#1baf7a"]
 # Rampa secuencial ordinal (azul). El paso más claro no baja de 250 para que
 # siga teniendo contraste sobre el fondo claro.
 SEQ = ["#86b6ef", "#3987e5", "#256abf", "#0d366b"]
+NODATA = "#f0efec"
 CRITICAL = "#d03b3b"
 
 
@@ -62,7 +63,9 @@ def _style() -> None:
             "axes.labelcolor": INK_2,
             "axes.edgecolor": AXIS,
             "axes.titlesize": 10.5,
-            "axes.titleweight": "semibold",
+            # "semibold" no es un peso que matplotlib resuelva con DejaVu Sans:
+            # cae a 700 y emite un aviso en cada figura. Se usa 700 directamente.
+            "axes.titleweight": "bold",
             "axes.titlecolor": INK,
             "axes.grid": True,
             "axes.axisbelow": True,
@@ -97,8 +100,9 @@ def _save(fig: "plt.Figure", name: str) -> None:
 
 
 def _read(name: str) -> pd.DataFrame | None:
+    """Lee un CSV de salida preservando los ceros a la izquierda de los ubigeo."""
     path = CFG.path("outputs") / f"{name}_{CFG.mode}.csv"
-    return pd.read_csv(path) if path.exists() else None
+    return read_output_csv(path) if path.exists() else None
 
 
 # ------------------------------------------------------------------- figuras
@@ -121,9 +125,11 @@ def fig_choropleth(bands: list[int]) -> None:
     gdf["clase"] = pd.cut(gdf["t_medio_min"], bins=edges, labels=labels, right=True)
 
     fig, ax = plt.subplots(figsize=(6.0, 7.6))
-    gdf[gdf["clase"].isna()].plot(
-        ax=ax, color="#f0efec", edgecolor="white", linewidth=0.12
-    )
+    # geopandas deriva el aspecto de la extensión de los datos, así que dibujar
+    # un subconjunto vacío produce un aspecto NaN y aborta.
+    nodata = gdf[gdf["clase"].isna()]
+    if not nodata.empty:
+        nodata.plot(ax=ax, color=NODATA, edgecolor="white", linewidth=0.12)
     for label, color in zip(labels, SEQ, strict=True):
         sub = gdf[gdf["clase"] == label]
         if not sub.empty:
@@ -139,10 +145,20 @@ def fig_choropleth(bands: list[int]) -> None:
         Patch(facecolor=c, edgecolor="white", label=f"{lab} min")
         for lab, c in zip(labels, SEQ, strict=True)
     ]
-    if gdf["clase"].isna().any():
-        handles.append(Patch(facecolor="#f0efec", edgecolor="white", label="sin dato"))
-    ax.legend(handles=handles, loc="lower left", title="Minutos", title_fontsize=8.5,
-              fontsize=8.5, labelcolor=INK_2)
+    if not nodata.empty:
+        handles.append(Patch(facecolor=NODATA, edgecolor="white", label="sin dato"))
+    # La leyenda va fuera del eje: dentro del mapa taparía territorio, y qué
+    # esquina queda libre depende del alcance de la corrida.
+    ax.legend(
+        handles=handles,
+        loc="upper center",
+        bbox_to_anchor=(0.5, 0.0),
+        ncol=min(len(handles), 3),
+        title="Minutos en auto",
+        title_fontsize=8.5,
+        fontsize=8.5,
+        labelcolor=INK_2,
+    )
     _save(fig, "fig1_choropleth_acceso")
 
 
@@ -200,7 +216,7 @@ def fig_lorenz() -> None:
     if ineq is not None and not ineq.empty:
         g = float(ineq.iloc[0]["gini_tiempo_acceso"])
         ax.annotate(f"Gini = {g:.3f}", xy=(0.05, 0.88), fontsize=11, color=INK,
-                    fontweight="semibold")
+                    fontweight="bold")
     ax.set_xlim(0, 1)
     ax.set_ylim(0, 1)
     ax.set_xlabel("Proporción acumulada de población\n(ordenada de menor a mayor tiempo)")

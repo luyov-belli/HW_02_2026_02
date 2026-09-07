@@ -1,0 +1,23 @@
+{
+  "environment": {
+    "timestamp_utc": "2026-09-07T03:57:47+00:00",
+    "python": "3.14.6",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "pandas": "3.0.5",
+    "scope_mode": "dev"
+  },
+  "counters": {},
+  "decisions": [
+    {
+      "stage": "routing_combine",
+      "dataset": "cross_mode",
+      "check": "análisis multimodal",
+      "n_affected": 41,
+      "n_total": 396,
+      "share_affected": 0.103535,
+      "action": "orígenes cuyo establecimiento más cercano cambia según el modo",
+      "justification": "si el establecimiento más cercano en auto no es el más cercano a pie, la cobertura declarada depende del supuesto de motorización, que en zonas rurales no se cumple",
+      "timestamp_utc": "2026-09-07T03:57:47+00:00"
+    }
+  ]
+}

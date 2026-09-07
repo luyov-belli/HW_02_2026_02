@@ -157,7 +157,13 @@ def fetch_source(key: str, spec: dict[str, Any], force: bool = False) -> dict[st
             "descarga de '%s' fallida (%s); se usa la copia versionada %s",
             key, str(err)[:120], src.name,
         )
+        # Algunas fuentes se respaldan en otro formato que el original (los
+        # límites vienen como .shp.zip y se respaldan como GeoPackage, que ocupa
+        # la mitad), así que el destino puede ser distinto del nombre publicado.
+        target = spec.get("fallback_target")
+        dest = (PROJECT_ROOT / target) if target else dest
         _restore_fallback(src, dest)
+        entry["path"] = str(dest.relative_to(PROJECT_ROOT))
         entry.update(
             bytes=dest.stat().st_size,
             sha256=file_sha256(dest),
@@ -200,16 +206,26 @@ def extract_zip(key: str, members_contain: str | None = None) -> Path:
     return outdir
 
 
-def find_layer(folder: Path, pattern: str, suffix: str = ".shp") -> Path:
-    """Busca recursivamente una capa cuyo nombre contenga ``pattern``."""
-    matches = sorted(
-        p for p in folder.rglob(f"*{suffix}") if pattern.lower() in p.name.lower()
-    )
-    if not matches:
-        raise FileNotFoundError(
-            f"no se encontró ninguna capa '{pattern}{suffix}' en {folder}"
+def find_layer(
+    folder: Path, pattern: str, suffixes: str | tuple[str, ...] = (".shp", ".gpkg")
+) -> Path:
+    """Busca recursivamente una capa cuyo nombre contenga ``pattern``.
+
+    Se aceptan varios formatos y se devuelve el primero que exista, en el orden
+    dado: la fuente publicada es un shapefile, pero el respaldo versionado es un
+    GeoPackage, que pesa la mitad.
+    """
+    if isinstance(suffixes, str):
+        suffixes = (suffixes,)
+    for suffix in suffixes:
+        matches = sorted(
+            p for p in folder.rglob(f"*{suffix}") if pattern.lower() in p.name.lower()
         )
-    return matches[0]
+        if matches:
+            return matches[0]
+    raise FileNotFoundError(
+        f"no se encontró ninguna capa '{pattern}' con extensión {suffixes} en {folder}"
+    )
 
 
 def fetch_elevation(
@@ -367,7 +383,13 @@ def main(argv: list[str] | None = None) -> int:
         )
 
     if "boundaries" in keys:
-        extract_zip("boundaries")
+        # Si se usó el respaldo, no hay zip que extraer: ya es un GeoPackage.
+        used_fallback = any(
+            e["key"] == "boundaries" and e["origin"] == "fallback_repositorio"
+            for e in manifest["sources"]
+        )
+        if not used_fallback:
+            extract_zip("boundaries")
     if "osm_shp" in keys:
         extract_zip("osm_shp", members_contain="roads")
 

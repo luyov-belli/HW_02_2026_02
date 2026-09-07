@@ -386,13 +386,18 @@ def cross_analysis(
         on="ubigeo", how="left", suffixes=("", "_ctx"),
     )
 
+    min_n = int(CFG.get("metrics", "cross_min_districts", default=30))
     rows = []
     for var in variables:
         if var not in df.columns:
             LOG.warning("variable de contexto ausente: %s", var)
             continue
         pair = df[[var, "t_medio_min", "poblacion"]].dropna()
-        if len(pair) < 30:
+        if len(pair) < min_n:
+            LOG.info(
+                "variable '%s' omitida: %d distritos con dato, mínimo %d",
+                var, len(pair), min_n,
+            )
             continue
         rho = float(pair[var].corr(pair["t_medio_min"], method="spearman"))
         q = pair[var].quantile([0.2, 0.8])
@@ -413,11 +418,36 @@ def cross_analysis(
                 "interpretacion": _interpret(var, rho),
             }
         )
+    if not rows:
+        # Ocurre en alcances pequeños (modo dev): con una decena de distritos una
+        # correlación no significa nada, así que se omite en lugar de reportarse.
+        LOG.warning(
+            "análisis cruzado omitido: ninguna variable alcanza %d distritos", min_n
+        )
+        dlog.record(
+            check="análisis cruzado acceso × contexto",
+            dataset="cross_analysis",
+            n_affected=0,
+            n_total=len(df),
+            action="omitido",
+            justification=(
+                f"ninguna variable de contexto tiene datos en al menos {min_n} "
+                "distritos; una correlación sobre menos casos no sería informativa"
+            ),
+        )
+        return pd.DataFrame(
+            columns=[
+                "variable", "n_distritos", "spearman_rho",
+                "t_medio_quintil_inferior", "t_medio_quintil_superior",
+                "reportable", "interpretacion",
+            ]
+        )
+
     rep = pd.DataFrame(rows).sort_values("spearman_rho", key=abs, ascending=False)
     dlog.record(
         check="análisis cruzado acceso × contexto",
         dataset="cross_analysis",
-        n_affected=int(rep["reportable"].sum()) if not rep.empty else 0,
+        n_affected=int(rep["reportable"].sum()),
         n_total=len(rep),
         action=f"asociaciones con |rho| ≥ {thr} marcadas como reportables",
         justification=(

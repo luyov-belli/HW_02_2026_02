@@ -1,0 +1,3 @@
+profile,conjunto,n_puntos,n_snap_desconocido,snap_medio_m,snap_mediana_m,snap_p95_m,snap_max_m,n_sobre_limite,n_sin_acceso_vial
+bike,demanda,198,0,455.1832042197988,189.1890106201172,1676.559735107414,4394.712890625,9,0
+bike,establecimientos,3,0,31.01843007405599,19.881940841674805,54.08632335662841,57.886810302734375,0,0

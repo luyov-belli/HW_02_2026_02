@@ -171,7 +171,54 @@ def read_csv_robust(
     )
 
 
+#: Columnas identificadoras y su ancho con ceros a la izquierda. Al pasar por
+#: CSV, pandas las interpreta como enteros y "010109" vuelve como 10109, lo que
+#: rompe silenciosamente todos los cruces. Cualquier lectura de un CSV de salida
+#: debe pasar por :func:`read_output_csv`.
+ID_COLUMNS: dict[str, int] = {
+    "ubigeo": 6,
+    "UBIGEO": 6,
+    "COD_IPRESS": 8,
+    "ccpp_code": 10,
+    "adm3_pcode": 8,
+}
+
+
+def coerce_id_columns(df: pd.DataFrame) -> pd.DataFrame:
+    """Devuelve ``df`` con las columnas identificadoras como texto con relleno."""
+    for col, width in ID_COLUMNS.items():
+        if col in df.columns:
+            df[col] = (
+                df[col]
+                .astype("string")
+                .str.replace(r"\.0$", "", regex=True)
+                .str.strip()
+                .str.zfill(width)
+            )
+    return df
+
+
+def read_output_csv(path: str | Path, **kwargs: Any) -> pd.DataFrame:
+    """Lee un CSV de ``data/outputs`` preservando los identificadores."""
+    return coerce_id_columns(pd.read_csv(path, **kwargs))
+
+
 def mojibake_score(series: pd.Series) -> int:
     """Cuenta valores con síntomas típicos de doble codificación."""
     pattern = r"Ã.|Â.|ï¿½|�"
     return int(series.astype("string").str.contains(pattern, regex=True, na=False).sum())
+
+
+def lossy_ascii_score(series: pd.Series) -> int:
+    """Cuenta valores donde un carácter no ASCII fue reemplazado por ``?``.
+
+    Es un daño distinto del mojibake y no se detecta con el patrón anterior: la
+    doble codificación deja rastros recuperables (``Ã±`` → ``ñ``), mientras que
+    la sustitución por ``?`` es **irreversible**. Ocurre cuando el sistema de
+    origen exporta a una codificación que no puede representar el carácter.
+
+    Se cuenta un ``?`` como pérdida solo si está rodeado de letras, para no
+    contar signos de interrogación legítimos.
+    """
+    s = series.astype("string")
+    return int(s.str.contains(r"[A-Za-z]\?[A-Za-z]|^\?[A-Za-z]", regex=True, na=False).sum())

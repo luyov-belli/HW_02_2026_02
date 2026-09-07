@@ -66,14 +66,17 @@ jobs:
             echo '```'
           } >> "$GITHUB_STEP_SUMMARY"
 
+      # Los logs de Actions requieren sesión iniciada, pero las *anotaciones* son
+      # públicas. run_step vuelca la cola del error a una anotación para que el
+      # fallo sea diagnosticable sin permisos sobre el repositorio.
       - name: Fase 1a — descarga de fuentes tabulares y límites
-        run: python -m src.acquisition
+        run: bash scripts/run_step.sh "Fase 1a" python -m src.acquisition
 
       - name: Fase 1b — validación y muestreo
-        run: python -m src.validation
+        run: bash scripts/run_step.sh "Fase 1b" python -m src.validation
 
       - name: Fase 1c — descarga de la red vial (OSM PBF)
-        run: python -m src.acquisition --only osm_pbf
+        run: bash scripts/run_step.sh "Fase 1c" python -m src.acquisition --only osm_pbf
 
       - name: Resumen de la Fase 1
         if: always()
@@ -90,18 +93,18 @@ jobs:
           } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Perfil car (principal)
-        run: bash scripts/osrm_build_and_route.sh car
+        run: bash scripts/run_step.sh "OSRM car" bash scripts/osrm_build_and_route.sh car
 
       - name: Perfil foot
         continue-on-error: true
-        run: bash scripts/osrm_build_and_route.sh foot
+        run: bash scripts/run_step.sh "OSRM foot" bash scripts/osrm_build_and_route.sh foot
 
       - name: Perfil bike
         continue-on-error: true
-        run: bash scripts/osrm_build_and_route.sh bike
+        run: bash scripts/run_step.sh "OSRM bike" bash scripts/osrm_build_and_route.sh bike
 
       - name: Análisis multimodal
-        run: python -m src.routing --stage combine
+        run: bash scripts/run_step.sh "Multimodal" python -m src.routing --stage combine
 
       - name: Resumen de la Fase 2
         if: always()

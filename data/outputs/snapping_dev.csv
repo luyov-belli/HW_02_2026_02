@@ -1,0 +1,3 @@
+profile,conjunto,n_puntos,n_snap_desconocido,snap_medio_m,snap_mediana_m,snap_p95_m,snap_max_m,n_sobre_limite,n_sin_acceso_vial
+car,demanda,198,0,455.49256638565447,189.17472076416016,1676.5119873046797,4394.71337890625,9,0
+car,establecimientos,3,0,31.019095420837402,19.86623764038086,54.086593246459955,57.88885498046875,0,0

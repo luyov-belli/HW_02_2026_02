@@ -269,6 +269,9 @@ cross_variables = [
 ]
 # Umbral de |rho| a partir del cual se comenta una asociación en el informe.
 correlation_report_threshold = 0.15
+# Mínimo de distritos con dato para que una variable entre al análisis cruzado.
+# Por debajo, una correlación no es informativa y se omite en lugar de reportarse.
+cross_min_districts = 30
 
 [innovation]
 run_2sfca            = true
@@ -304,6 +307,12 @@ note           = "El encabezado del archivo tiene invertidas las etiquetas de la
 [sources.boundaries]
 url       = "https://data.humdata.org/dataset/54fc7f4d-f4c0-4892-91f6-2fe7c1ecf363/resource/61faa8d6-fbfa-4d44-a94d-8f3b0241277a/download/per_admin_boundaries.shp.zip"
 filename  = "per_admin_boundaries.shp.zip"
+# HDX está detrás de Cloudflare y rechaza peticiones desde algunas redes (devuelve
+# 403 a clientes no navegador). El respaldo versionado es la capa distrital en
+# GeoPackage, que pesa la mitad que el shapefile y conserva la geometría completa
+# (no se simplifica: la verificación punto-en-polígono necesita el borde real).
+fallback_path   = "data/raw_cache/per_admin3.gpkg.gz"
+fallback_target = "data/raw/boundaries/per_admin3.gpkg"
 district_layer_pattern = "admin3"
 # Los pcode de HDX son "PE" + UBIGEO del INEI (PE030101 -> distrito 030101).
 pcode_prefix = "PE"

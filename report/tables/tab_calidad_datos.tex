@@ -1,0 +1,21 @@
+\begin{table}[htbp]
+\caption{Reporte de calidad de datos: verificaciones que detectaron al menos un registro afectado. El detalle con la acción tomada y su justificación está en \texttt{data/outputs/data\_quality\_report.json}.}
+\label{tab:calidad-datos}
+\begin{tabular}{lrrr}
+\toprule
+Fuente & Verificación & Registros & \textbackslash \% del total \\
+\midrule
+boundaries & carga de polígonos distritales & 13 & 0.69 \\
+renipress & filtro de alcance geográfico & 26732 & 99.56 \\
+renipress & categorías sin dato válido & 28 & 23.73 \\
+renipress & coordenadas nulas, vacías o cero & 8 & 6.78 \\
+renipress & tasa de recuperación de coordenadas & 8 & 100.00 \\
+ccpp & orientación de las columnas de coordenadas & 99937 & 100.00 \\
+ccpp & clasificación urbano/rural & 361 & 0.36 \\
+ccpp & filtro de alcance geográfico & 99733 & 99.80 \\
+ccpp & punto fuera del polígono distrital declarado & 1 & 0.49 \\
+ccpp & centros poblados con población cero & 6 & 2.94 \\
+demand\_sample & muestreo de puntos de demanda & 198 & 100.00 \\
+\bottomrule
+\end{tabular}
+\end{table}

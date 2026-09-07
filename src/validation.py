@@ -35,7 +35,13 @@ import pandas as pd
 
 from .acquisition import find_layer
 from .config import CFG
-from .utils import DecisionLog, get_logger, mojibake_score, read_csv_robust
+from .utils import (
+    DecisionLog,
+    get_logger,
+    lossy_ascii_score,
+    mojibake_score,
+    read_csv_robust,
+)
 
 LOG = get_logger("validation")
 
@@ -72,10 +78,10 @@ def in_bbox(lon: pd.Series, lat: pd.Series) -> pd.Series:
 def load_districts(dlog: DecisionLog) -> gpd.GeoDataFrame:
     """Polígonos distritales, con UBIGEO derivado del pcode de HDX."""
     spec = CFG["sources"]["boundaries"]
-    shp = find_layer(
-        CFG.path("raw") / "boundaries", spec["district_layer_pattern"], ".shp"
+    layer = find_layer(
+        CFG.path("raw") / "boundaries", spec["district_layer_pattern"]
     )
-    gdf = gpd.read_file(shp)
+    gdf = gpd.read_file(layer)
     prefix = spec["pcode_prefix"]
     gdf["ubigeo"] = gdf["adm3_pcode"].astype("string").str.removeprefix(prefix)
     gdf["district"] = norm_name(gdf["adm3_name"])
@@ -141,6 +147,24 @@ def load_facilities(districts: gpd.GeoDataFrame, dlog: DecisionLog) -> gpd.GeoDa
             f"{moji} campos con síntomas de doble codificación"
         ),
         encoding_used=encoding,
+    )
+    lossy = lossy_ascii_score(df["NOMBRE"])
+    dlog.record(
+        check="pérdida de caracteres no ASCII en el origen",
+        dataset="renipress",
+        n_affected=lossy,
+        n_total=n0,
+        action="se reporta y no se repara",
+        justification=(
+            "el archivo publicado no contiene ni un solo byte de 'ñ' ni de vocal "
+            "acentuada en ninguna codificación: el sistema de origen exportó "
+            "reemplazando cada carácter no ASCII por '?', pérdida irreversible "
+            "(no es mojibake, que sí sería recuperable). Reconstruir 'SE?OR' como "
+            "'SEÑOR' es una inferencia y en casos como 'MAR?A' sería una "
+            "invención, así que no se repara. Sin impacto analítico: los nombres "
+            "son solo de presentación y ningún cruce los usa como clave —los "
+            "cruces van por COD_IPRESS y UBIGEO"
+        ),
     )
 
     for col in ("DEPARTAMENTO", "PROVINCIA", "DISTRITO", "NOMBRE", "INSTITUCION"):

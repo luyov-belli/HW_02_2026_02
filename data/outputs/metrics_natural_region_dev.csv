@@ -1,0 +1,2 @@
+natural_region,poblacion,n_puntos,poblacion_sin_ruta,t_medio_min,t_mediano_min,t_p90_min,km_medio_red,gini_tiempo,pob_hasta_30min,share_hasta_30min,share_banda_0_30min,pob_hasta_60min,share_hasta_60min,share_banda_30_60min,pob_hasta_120min,share_hasta_120min,share_banda_60_120min,share_mas_120min,pob_mas_120min
+costa,203316.0,198,0.0,10.177265896794882,4.196146329558022,22.516441838951803,,0.5949407839055276,191930.0,0.9439985047905723,0.9439985047905723,201436.0,0.9907533101182396,0.04675480532766729,203316.0,1.0,0.009246689881760362,0.0,0.0
