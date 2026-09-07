@@ -30,6 +30,14 @@ data/processed/*_dev.gpkg
 osrm/
 *.osrm*
 
+# Figuras y tablas del informe: las genera src/export.py y su contenido depende
+# del alcance de la corrida. Se ignoran aquí para que una corrida de prueba en el
+# alcance "dev" no las versione; los workflows las agregan con `git add -f`
+# después de generarlas con los datos nacionales, así que las que llegan al
+# repositorio son siempre las oficiales.
+report/figures/
+report/tables/
+
 # LaTeX
 report/*.aux
 report/*.log

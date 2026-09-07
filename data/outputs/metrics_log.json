@@ -1,6 +1,6 @@
 {
   "environment": {
-    "timestamp_utc": "2026-09-07T03:58:32+00:00",
+    "timestamp_utc": "2026-09-07T04:27:40+00:00",
     "python": "3.14.6",
     "platform": "Windows-11-10.0.26200-SP0",
     "pandas": "3.0.5",
@@ -21,7 +21,7 @@
       "share_affected": 1.0,
       "action": "SRTM 30 m consultado vía OpenTopoData y versionado en data/processed",
       "justification": "la altitud es uno de los dos proxies estándar de pobreza y aislamiento en el Perú; se cachea para que ni CI ni una segunda corrida golpeen la API",
-      "timestamp_utc": "2026-09-07T03:58:31+00:00"
+      "timestamp_utc": "2026-09-07T04:27:39+00:00"
     },
     {
       "stage": "metrics",
@@ -32,7 +32,7 @@
       "share_affected": 0.873737,
       "action": "media rural 24.6 min vs. urbana 8.5 min",
       "justification": "la clasificación es la del INEI que trae el propio listado de centros poblados (regla 'inei_classification'), no un umbral inventado; el umbral de población solo actúa como respaldo para los registros sin ese campo, y su uso está contado en el reporte de calidad",
-      "timestamp_utc": "2026-09-07T03:58:31+00:00",
+      "timestamp_utc": "2026-09-07T04:27:39+00:00",
       "ratio_rural_urbano": 2.908
     },
     {
@@ -44,7 +44,7 @@
       "share_affected": 1.0,
       "action": "construidas 7 variables distritales",
       "justification": "no se incluye pobreza monetaria ni población menor de 5 años a nivel distrital: el portal del INEI no respondió en la fecha de acceso y la versión vigente de las estadísticas de población de HDX solo llega a nivel departamental (verificado). Se usan en su lugar ruralidad y altitud, los dos proxies estándar en la literatura peruana, y la ausencia se declara en Limitaciones",
-      "timestamp_utc": "2026-09-07T03:58:32+00:00"
+      "timestamp_utc": "2026-09-07T04:27:40+00:00"
     },
     {
       "stage": "metrics",
@@ -55,7 +55,7 @@
       "share_affected": 0.0,
       "action": "omitido",
       "justification": "ninguna variable de contexto tiene datos en al menos 30 distritos; una correlación sobre menos casos no sería informativa",
-      "timestamp_utc": "2026-09-07T03:58:32+00:00"
+      "timestamp_utc": "2026-09-07T04:27:40+00:00"
     },
     {
       "stage": "metrics",
@@ -66,7 +66,7 @@
       "share_affected": 0.333333,
       "action": "1 establecimientos resolutivos nuevos entre 2010 y 2026; la cobertura a 60 min varía +0.00%",
       "justification": "serie reconstruida con INICIO_ACTIVIDAD, sin costo adicional de ruteo. Supone que ningún resolutivo cerró, porque RENIPRESS publicado no permite detectar cierres; por eso subestima la mejora",
-      "timestamp_utc": "2026-09-07T03:58:32+00:00"
+      "timestamp_utc": "2026-09-07T04:27:40+00:00"
     }
   ]
 }

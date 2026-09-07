@@ -709,20 +709,20 @@ def apply_fallback(
 
 
 def snapping_report(
-    res: TableResult,
-    demand: pd.DataFrame,
-    facilities: pd.DataFrame,
-    profile: str,
-    dlog: DecisionLog,
+    res: TableResult, profile: str, dlog: DecisionLog
 ) -> pd.DataFrame:
-    """Análisis de enganche a la red que exige la Fase 2."""
+    """Análisis de enganche a la red que exige la Fase 2.
+
+    Las distancias de enganche vienen dentro de la respuesta de ``/table`` de
+    OSRM, así que este reporte no cuesta peticiones adicionales.
+    """
     fb = CFG["routing"]["fallback"]
     limit = float(CFG["routing"]["snap_max_distance_m"])
 
     rows = []
-    for label, snap, frame, id_col in (
-        ("demanda", res.source_snap_m, demand, "demand_id"),
-        ("establecimientos", res.dest_snap_m, facilities, "COD_IPRESS"),
+    for label, snap in (
+        ("demanda", res.source_snap_m),
+        ("establecimientos", res.dest_snap_m),
     ):
         snap = np.asarray(snap, dtype="float64")
         finite = np.isfinite(snap)
@@ -803,7 +803,7 @@ def run_primary(
 
     res, _ = table_cached(backend, o_all, d_res, primary, dlog)
     dur, imputed = apply_fallback(res, o_all, d_res, dlog, primary)
-    out["snapping"] = snapping_report(res, demand, resolutive, primary, dlog)
+    out["snapping"] = snapping_report(res, primary, dlog)
 
     index = pd.Index(demand["demand_id"], name="demand_id")
     columns = pd.Index(resolutive["COD_IPRESS"], name="COD_IPRESS")
@@ -896,7 +896,7 @@ def run_secondary(
             index=pd.Index(sub["demand_id"], name="demand_id"),
             columns=pd.Index(dest["COD_IPRESS"], name="COD_IPRESS"),
         ),
-        f"snapping_{profile}": snapping_report(res, sub, dest, profile, dlog),
+        f"snapping_{profile}": snapping_report(res, profile, dlog),
     }
     dlog.record(
         check="restricción de destinos del perfil secundario",

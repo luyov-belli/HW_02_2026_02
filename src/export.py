@@ -233,20 +233,26 @@ def fig_access_vs_altitude() -> None:
     if metrics is None or ctx is None:
         return
     access = _read("access_points")
-    region = (
-        access.groupby("ubigeo")["natural_region"].agg(lambda s: s.mode().iloc[0])
-        if access is not None else None
-    )
     df = metrics.merge(
         ctx[["ubigeo", "altitude_m", "rural_share"]], on="ubigeo", how="left"
     )
-    if region is not None:
-        df = df.merge(region.rename("natural_region"), on="ubigeo", how="left")
+    if access is not None and "natural_region" in access.columns:
+        # reset_index para que 'ubigeo' sea columna: un merge con `on=` no mira
+        # el índice del operando derecho.
+        region = (
+            access.groupby("ubigeo")["natural_region"]
+            .agg(lambda s: s.mode().iloc[0])
+            .reset_index()
+        )
+        df = df.merge(region, on="ubigeo", how="left")
+    if "natural_region" not in df.columns:
+        LOG.warning("sin región natural: se omite fig4")
+        plt.close("all")
+        return
 
     fig, ax = plt.subplots(figsize=(6.4, 4.1))
-    regions = ["costa", "sierra", "selva"]
-    for reg, color in zip(regions, CAT, strict=True):
-        g = df[df.get("natural_region") == reg].dropna(subset=["altitude_m", "t_medio_min"])
+    for reg, color in zip(["costa", "sierra", "selva"], CAT, strict=True):
+        g = df[df["natural_region"] == reg].dropna(subset=["altitude_m", "t_medio_min"])
         if g.empty:
             continue
         ax.scatter(

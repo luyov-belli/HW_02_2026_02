@@ -131,14 +131,23 @@ def load_access(profile: str | None = None) -> pd.DataFrame:
 
     dpath = out / f"od_dist_{profile}_matrix_{CFG.mode}.parquet"
     if dpath.exists():
-        dist = pd.read_parquet(dpath).set_index("demand_id")
-        rows = np.arange(len(mat))
-        pos = mat.columns.get_indexer(df.set_index("demand_id").loc[mat.index, "nearest_facility"])
-        km = pd.Series(
-            dist.reindex(mat.index).to_numpy()[rows, pos], index=mat.index, name="km_red"
+        dist = pd.read_parquet(dpath).set_index("demand_id").reindex(mat.index)
+        nearest_aligned = nearest.reindex(mat.index)
+        pos = mat.columns.get_indexer(nearest_aligned)
+        # get_indexer devuelve -1 para las etiquetas que no encuentra, y eso
+        # incluye los orígenes cuya fila es toda NaN (sin ruta a ningún
+        # establecimiento), donde idxmin no puede devolver nada. Indexar con -1
+        # tomaría silenciosamente la última columna, así que se anulan.
+        valid = pos >= 0
+        km_values = np.full(len(mat), np.nan)
+        if valid.any():
+            km_values[valid] = dist.to_numpy()[np.flatnonzero(valid), pos[valid]]
+        df = df.merge(
+            pd.Series(km_values, index=mat.index, name="km_red"),
+            left_on="demand_id", right_index=True, how="left",
         )
-        df = df.merge(km, left_on="demand_id", right_index=True, how="left")
     else:
+        # El motor 'graph' no reporta distancia de red, solo tiempo.
         df["km_red"] = np.nan
 
     df["unreachable"] = df["t_min"].isna()

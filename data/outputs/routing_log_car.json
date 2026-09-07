@@ -1,6 +1,6 @@
 {
   "environment": {
-    "timestamp_utc": "2026-09-07T03:57:47+00:00",
+    "timestamp_utc": "2026-09-07T04:27:38+00:00",
     "python": "3.14.6",
     "platform": "Windows-11-10.0.26200-SP0",
     "pandas": "3.0.5",
@@ -21,7 +21,7 @@
       "share_affected": 1.0,
       "action": "leído de disco: table_graph_car_08019f843ca3435b.npz",
       "justification": "la segunda corrida no vuelve a consultar el motor de ruteo; la clave de caché es el hash de (motor, perfil, coordenadas)",
-      "timestamp_utc": "2026-09-07T03:57:47+00:00"
+      "timestamp_utc": "2026-09-07T04:27:38+00:00"
     },
     {
       "stage": "routing_car",
@@ -32,7 +32,7 @@
       "share_affected": 0.0,
       "action": "0 pares imputados por línea recta penalizada (×1.35 a 25 km/h); 0 orígenes marcados sin acceso vial",
       "justification": "no imputar dejaría distritos enteros fuera de los agregados y sesgaría la cobertura al alza; imputar a un origen que está a más de 20 km de cualquier vía inventaría infraestructura inexistente, así que ese caso se reporta por separado en lugar de rellenarse",
-      "timestamp_utc": "2026-09-07T03:57:47+00:00"
+      "timestamp_utc": "2026-09-07T04:27:38+00:00"
     },
     {
       "stage": "routing_car",
@@ -43,7 +43,7 @@
       "share_affected": 0.044776,
       "action": "puntos enganchados a más de 2000 m de su coordenada declarada",
       "justification": "un enganche largo significa que el punto se está ruteando desde una vía que no es la suya; se reporta la distribución completa (media, mediana, p95, máximo) en lugar de un solo promedio",
-      "timestamp_utc": "2026-09-07T03:57:47+00:00",
+      "timestamp_utc": "2026-09-07T04:27:38+00:00",
       "snap_mean_demand_m": 455.5
     },
     {
@@ -55,7 +55,7 @@
       "share_affected": 1.0,
       "action": "leído de disco: table_graph_car_cdd517adeec6e7c8.npz",
       "justification": "la segunda corrida no vuelve a consultar el motor de ruteo; la clave de caché es el hash de (motor, perfil, coordenadas)",
-      "timestamp_utc": "2026-09-07T03:57:47+00:00"
+      "timestamp_utc": "2026-09-07T04:27:38+00:00"
     },
     {
       "stage": "routing_car",
@@ -66,7 +66,7 @@
       "share_affected": 0.0,
       "action": "0 pares imputados por línea recta penalizada (×1.35 a 25 km/h); 0 orígenes marcados sin acceso vial",
       "justification": "no imputar dejaría distritos enteros fuera de los agregados y sesgaría la cobertura al alza; imputar a un origen que está a más de 20 km de cualquier vía inventaría infraestructura inexistente, así que ese caso se reporta por separado en lugar de rellenarse",
-      "timestamp_utc": "2026-09-07T03:57:47+00:00"
+      "timestamp_utc": "2026-09-07T04:27:38+00:00"
     },
     {
       "stage": "routing_car",
@@ -77,7 +77,7 @@
       "share_affected": 0.322581,
       "action": "se conservan las 10 candidatas más cercanas por origen",
       "justification": "para recalcular cobertura bajo cualquier umbral ≤ el tiempo de la 10.ª candidata, el mínimo sobre el conjunto ascendido es idéntico al que daría la matriz completa; guardar 26 millones de pares en el repositorio no aportaría información utilizable",
-      "timestamp_utc": "2026-09-07T03:57:47+00:00"
+      "timestamp_utc": "2026-09-07T04:27:38+00:00"
     },
     {
       "stage": "routing_car",
@@ -88,7 +88,7 @@
       "share_affected": 0.338384,
       "action": "orígenes en los que Haversine elige otro establecimiento como el más cercano",
       "justification": "es la evidencia de por qué el enunciado prohíbe Haversine. Índice de desvío en distancia (mediana) = nan; con una velocidad supuesta de 40 km/h, 4 habitantes que el análisis naíf declararía dentro de 60 minutos están en realidad fuera",
-      "timestamp_utc": "2026-09-07T03:57:47+00:00"
+      "timestamp_utc": "2026-09-07T04:27:38+00:00"
     }
   ]
 }
