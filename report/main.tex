@@ -295,12 +295,12 @@ análisis de la tabla~\ref{tab:snapping} no cuesta peticiones adicionales.
 
 Los pares sin ruta se tratan con una política explícita en tres pasos:
 reintento con radio de enganche ampliado; imputación por distancia en línea
-recta penalizada ($\times 1{,}35$ a \SI{25}{\km\per\hour}); y, si el origen está
-a más de \SI{20}{\km} de cualquier vía, \textbf{no se imputa}: se marca como
+recta penalizada ($\times 1{,}35$ a \SI{25}{\kilo\metre\per\hour}); y, si el origen está
+a más de \SI{20}{\kilo\metre} de cualquier vía, \textbf{no se imputa}: se marca como
 «sin acceso vial» y se reporta por separado. La asimetría es deliberada. No
 imputar nada dejaría distritos enteros fuera de los agregados y sesgaría la
 cobertura al alza; imputar un tiempo de auto a un punto que no tiene carretera
-a \SI{20}{\km} inventaría infraestructura inexistente.
+a \SI{20}{\kilo\metre} inventaría infraestructura inexistente.
 
 \inputtable{tab_snapping}
 
@@ -514,7 +514,7 @@ transporte real es fluvial y, para emergencias, aéreo. Un tiempo de auto de sei
 horas hacia un centro poblado del Bajo Amazonas no es «seis horas»: es
 «inaccesible por carretera», y el viaje real puede ser más corto en lancha o
 mucho más largo en época de estiaje. El pipeline marca estos puntos como «sin
-acceso vial» cuando están a más de \SI{20}{\km} de cualquier vía, pero no modela
+acceso vial» cuando están a más de \SI{20}{\kilo\metre} de cualquier vía, pero no modela
 la red fluvial. Se decidió declararlo como limitación en lugar de modelarlo a
 medias, porque un modelo fluvial sin datos de embarcaderos, caudales
 estacionales y frecuencias de servicio produciría cifras con apariencia de

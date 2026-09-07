@@ -136,23 +136,9 @@ jobs:
           root_file: main.tex
           working_directory: report
 
-      # El log de pdflatex no es accesible sin sesión iniciada, y el error real de
-      # LaTeX está siempre en las líneas que empiezan con "!". Se publican como
-      # anotación, que sí es pública.
       - name: Diagnóstico de LaTeX
         if: ${{ always() && steps.latex.outcome == 'failure' }}
-        run: |
-          {
-            echo "## ❌ La compilación del informe falló"
-            echo '```'
-            grep -n -A4 '^!' report/main.log 2>/dev/null | head -n 80 \
-              || tail -n 60 report/main.log 2>/dev/null \
-              || echo "(no se generó report/main.log)"
-            echo '```'
-          } >> "$GITHUB_STEP_SUMMARY"
-          ERR="$(grep -m3 -A2 '^!' report/main.log 2>/dev/null \
-            | tr '\n' ' ' | tr -s ' ' | tail -c 900)"
-          echo "::error title=LaTeX::${ERR:-sin detalle en report/main.log}"
+        run: bash scripts/latex_diag.sh
 
       - name: Commit del informe compilado
         if: ${{ always() && steps.latex.outcome == 'success' }}
@@ -207,3 +193,16 @@ jobs:
           bash scripts/commit_outputs.sh \
             "ci: rescate de artefactos (alcance ${HW02_SCOPE}, job ${{ job.status }})" \
             data/outputs data/processed logs report/figures report/tables
+
+      # `continue-on-error` en el paso de LaTeX evita perder el ruteo, pero deja
+      # el job en verde aunque no haya PDF. El PDF compilado es un entregable
+      # obligatorio, así que se falla aquí, al final: los datos ya están
+      # commiteados y el rojo señala lo único que quedó pendiente.
+      - name: Exigir el informe compilado
+        if: ${{ !cancelled() }}
+        run: |
+          if [ ! -f report/main.pdf ]; then
+            echo "::error title=Informe::no se generó report/main.pdf; ver el diagnóstico de LaTeX"
+            exit 1
+          fi
+          echo "report/main.pdf presente ($(du -h report/main.pdf | cut -f1))"
