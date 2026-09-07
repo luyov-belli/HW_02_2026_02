@@ -77,3 +77,12 @@
 2026-09-06 23:29:57,436 | WARNING | hw02.validation        | centros poblados: encabezado consistente con el contenido (lat=Latitud, lon=Longitud)
 2026-09-06 23:31:19,435 | WARNING | hw02.validation        | centros poblados: encabezado invertido: se ignoran las etiquetas (lat=Longitud (coord Y), lon=Latitud (coord X))
 2026-09-06 23:31:19,438 | WARNING | hw02.validation        | centros poblados: encabezado consistente con el contenido (lat=Latitud, lon=Longitud)
+2026-09-07 13:53:04,627 | INFO    | hw02.validation        | RENIPRESS_2026_v6.csv leído con codificación utf-8 (26850 filas)
+2026-09-07 13:53:15,592 | INFO    | hw02.validation        | coordenadas recuperadas por centroide distrital: 7061 de 7067 faltantes
+2026-09-07 13:53:39,391 | INFO    | hw02.validation        | centros poblados: 99937 filas, columnas ['UBIGEO', 'IDDD', 'DEPARTAMENTO', 'IDPP', 'PROVINCIA', 'IDDIS', 'DISTRITO', 'IDCCPP', 'CCPP', 'CATEGORIA', 'CATEGORIA 2', 'CAPITAL', 'Viviendas', 'Habitantes', 'Latitud (coord X)', 'Longitud (coord Y)', 'CLASIFICACION INEI']
+2026-09-07 13:53:39,619 | WARNING | hw02.validation        | centros poblados: encabezado invertido: se ignoran las etiquetas (lat=Longitud (coord Y), lon=Latitud (coord X))
+2026-09-07 13:54:01,440 | INFO    | hw02.validation        | muestra: 5000 puntos (2003 certeza), pesos suman 27776818 de 27776818 hab.
+2026-09-07 13:54:01,772 | INFO    | hw02.validation        | escrito facilities_national.parquet (26850 filas, 52 columnas)
+2026-09-07 13:54:02,127 | INFO    | hw02.validation        | escrito demand_points_national.parquet (87504 filas, 34 columnas)
+2026-09-07 13:54:02,357 | INFO    | hw02.validation        | escrito demand_sample_national.parquet (5000 filas, 40 columnas)
+2026-09-07 13:54:02,611 | INFO    | hw02.validation        | Fase 1 completa. Archivos en /home/runner/work/HW_02_2026_02/HW_02_2026_02/data/processed

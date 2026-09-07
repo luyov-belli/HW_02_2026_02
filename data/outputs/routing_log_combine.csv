@@ -1,2 +1,2 @@
 stage,dataset,check,n_affected,n_total,share_affected,action,justification,timestamp_utc
-routing_combine,cross_mode,análisis multimodal,41,396,0.103535,orígenes cuyo establecimiento más cercano cambia según el modo,"si el establecimiento más cercano en auto no es el más cercano a pie, la cobertura declarada depende del supuesto de motorización, que en zonas rurales no se cumple",2026-09-07T03:57:47+00:00
+routing_combine,cross_mode,análisis multimodal,1060,2400,0.441667,orígenes cuyo establecimiento más cercano cambia según el modo,"si el establecimiento más cercano en auto no es el más cercano a pie, la cobertura declarada depende del supuesto de motorización, que en zonas rurales no se cumple",2026-09-07T14:19:44+00:00

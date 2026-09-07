@@ -1,10 +1,10 @@
 {
   "environment": {
-    "timestamp_utc": "2026-09-07T03:57:47+00:00",
-    "python": "3.14.6",
-    "platform": "Windows-11-10.0.26200-SP0",
+    "timestamp_utc": "2026-09-07T14:19:44+00:00",
+    "python": "3.12.14",
+    "platform": "Linux-6.17.0-1022-azure-x86_64-with-glibc2.39",
     "pandas": "3.0.5",
-    "scope_mode": "dev"
+    "scope_mode": "national"
   },
   "counters": {},
   "decisions": [
@@ -12,12 +12,12 @@
       "stage": "routing_combine",
       "dataset": "cross_mode",
       "check": "análisis multimodal",
-      "n_affected": 41,
-      "n_total": 396,
-      "share_affected": 0.103535,
+      "n_affected": 1060,
+      "n_total": 2400,
+      "share_affected": 0.441667,
       "action": "orígenes cuyo establecimiento más cercano cambia según el modo",
       "justification": "si el establecimiento más cercano en auto no es el más cercano a pie, la cobertura declarada depende del supuesto de motorización, que en zonas rurales no se cumple",
-      "timestamp_utc": "2026-09-07T03:57:47+00:00"
+      "timestamp_utc": "2026-09-07T14:19:44+00:00"
     }
   ]
 }
