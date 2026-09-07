@@ -26,8 +26,10 @@ Uso::
 from __future__ import annotations
 
 import argparse
+import gzip
 import json
 import math
+import shutil
 import time
 import zipfile
 from pathlib import Path
@@ -35,7 +37,7 @@ from typing import Any
 
 import requests
 
-from .config import CFG
+from .config import CFG, PROJECT_ROOT
 from .utils import DecisionLog, file_sha256, get_logger, utcnow
 
 LOG = get_logger("acquisition")
@@ -97,7 +99,16 @@ def _download(
 
 
 def fetch_source(key: str, spec: dict[str, Any], force: bool = False) -> dict[str, Any]:
-    """Descarga (o reutiliza) una fuente y devuelve su entrada de manifiesto."""
+    """Descarga (o reutiliza) una fuente y devuelve su entrada de manifiesto.
+
+    Si la descarga falla y la fuente declara ``fallback_path``, se usa la copia
+    versionada en el repositorio. Esto implementa la recomendación explícita del
+    enunciado ("si un portal cae, cachea y explica"): el portal de datos abiertos
+    de SUSALUD solo responde por HTTP y no es alcanzable desde la red de los
+    runners de GitHub Actions, de modo que sin respaldo el pipeline no sería
+    reproducible fuera del Perú. El manifiesto registra qué origen se usó
+    realmente y el SHA-256, para que la sustitución sea auditable.
+    """
     dest = CFG.path("raw") / spec["filename"]
     entry: dict[str, Any] = {
         "key": key,
@@ -105,7 +116,7 @@ def fetch_source(key: str, spec: dict[str, Any], force: bool = False) -> dict[st
         "filename": spec["filename"],
         "license": spec.get("license", "no declarada"),
         "note": spec.get("note"),
-        "path": str(dest.relative_to(CFG.path("raw").parent.parent)),
+        "path": str(dest.relative_to(PROJECT_ROOT)),
     }
     if dest.exists() and not force:
         LOG.info("%s ya presente (%.1f MB), se reutiliza", dest.name, dest.stat().st_size / 1e6)
@@ -114,12 +125,60 @@ def fetch_source(key: str, spec: dict[str, Any], force: bool = False) -> dict[st
             sha256=file_sha256(dest),
             downloaded_at_utc="reutilizado",
             attempts=0,
+            origin="cache_local",
         )
-    else:
-        LOG.info("descargando %s -> %s", spec["url"], dest.name)
-        entry.update(_download(spec["url"], dest, mirrors=spec.get("mirrors")))
-        LOG.info("%s listo (%.1f MB)", dest.name, entry["bytes"] / 1e6)
+        return entry
+
+    LOG.info("descargando %s -> %s", spec["url"], dest.name)
+    has_fallback = bool(spec.get("fallback_path"))
+    try:
+        entry.update(
+            _download(
+                spec["url"],
+                dest,
+                mirrors=spec.get("mirrors"),
+                # Con respaldo disponible no tiene sentido gastar diez minutos
+                # de CI reintentando contra un portal que no responde.
+                timeout=45 if has_fallback else 120,
+                attempts_per_url=2 if has_fallback else 4,
+            )
+        )
+        entry["origin"] = "descarga"
+    except Exception as err:  # noqa: BLE001
+        fallback = spec.get("fallback_path")
+        if not fallback:
+            raise
+        src = PROJECT_ROOT / fallback
+        if not src.exists():
+            raise FileNotFoundError(
+                f"la descarga de '{key}' falló ({err}) y no existe el respaldo {src}"
+            ) from err
+        LOG.warning(
+            "descarga de '%s' fallida (%s); se usa la copia versionada %s",
+            key, str(err)[:120], src.name,
+        )
+        _restore_fallback(src, dest)
+        entry.update(
+            bytes=dest.stat().st_size,
+            sha256=file_sha256(dest),
+            downloaded_at_utc="respaldo versionado",
+            attempts=0,
+            origin="fallback_repositorio",
+            fallback_path=fallback,
+            download_error=str(err)[:200],
+        )
+    LOG.info("%s listo (%.1f MB, origen: %s)", dest.name, entry["bytes"] / 1e6, entry["origin"])
     return entry
+
+
+def _restore_fallback(src: Path, dest: Path) -> None:
+    """Copia el respaldo a ``data/raw``, descomprimiéndolo si viene en gzip."""
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    if src.suffix == ".gz":
+        with gzip.open(src, "rb") as fin, open(dest, "wb") as fout:
+            shutil.copyfileobj(fin, fout)
+    else:
+        shutil.copyfile(src, dest)
 
 
 def extract_zip(key: str, members_contain: str | None = None) -> Path:
@@ -289,10 +348,22 @@ def main(argv: list[str] | None = None) -> int:
             dataset=key,
             n_affected=1,
             n_total=1,
-            action=f"archivo {entry['filename']} ({entry['bytes'] / 1e6:.1f} MB)",
-            justification=f"licencia: {entry['license']}",
+            action=(
+                f"archivo {entry['filename']} ({entry['bytes'] / 1e6:.1f} MB), "
+                f"origen: {entry['origin']}"
+            ),
+            justification=(
+                f"licencia: {entry['license']}"
+                + (
+                    "; el portal no respondió y se usó la copia versionada en el "
+                    "repositorio, con SHA-256 registrado para auditoría"
+                    if entry["origin"] == "fallback_repositorio"
+                    else ""
+                )
+            ),
             sha256=entry["sha256"],
             url=entry["url"],
+            origin=entry["origin"],
         )
 
     if "boundaries" in keys:

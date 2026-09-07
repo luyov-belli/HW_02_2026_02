@@ -281,16 +281,26 @@ sfca_decay          = "gaussian"     # "step" | "gaussian"
 
 [sources]
 [sources.renipress]
-url       = "http://datos.susalud.gob.pe/sites/default/files/RENIPRESS_2026_v6.csv"
-dict_url  = "http://datos.susalud.gob.pe/sites/default/files/Diccionario_Datos_RENIPRESS.xlsx"
-filename  = "RENIPRESS_2026_v6.csv"
-sep       = ";"
-license   = "Datos Abiertos del Estado Peruano (ODC-BY). SUSALUD."
+# El portal de SUSALUD solo responde por HTTP (su extremo HTTPS está caído) y no
+# es alcanzable desde la red de los runners de GitHub Actions. Por eso se versiona
+# una copia comprimida en data/raw_cache/, que el pipeline usa solo si la descarga
+# falla, registrando la sustitución y el SHA-256 en el manifiesto.
+url            = "http://datos.susalud.gob.pe/sites/default/files/RENIPRESS_2026_v6.csv"
+dict_url       = "http://datos.susalud.gob.pe/sites/default/files/Diccionario_Datos_RENIPRESS.xlsx"
+filename       = "RENIPRESS_2026_v6.csv"
+fallback_path  = "data/raw_cache/RENIPRESS_2026_v6.csv.gz"
+accessed_utc   = "2026-09-07"
+sha256         = "0817a7e15273a2ae"   # prefijo; el completo va en data/raw/manifest.json
+sep            = ";"
+license        = "Datos Abiertos del Estado Peruano (ODC-BY). SUSALUD."
 [sources.ccpp]
-url       = "https://www.datosabiertos.gob.pe/sites/default/files/ListadoCentroPobladosMTC.xlsx"
-filename  = "ListadoCentroPobladosMTC.xlsx"
-license   = "Datos Abiertos del Estado Peruano. MTC, sobre base INEI."
-note      = "El encabezado del archivo tiene invertidas las etiquetas de latitud y longitud; ver src/validation.py."
+url            = "https://www.datosabiertos.gob.pe/sites/default/files/ListadoCentroPobladosMTC.xlsx"
+filename       = "ListadoCentroPobladosMTC.xlsx"
+fallback_path  = "data/raw_cache/ListadoCentroPobladosMTC.xlsx"
+accessed_utc   = "2026-09-07"
+sha256         = "e2565e6f6d798313"
+license        = "Datos Abiertos del Estado Peruano. MTC, sobre base INEI."
+note           = "El encabezado del archivo tiene invertidas las etiquetas de latitud y longitud; ver src/validation.py."
 [sources.boundaries]
 url       = "https://data.humdata.org/dataset/54fc7f4d-f4c0-4892-91f6-2fe7c1ecf363/resource/61faa8d6-fbfa-4d44-a94d-8f3b0241277a/download/per_admin_boundaries.shp.zip"
 filename  = "per_admin_boundaries.shp.zip"
