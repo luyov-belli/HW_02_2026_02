@@ -1,0 +1,31 @@
+# HW_02 — Accesibilidad vial a establecimientos de salud resolutivos
+# Probado con Python 3.12 (CI) y 3.14 (local). Instalación:
+#     python -m venv .venv && .venv/Scripts/activate   # Windows
+#     python -m venv .venv && source .venv/bin/activate # Linux/macOS
+#     pip install -r requirements.txt
+
+# --- datos y geoespacial ---
+pandas>=2.2
+numpy>=1.26
+geopandas>=1.0
+shapely>=2.0
+pyproj>=3.6
+pyogrio>=0.9
+pyarrow>=16.0
+openpyxl>=3.1
+
+# --- ruteo y grafos ---
+scipy>=1.13
+requests>=2.31
+
+# --- dashboard (Fase 4) ---
+streamlit>=1.36
+folium>=0.16
+streamlit-folium>=0.21
+plotly>=5.22
+
+# --- figuras para el informe (Fase 5) ---
+matplotlib>=3.8
+
+# --- utilidades ---
+tqdm>=4.66

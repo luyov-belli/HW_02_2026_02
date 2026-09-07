@@ -1,0 +1,105 @@
+name: Fase 2 — OSRM en Docker (matriz OD)
+
+# La corrida oficial del motor de ruteo se ejecuta aquí y no en una laptop.
+# Motivo documentado: OSRM se distribuye como contenedor y Docker Desktop en
+# Windows exige WSL2 y permisos de administrador. El runner de Ubuntu ya trae
+# Docker, 16 GB de RAM y 4 núcleos, así que la corrida es reproducible por
+# cualquiera que haga fork del repositorio sin instalar nada.
+#
+# Se dispara tocando .github/routing.trigger (para no reconstruir el grafo en
+# cada commit de código) o a mano desde la pestaña Actions.
+
+on:
+  workflow_dispatch:
+    inputs:
+      scope:
+        description: "Alcance del análisis"
+        type: choice
+        options: [national, regions, dev]
+        default: national
+  push:
+    paths:
+      - ".github/routing.trigger"
+
+concurrency:
+  group: routing-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  routing:
+    runs-on: ubuntu-latest
+    timeout-minutes: 330
+    permissions:
+      contents: write
+    env:
+      HW02_SCOPE: ${{ inputs.scope || 'national' }}
+      OSRM_IMAGE: ghcr.io/project-osrm/osrm-backend:latest
+      PRIMARY_PROFILE: car
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Instalar dependencias
+        run: pip install -r requirements.txt
+
+      - name: Espacio en disco disponible
+        run: df -h /
+
+      - name: Fase 1 — adquisición y validación
+        run: |
+          python -m src.acquisition --with-osm-pbf
+          python -m src.validation
+
+      - name: Perfil car (principal)
+        run: bash scripts/osrm_build_and_route.sh car
+
+      - name: Perfil foot
+        continue-on-error: true
+        run: bash scripts/osrm_build_and_route.sh foot
+
+      - name: Perfil bike
+        continue-on-error: true
+        run: bash scripts/osrm_build_and_route.sh bike
+
+      - name: Análisis multimodal
+        run: python -m src.routing --stage combine
+
+      - name: Resumen
+        run: |
+          python - <<'PY'
+          import pandas as pd, os, glob
+          scope = os.environ["HW02_SCOPE"]
+          m = pd.read_parquet(f"data/outputs/od_car_matrix_{scope}.parquet").set_index("demand_id")
+          t = m.min(axis=1)
+          print(f"matriz {m.shape[0]}x{m.shape[1]}")
+          print(f"mediana {t.median():.1f} min | p90 {t.quantile(.9):.1f} | max {t.max():.1f}")
+          for f in sorted(glob.glob("data/outputs/*")):
+              print(f"{os.path.getsize(f)/1e6:8.2f} MB  {f}")
+          PY
+
+      - name: Publicar artefactos
+        uses: actions/upload-artifact@v4
+        with:
+          name: matrices-od-${{ env.HW02_SCOPE }}
+          path: |
+            data/outputs/
+            data/processed/
+            logs/
+          retention-days: 30
+
+      - name: Commit de resultados
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -f data/outputs data/processed logs
+          if git diff --cached --quiet; then
+            echo "sin cambios que commitear"
+          else
+            git commit -m "ci: matriz OD y validación (OSRM, alcance ${HW02_SCOPE})"
+            git push origin HEAD:${GITHUB_REF_NAME}
+          fi

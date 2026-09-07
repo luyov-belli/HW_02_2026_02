@@ -1,0 +1,36 @@
+# Entornos
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+
+# Insumos crudos: se regeneran con `python -m src.acquisition`.
+# Su procedencia, licencia, tamaño y SHA-256 quedan en data/raw/manifest.json,
+# que sí se versiona.
+data/raw/*
+!data/raw/manifest.json
+
+# Caché de ruteo: las matrices .npz intermedias pesan cientos de MB y son
+# reconstruibles. Los resultados que consume el dashboard viven en data/outputs/
+# y sí se versionan.
+data/cache/
+
+# Artefactos de OSRM generados por osrm-extract/partition/customize
+osrm/
+*.osrm*
+
+# LaTeX
+report/*.aux
+report/*.log
+report/*.out
+report/*.toc
+report/*.fls
+report/*.fdb_latexmk
+report/*.synctex.gz
+report/*.bbl
+report/*.blg
+
+# Sistema
+.DS_Store
+Thumbs.db
