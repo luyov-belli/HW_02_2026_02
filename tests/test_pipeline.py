@@ -371,6 +371,23 @@ def test_toda_figura_generada_se_usa_en_el_informe():
     assert not sin_usar, f"figuras generadas pero no incluidas: {sin_usar}"
 
 
+def test_las_corridas_de_prueba_no_escriben_en_los_artefactos_oficiales():
+    """Regresión: pytest dejaba líneas dentro de logs/validation.log, un entregable.
+
+    Los directorios con nombres de archivo fijos (logs, salidas, figuras, tablas)
+    tienen que desviarse a un sufijo cuando la corrida no es el estudio. Los que
+    ya llevan el alcance en el nombre del archivo no deben desviarse, porque el
+    dashboard los busca por ese nombre.
+    """
+    # create=False: una prueba no debe dejar directorios detrás, y el paso de
+    # commit de CI hace `git add -f report`, que ignoraría el .gitignore.
+    assert CFG.artifact_suffix == "_test"
+    for key in ("logs", "outputs", "figures", "tables"):
+        assert CFG.path(key, create=False).name.endswith("_test"), key
+    for key in ("processed", "raw"):
+        assert not CFG.path(key, create=False).name.endswith("_test"), key
+
+
 # ----------------------------------------------------------------- configuración
 def test_config_declara_todo_lo_que_el_codigo_lee():
     """Contrato entre config.md y el código: si falta una clave, falla aquí."""
