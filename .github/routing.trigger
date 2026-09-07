@@ -23,3 +23,11 @@ Corridas
    diagnosticable sin permisos sobre el repositorio.
    Corrida nacional completa: 25 departamentos, perfiles car / foot / bike.
 5. 2026-09-06 23:15 - la anotacion publica revelo el error real: el bucle de descarga incluia las fuentes que son servicios (altitud, Overpass) y reventaba con KeyError. HDX descarga bien desde el runner. Corrida nacional completa.
+6. 2026-09-06 23:15 — primera corrida en la que OSRM completó los tres perfiles
+   (car, foot y bike, 27 minutos de grafo). Falló en el último paso, el análisis
+   multimodal: `idxmin(axis=1)` sobre filas todas-NaN. Como el paso de commit no
+   tenía `if: !cancelled()`, los 27 minutos de ruteo se descartaron y solo
+   sobrevivió el artefacto. Corregidas ambas cosas: el bug y la política de
+   commit.
+7. 2026-09-07 — recálculo de la matriz nacional con `safe_row_idxmin` y el
+   workflow ya extendido a las fases 3 a 5 y la compilación del PDF.
