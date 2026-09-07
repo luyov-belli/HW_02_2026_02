@@ -29,3 +29,9 @@ matplotlib>=3.8
 
 # --- utilidades ---
 tqdm>=4.66
+
+# --- pruebas ---
+# `pytest -q` cubre los estimadores ponderados, el reparto de cupos del muestreo
+# y las conversiones que fallaban en silencio (ceros a la izquierda de los
+# ubigeo, encabezado de coordenadas invertido). Se corre en CI antes del análisis.
+pytest>=8.0

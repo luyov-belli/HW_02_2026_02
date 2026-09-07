@@ -1,0 +1,12 @@
+2026-09-06 22:58:45,160 | INFO    | hw02.models            | MCLP: 35 puntos descubiertos (0.9% de la población), 11 candidatas útiles
+2026-09-06 22:58:45,162 | INFO    | hw02.models            | MCLP: sin ganancia marginal en el paso 4; se detiene
+2026-09-06 22:58:45,179 | INFO    | hw02.models            | escrito sfca_points_dev.csv (198 filas)
+2026-09-06 22:58:45,181 | INFO    | hw02.models            | escrito sfca_district_dev.csv (13 filas)
+2026-09-06 22:58:45,183 | INFO    | hw02.models            | escrito mclp_frontier_dev.csv (4 filas)
+2026-09-06 22:58:45,185 | INFO    | hw02.models            | escrito mclp_sequence_dev.csv (3 filas)
+2026-09-06 23:27:42,408 | INFO    | hw02.models            | MCLP: 35 puntos descubiertos (0.9% de la población), 11 candidatas útiles
+2026-09-06 23:27:42,412 | INFO    | hw02.models            | MCLP: sin ganancia marginal en el paso 4; se detiene
+2026-09-06 23:27:42,431 | INFO    | hw02.models            | escrito sfca_points_dev.csv (198 filas)
+2026-09-06 23:27:42,433 | INFO    | hw02.models            | escrito sfca_district_dev.csv (13 filas)
+2026-09-06 23:27:42,435 | INFO    | hw02.models            | escrito mclp_frontier_dev.csv (4 filas)
+2026-09-06 23:27:42,437 | INFO    | hw02.models            | escrito mclp_sequence_dev.csv (3 filas)

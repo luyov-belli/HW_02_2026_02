@@ -26,7 +26,10 @@ Uso::
 from __future__ import annotations
 
 import argparse
+import gzip
 import json
+import math
+import shutil
 import time
 import zipfile
 from pathlib import Path
@@ -34,7 +37,7 @@ from typing import Any
 
 import requests
 
-from .config import CFG
+from .config import CFG, PROJECT_ROOT
 from .utils import DecisionLog, file_sha256, get_logger, utcnow
 
 LOG = get_logger("acquisition")
@@ -96,7 +99,16 @@ def _download(
 
 
 def fetch_source(key: str, spec: dict[str, Any], force: bool = False) -> dict[str, Any]:
-    """Descarga (o reutiliza) una fuente y devuelve su entrada de manifiesto."""
+    """Descarga (o reutiliza) una fuente y devuelve su entrada de manifiesto.
+
+    Si la descarga falla y la fuente declara ``fallback_path``, se usa la copia
+    versionada en el repositorio. Esto implementa la recomendación explícita del
+    enunciado ("si un portal cae, cachea y explica"): el portal de datos abiertos
+    de SUSALUD solo responde por HTTP y no es alcanzable desde la red de los
+    runners de GitHub Actions, de modo que sin respaldo el pipeline no sería
+    reproducible fuera del Perú. El manifiesto registra qué origen se usó
+    realmente y el SHA-256, para que la sustitución sea auditable.
+    """
     dest = CFG.path("raw") / spec["filename"]
     entry: dict[str, Any] = {
         "key": key,
@@ -104,7 +116,7 @@ def fetch_source(key: str, spec: dict[str, Any], force: bool = False) -> dict[st
         "filename": spec["filename"],
         "license": spec.get("license", "no declarada"),
         "note": spec.get("note"),
-        "path": str(dest.relative_to(CFG.path("raw").parent.parent)),
+        "path": str(dest.relative_to(PROJECT_ROOT)),
     }
     if dest.exists() and not force:
         LOG.info("%s ya presente (%.1f MB), se reutiliza", dest.name, dest.stat().st_size / 1e6)
@@ -113,12 +125,66 @@ def fetch_source(key: str, spec: dict[str, Any], force: bool = False) -> dict[st
             sha256=file_sha256(dest),
             downloaded_at_utc="reutilizado",
             attempts=0,
+            origin="cache_local",
         )
-    else:
-        LOG.info("descargando %s -> %s", spec["url"], dest.name)
-        entry.update(_download(spec["url"], dest, mirrors=spec.get("mirrors")))
-        LOG.info("%s listo (%.1f MB)", dest.name, entry["bytes"] / 1e6)
+        return entry
+
+    LOG.info("descargando %s -> %s", spec["url"], dest.name)
+    has_fallback = bool(spec.get("fallback_path"))
+    try:
+        entry.update(
+            _download(
+                spec["url"],
+                dest,
+                mirrors=spec.get("mirrors"),
+                # Con respaldo disponible no tiene sentido gastar diez minutos
+                # de CI reintentando contra un portal que no responde.
+                timeout=45 if has_fallback else 120,
+                attempts_per_url=2 if has_fallback else 4,
+            )
+        )
+        entry["origin"] = "descarga"
+    except Exception as err:  # noqa: BLE001
+        fallback = spec.get("fallback_path")
+        if not fallback:
+            raise
+        src = PROJECT_ROOT / fallback
+        if not src.exists():
+            raise FileNotFoundError(
+                f"la descarga de '{key}' falló ({err}) y no existe el respaldo {src}"
+            ) from err
+        LOG.warning(
+            "descarga de '%s' fallida (%s); se usa la copia versionada %s",
+            key, str(err)[:120], src.name,
+        )
+        # Algunas fuentes se respaldan en otro formato que el original (los
+        # límites vienen como .shp.zip y se respaldan como GeoPackage, que ocupa
+        # la mitad), así que el destino puede ser distinto del nombre publicado.
+        target = spec.get("fallback_target")
+        dest = (PROJECT_ROOT / target) if target else dest
+        _restore_fallback(src, dest)
+        entry["path"] = str(dest.relative_to(PROJECT_ROOT))
+        entry.update(
+            bytes=dest.stat().st_size,
+            sha256=file_sha256(dest),
+            downloaded_at_utc="respaldo versionado",
+            attempts=0,
+            origin="fallback_repositorio",
+            fallback_path=fallback,
+            download_error=str(err)[:200],
+        )
+    LOG.info("%s listo (%.1f MB, origen: %s)", dest.name, entry["bytes"] / 1e6, entry["origin"])
     return entry
+
+
+def _restore_fallback(src: Path, dest: Path) -> None:
+    """Copia el respaldo a ``data/raw``, descomprimiéndolo si viene en gzip."""
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    if src.suffix == ".gz":
+        with gzip.open(src, "rb") as fin, open(dest, "wb") as fout:
+            shutil.copyfileobj(fin, fout)
+    else:
+        shutil.copyfile(src, dest)
 
 
 def extract_zip(key: str, members_contain: str | None = None) -> Path:
@@ -140,16 +206,79 @@ def extract_zip(key: str, members_contain: str | None = None) -> Path:
     return outdir
 
 
-def find_layer(folder: Path, pattern: str, suffix: str = ".shp") -> Path:
-    """Busca recursivamente una capa cuyo nombre contenga ``pattern``."""
-    matches = sorted(
-        p for p in folder.rglob(f"*{suffix}") if pattern.lower() in p.name.lower()
-    )
-    if not matches:
-        raise FileNotFoundError(
-            f"no se encontró ninguna capa '{pattern}{suffix}' en {folder}"
+def find_layer(
+    folder: Path, pattern: str, suffixes: str | tuple[str, ...] = (".shp", ".gpkg")
+) -> Path:
+    """Busca recursivamente una capa cuyo nombre contenga ``pattern``.
+
+    Se aceptan varios formatos y se devuelve el primero que exista, en el orden
+    dado: la fuente publicada es un shapefile, pero el respaldo versionado es un
+    GeoPackage, que pesa la mitad.
+    """
+    if isinstance(suffixes, str):
+        suffixes = (suffixes,)
+    for suffix in suffixes:
+        matches = sorted(
+            p for p in folder.rglob(f"*{suffix}") if pattern.lower() in p.name.lower()
         )
-    return matches[0]
+        if matches:
+            return matches[0]
+    raise FileNotFoundError(
+        f"no se encontró ninguna capa '{pattern}' con extensión {suffixes} en {folder}"
+    )
+
+
+def fetch_elevation(
+    lats: list[float], lons: list[float], cache_path: Path
+) -> "pd.Series":
+    """Altitud SRTM 30 m para una lista de puntos, con caché en disco.
+
+    Se consulta OpenTopoData en lotes respetando su límite de una petición por
+    segundo. El resultado se versiona en ``data/processed``, de modo que ni CI ni
+    una segunda corrida vuelven a llamar al servicio. Si el servicio no responde,
+    se devuelven NaN y el análisis cruzado reporta la altitud como no disponible
+    en lugar de fallar.
+    """
+    import pandas as pd
+
+    spec = CFG["sources"]["elevation"]
+    if cache_path.exists():
+        cached = pd.read_parquet(cache_path)
+        LOG.info("altitud desde caché: %s (%d puntos)", cache_path.name, len(cached))
+        return cached.set_index("point_key")["elevation_m"]
+
+    keys = [f"{la:.5f},{lo:.5f}" for la, lo in zip(lats, lons, strict=True)]
+    unique_keys = list(dict.fromkeys(keys))
+    batch = int(spec["batch"])
+    values: dict[str, float] = {}
+    LOG.info(
+        "consultando altitud de %d puntos únicos en %d lotes",
+        len(unique_keys), math.ceil(len(unique_keys) / batch),
+    )
+    for i in range(0, len(unique_keys), batch):
+        chunk = unique_keys[i : i + batch]
+        try:
+            resp = requests.get(
+                spec["url"],
+                params={"locations": "|".join(chunk)},
+                timeout=90,
+                headers={"User-Agent": "HW02-accesibilidad-salud/1.0"},
+            )
+            resp.raise_for_status()
+            for key, item in zip(chunk, resp.json()["results"], strict=True):
+                values[key] = item.get("elevation")
+        except Exception as err:  # noqa: BLE001
+            LOG.warning("lote de altitud %d falló: %s", i // batch, err)
+            for key in chunk:
+                values.setdefault(key, None)
+        time.sleep(float(spec["rate_limit_s"]))
+
+    series = pd.Series(values, name="elevation_m", dtype="float64")
+    series.index.name = "point_key"
+    series.reset_index().to_parquet(cache_path, index=False)
+    ok = int(series.notna().sum())
+    LOG.info("altitud resuelta para %d de %d puntos", ok, len(series))
+    return series
 
 
 def probe_wayback_renipress() -> dict[str, Any]:
@@ -176,7 +305,9 @@ def probe_wayback_renipress() -> dict[str, Any]:
                 "collapse": "urlkey",
                 "limit": "50",
             },
-            timeout=60,
+            # Sondeo informativo: no vale la pena colgar la corrida un minuto
+            # esperando al Internet Archive, que además responde solo por HTTP.
+            timeout=20,
         )
         resp.raise_for_status()
         rows = resp.json()
@@ -226,7 +357,11 @@ def main(argv: list[str] | None = None) -> int:
 
     for key in keys:
         spec = sources[key]
-        if "url" not in spec:
+        # No todas las entradas de [sources] son archivos que se descarguen: la
+        # altitud y Overpass son servicios que se consultan por punto y los
+        # resuelven src.metrics y src.routing cuando los necesitan.
+        if "url" not in spec or "filename" not in spec:
+            LOG.info("fuente '%s' es un servicio, no un archivo: se omite aquí", key)
             continue
         entry = fetch_source(key, spec, force=args.force)
         manifest["sources"].append(entry)
@@ -235,14 +370,32 @@ def main(argv: list[str] | None = None) -> int:
             dataset=key,
             n_affected=1,
             n_total=1,
-            action=f"archivo {entry['filename']} ({entry['bytes'] / 1e6:.1f} MB)",
-            justification=f"licencia: {entry['license']}",
+            action=(
+                f"archivo {entry['filename']} ({entry['bytes'] / 1e6:.1f} MB), "
+                f"origen: {entry['origin']}"
+            ),
+            justification=(
+                f"licencia: {entry['license']}"
+                + (
+                    "; el portal no respondió y se usó la copia versionada en el "
+                    "repositorio, con SHA-256 registrado para auditoría"
+                    if entry["origin"] == "fallback_repositorio"
+                    else ""
+                )
+            ),
             sha256=entry["sha256"],
             url=entry["url"],
+            origin=entry["origin"],
         )
 
     if "boundaries" in keys:
-        extract_zip("boundaries")
+        # Si se usó el respaldo, no hay zip que extraer: ya es un GeoPackage.
+        used_fallback = any(
+            e["key"] == "boundaries" and e["origin"] == "fallback_repositorio"
+            for e in manifest["sources"]
+        )
+        if not used_fallback:
+            extract_zip("boundaries")
     if "osm_shp" in keys:
         extract_zip("osm_shp", members_contain="roads")
 

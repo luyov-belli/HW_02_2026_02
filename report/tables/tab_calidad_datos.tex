@@ -1,0 +1,26 @@
+\begin{table}[htbp]
+\caption{Reporte de calidad de datos: verificaciones que detectaron al menos un registro afectado. El detalle con la acción tomada y su justificación está en \texttt{data/outputs/data\_quality\_report.json}.}
+\label{tab:calidad-datos}
+\begin{tabular}{lrrr}
+\toprule
+Fuente & Verificación & Registros & \textbackslash \% del total \\
+\midrule
+boundaries & carga de polígonos distritales & 1873 & 100.00 \\
+renipress & pérdida de caracteres no ASCII en el origen & 623 & 2.32 \\
+renipress & definición de establecimiento operativo & 70 & 0.26 \\
+renipress & categorías sin dato válido & 4894 & 18.23 \\
+renipress & coordenadas nulas, vacías o cero & 7067 & 26.32 \\
+renipress & punto fuera del polígono distrital declarado & 603 & 3.05 \\
+renipress & UBIGEO sin polígono distrital disponible & 95 & 0.48 \\
+renipress & tasa de recuperación de coordenadas & 7061 & 99.92 \\
+ccpp & orientación de las columnas de coordenadas & 99937 & 100.00 \\
+ccpp & clasificación urbano/rural & 361 & 0.36 \\
+ccpp & filtro de alcance geográfico & 10 & 0.01 \\
+ccpp & punto fuera del polígono distrital declarado & 816 & 0.82 \\
+ccpp & UBIGEO sin polígono distrital disponible & 189 & 0.19 \\
+ccpp & centros poblados con población cero & 12423 & 12.43 \\
+demand\_sample & muestreo de puntos de demanda & 5000 & 5.71 \\
+demand\_sample & distritos con estimación de alta varianza & 708 & 38.21 \\
+\bottomrule
+\end{tabular}
+\end{table}

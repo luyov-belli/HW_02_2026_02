@@ -22,6 +22,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+import numpy as np
 import pandas as pd
 
 from .config import CFG
@@ -171,7 +172,79 @@ def read_csv_robust(
     )
 
 
+#: Columnas identificadoras y su ancho con ceros a la izquierda. Al pasar por
+#: CSV, pandas las interpreta como enteros y "010109" vuelve como 10109, lo que
+#: rompe silenciosamente todos los cruces. Cualquier lectura de un CSV de salida
+#: debe pasar por :func:`read_output_csv`.
+ID_COLUMNS: dict[str, int] = {
+    "ubigeo": 6,
+    "UBIGEO": 6,
+    "COD_IPRESS": 8,
+    "ccpp_code": 10,
+    "adm3_pcode": 8,
+}
+
+
+def coerce_id_columns(df: pd.DataFrame) -> pd.DataFrame:
+    """Devuelve ``df`` con las columnas identificadoras como texto con relleno."""
+    for col, width in ID_COLUMNS.items():
+        if col in df.columns:
+            df[col] = (
+                df[col]
+                .astype("string")
+                .str.replace(r"\.0$", "", regex=True)
+                .str.strip()
+                .str.zfill(width)
+            )
+    return df
+
+
+def read_output_csv(path: str | Path, **kwargs: Any) -> pd.DataFrame:
+    """Lee un CSV de ``data/outputs`` preservando los identificadores."""
+    return coerce_id_columns(pd.read_csv(path, **kwargs))
+
+
+def safe_row_idxmin(df: pd.DataFrame) -> pd.Series:
+    """``df.idxmin(axis=1)`` tolerante a filas completamente NaN.
+
+    Desde pandas 2.1, ``idxmin`` lanza ``ValueError: Encountered all NA values``
+    en lugar de devolver NaN cuando una fila no tiene ningún valor. En esta matriz
+    eso pasa de forma legítima y esperada: los orígenes marcados como "sin acceso
+    vial" (a más de 20 km de cualquier vía) tienen la fila entera en NaN por
+    decisión de la política de *fallback*, y a pie hay orígenes sin ningún
+    establecimiento alcanzable. La fila sin valores no es un error de datos, así
+    que el resultado correcto es NaN en esa posición, no una excepción.
+
+    Devuelve una serie de etiquetas de columna, con ``pd.NA`` donde no hay mínimo.
+    """
+    arr = df.to_numpy(dtype="float64", na_value=np.nan)
+    finite = np.isfinite(arr)
+    has_any = finite.any(axis=1)
+    pos = np.where(finite, arr, np.inf).argmin(axis=1)
+
+    labels = pd.Series(pd.NA, index=df.index, dtype="object", name="idxmin")
+    if has_any.any():
+        cols = np.asarray(df.columns, dtype="object")
+        labels.iloc[np.flatnonzero(has_any)] = cols[pos[has_any]]
+    return labels
+
+
 def mojibake_score(series: pd.Series) -> int:
     """Cuenta valores con síntomas típicos de doble codificación."""
     pattern = r"Ã.|Â.|ï¿½|�"
     return int(series.astype("string").str.contains(pattern, regex=True, na=False).sum())
+
+
+def lossy_ascii_score(series: pd.Series) -> int:
+    """Cuenta valores donde un carácter no ASCII fue reemplazado por ``?``.
+
+    Es un daño distinto del mojibake y no se detecta con el patrón anterior: la
+    doble codificación deja rastros recuperables (``Ã±`` → ``ñ``), mientras que
+    la sustitución por ``?`` es **irreversible**. Ocurre cuando el sistema de
+    origen exporta a una codificación que no puede representar el carácter.
+
+    Se cuenta un ``?`` como pérdida solo si está rodeado de letras, para no
+    contar signos de interrogación legítimos.
+    """
+    s = series.astype("string")
+    return int(s.str.contains(r"[A-Za-z]\?[A-Za-z]|^\?[A-Za-z]", regex=True, na=False).sum())

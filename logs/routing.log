@@ -71,3 +71,40 @@
 2026-09-06 22:09:46,566 | INFO    | hw02.routing           | cargada matriz foot: (198, 3)
 2026-09-06 22:09:46,572 | INFO    | hw02.routing           | cargada matriz bike: (198, 3)
 2026-09-06 22:09:46,582 | INFO    | hw02.routing           | escrito cross_mode_dev.csv (0.0 MB)
+2026-09-06 22:57:47,000 | INFO    | hw02.routing           | motor de ruteo: graph
+2026-09-06 22:57:47,089 | INFO    | hw02.routing           | alcance dev: 198 orígenes, 3 resolutivas, 31 candidatas I-3/I-4
+2026-09-06 22:57:47,095 | INFO    | hw02.routing           | matriz graph/car desde caché en disco (table_graph_car_08019f843ca3435b.npz)
+2026-09-06 22:57:47,100 | INFO    | hw02.routing           | matriz graph/car desde caché en disco (table_graph_car_cdd517adeec6e7c8.npz)
+2026-09-06 22:57:47,110 | INFO    | hw02.routing           | escrito snapping_dev.csv (0.0 MB)
+2026-09-06 22:57:47,115 | INFO    | hw02.routing           | escrito od_car_matrix_dev.parquet (0.0 MB)
+2026-09-06 22:57:47,119 | INFO    | hw02.routing           | escrito od_dist_car_matrix_dev.parquet (0.0 MB)
+2026-09-06 22:57:47,123 | INFO    | hw02.routing           | escrito od_imputed_car_matrix_dev.parquet (0.0 MB)
+2026-09-06 22:57:47,129 | INFO    | hw02.routing           | escrito od_candidates_dev_car.parquet (0.0 MB)
+2026-09-06 22:57:47,131 | INFO    | hw02.routing           | escrito straight_vs_network_dev.csv (0.0 MB)
+2026-09-06 22:57:47,183 | INFO    | hw02.routing           | motor de ruteo: graph
+2026-09-06 22:57:47,207 | INFO    | hw02.routing           | perfil foot: 198 orígenes × 3 destinos (unión de los 15 más cercanos en auto)
+2026-09-06 22:57:47,212 | INFO    | hw02.routing           | matriz graph/foot desde caché en disco (table_graph_foot_9fee4b12e8041aa5.npz)
+2026-09-06 22:57:47,218 | INFO    | hw02.routing           | escrito od_foot_matrix_dev.parquet (0.0 MB)
+2026-09-06 22:57:47,220 | INFO    | hw02.routing           | escrito snapping_foot_dev.csv (0.0 MB)
+2026-09-06 22:57:47,223 | INFO    | hw02.routing           | motor de ruteo: graph
+2026-09-06 22:57:47,243 | INFO    | hw02.routing           | perfil bike: 198 orígenes × 3 destinos (unión de los 15 más cercanos en auto)
+2026-09-06 22:57:47,248 | INFO    | hw02.routing           | matriz graph/bike desde caché en disco (table_graph_bike_b1d20505ad2ceffc.npz)
+2026-09-06 22:57:47,254 | INFO    | hw02.routing           | escrito od_bike_matrix_dev.parquet (0.0 MB)
+2026-09-06 22:57:47,256 | INFO    | hw02.routing           | escrito snapping_bike_dev.csv (0.0 MB)
+2026-09-06 22:57:47,277 | INFO    | hw02.routing           | cargada matriz car: (198, 3)
+2026-09-06 22:57:47,283 | INFO    | hw02.routing           | cargada matriz foot: (198, 3)
+2026-09-06 22:57:47,289 | INFO    | hw02.routing           | cargada matriz bike: (198, 3)
+2026-09-06 22:57:47,297 | INFO    | hw02.routing           | escrito cross_mode_dev.csv (0.0 MB)
+2026-09-06 23:27:38,249 | INFO    | hw02.routing           | motor de ruteo: graph
+2026-09-06 23:27:38,325 | INFO    | hw02.routing           | alcance dev: 198 orígenes, 3 resolutivas, 31 candidatas I-3/I-4
+2026-09-06 23:27:38,330 | INFO    | hw02.routing           | matriz graph/car desde caché en disco (table_graph_car_08019f843ca3435b.npz)
+2026-09-06 23:27:38,335 | INFO    | hw02.routing           | matriz graph/car desde caché en disco (table_graph_car_cdd517adeec6e7c8.npz)
+2026-09-06 23:27:38,345 | INFO    | hw02.routing           | escrito snapping_dev.csv (0.0 MB)
+2026-09-06 23:27:38,351 | INFO    | hw02.routing           | escrito od_car_matrix_dev.parquet (0.0 MB)
+2026-09-06 23:27:38,355 | INFO    | hw02.routing           | escrito od_dist_car_matrix_dev.parquet (0.0 MB)
+2026-09-06 23:27:38,359 | INFO    | hw02.routing           | escrito od_imputed_car_matrix_dev.parquet (0.0 MB)
+2026-09-06 23:27:38,365 | INFO    | hw02.routing           | escrito od_candidates_dev_car.parquet (0.0 MB)
+2026-09-06 23:27:38,368 | INFO    | hw02.routing           | escrito straight_vs_network_dev.csv (0.0 MB)
+2026-09-06 23:27:38,419 | INFO    | hw02.routing           | motor de ruteo: graph
+2026-09-06 23:27:38,443 | INFO    | hw02.routing           | perfil foot: 198 orígenes × 3 destinos (unión de los 15 más cercanos en auto)
+2026-09-06 23:27:38,445 | INFO    | hw02.routing           | matriz graph/foot desde caché en disco (table_graph_foot_9fee4b12e8041aa5.npz)

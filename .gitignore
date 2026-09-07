@@ -16,9 +16,27 @@ data/raw/*
 # y sí se versionan.
 data/cache/
 
+# Salidas del alcance "dev" (un solo departamento). Existe para probar el
+# pipeline completo en segundos y sus resultados NO son resultados del estudio;
+# versionarlos invitaría a confundir metrics_national_dev.csv con la corrida
+# nacional. Los alcances "national" y "regions" sí se versionan.
+data/outputs/*_dev.csv
+data/outputs/*_dev.json
+data/outputs/*_dev*.parquet
+data/processed/*_dev.parquet
+data/processed/*_dev.gpkg
+
 # Artefactos de OSRM generados por osrm-extract/partition/customize
 osrm/
 *.osrm*
+
+# Figuras y tablas del informe: las genera src/export.py y su contenido depende
+# del alcance de la corrida. Se ignoran aquí para que una corrida de prueba en el
+# alcance "dev" no las versione; los workflows las agregan con `git add -f`
+# después de generarlas con los datos nacionales, así que las que llegan al
+# repositorio son siempre las oficiales.
+report/figures/
+report/tables/
 
 # LaTeX
 report/*.aux

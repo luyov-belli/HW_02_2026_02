@@ -1,0 +1,22 @@
+# Tema del dashboard.
+#
+# Se fija el modo claro deliberadamente en lugar de seguir la preferencia del
+# sistema: la paleta del proyecto está validada contra la superficie clara
+# (#fcfcfb) —los mismos colores que usan las figuras del informe—, y los
+# gráficos y el mapa base se dibujan sobre ese fondo. Con el chrome oscuro y los
+# gráficos claros el resultado se ve roto. Los valores son los de la paleta de
+# referencia, no los que trae Streamlit por defecto.
+
+[theme]
+base                = "light"
+primaryColor        = "#2a78d6"   # slot categórico 1
+backgroundColor     = "#fcfcfb"   # superficie clara
+secondaryBackgroundColor = "#f0efec"
+textColor           = "#0b0b0b"   # tinta primaria
+font                = "sans serif"
+
+[server]
+headless = true
+
+[browser]
+gatherUsageStats = false

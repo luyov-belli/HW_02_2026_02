@@ -119,14 +119,27 @@ departments = [
 ]
 
 [natural_region]
-# Regla para etiquetar región natural. Se aplica en cascada, primero altitud.
-# Sin DEM disponible se usa el proxy oficial de INEI: departamentos de costa/sierra/selva
-# y, para los departamentos mixtos, la altitud del centro poblado si existe.
-costa_max_elev_m  = 500
+# Regla de etiquetado en dos etapas.
+#
+# 1. **Proxy departamental** (src/validation.py). Cada departamento se asigna a la
+#    región que predomina en su población. Es provisional y grueso: nueve de los
+#    25 departamentos abarcan más de una región natural.
+# 2. **Refinamiento por altitud** (src/metrics.py), con la altitud SRTM de cada
+#    centro poblado, que es el dato que de verdad discrimina:
+#       altitud >= sierra_min_elev_m                -> sierra
+#       altitud <  sierra_min_elev_m y dpto de selva -> selva
+#       altitud <  sierra_min_elev_m en los demás    -> costa
+#    Así los distritos altos de Lima quedan como sierra y las tierras bajas de
+#    Cusco como selva, que es lo correcto y lo que el proxy no captaba.
+#    El proxy se conserva en la columna natural_region_proxy para poder auditar
+#    cuántos puntos reclasificó el refinamiento.
 sierra_min_elev_m = 500
+costa_max_elev_m  = 500
 selva_max_elev_m  = 500
-# Departamentos íntegramente de una sola región (INEI):
-costa_departments  = ["CALLAO", "ICA", "LAMBAYEQUE", "LA LIBERTAD", "TUMBES", "PIURA"]
+# Asignación predominante por departamento. Los 25 deben estar exactamente una
+# vez: tests/test_pipeline.py lo verifica, porque olvidar uno lo dejaba como
+# "no_determinada" sin que nada avisara.
+costa_departments  = ["CALLAO", "ICA", "LAMBAYEQUE", "LA LIBERTAD", "LIMA", "TUMBES", "PIURA"]
 sierra_departments = ["APURIMAC", "AYACUCHO", "CUSCO", "HUANCAVELICA", "JUNIN", "PASCO", "PUNO", "ANCASH", "AREQUIPA", "CAJAMARCA", "HUANUCO", "MOQUEGUA", "TACNA"]
 selva_departments  = ["AMAZONAS", "LORETO", "MADRE DE DIOS", "SAN MARTIN", "UCAYALI"]
 
@@ -253,6 +266,26 @@ aggregation_levels  = ["district", "province", "department", "natural_region", "
 worst_districts_n   = 25
 urban_rule          = "inei_classification"
 
+# Variables del análisis cruzado (Fase 3). No incluye pobreza monetaria porque el
+# portal del INEI no respondió en la fecha de acceso y el mapa de pobreza distrital
+# no está publicado como descarga automatizable en ningún espejo verificado; se
+# declara en Limitaciones y se usan sus dos proxies habituales en la literatura
+# peruana: ruralidad y altitud.
+cross_variables = [
+  "altitude_m",              # SRTM 30 m, mediana ponderada del distrito
+  "rural_share",             # % de población distrital en centros poblados rurales
+  "population",              # tamaño del distrito
+  "population_density",      # hab/km² con el área del polígono
+  "settlement_dispersion",   # % de población fuera de la capital distrital
+  "ccpp_count",              # número de centros poblados
+  "primary_care_per_10k",    # IPRESS I-1/I-2/I-3/I-4 operativas por 10 000 hab.
+]
+# Umbral de |rho| a partir del cual se comenta una asociación en el informe.
+correlation_report_threshold = 0.15
+# Mínimo de distritos con dato para que una variable entre al análisis cruzado.
+# Por debajo, una correlación no es informativa y se omite en lugar de reportarse.
+cross_min_districts = 30
+
 [innovation]
 run_2sfca            = true
 run_mclp             = true
@@ -264,19 +297,35 @@ sfca_decay          = "gaussian"     # "step" | "gaussian"
 
 [sources]
 [sources.renipress]
-url       = "http://datos.susalud.gob.pe/sites/default/files/RENIPRESS_2026_v6.csv"
-dict_url  = "http://datos.susalud.gob.pe/sites/default/files/Diccionario_Datos_RENIPRESS.xlsx"
-filename  = "RENIPRESS_2026_v6.csv"
-sep       = ";"
-license   = "Datos Abiertos del Estado Peruano (ODC-BY). SUSALUD."
+# El portal de SUSALUD solo responde por HTTP (su extremo HTTPS está caído) y no
+# es alcanzable desde la red de los runners de GitHub Actions. Por eso se versiona
+# una copia comprimida en data/raw_cache/, que el pipeline usa solo si la descarga
+# falla, registrando la sustitución y el SHA-256 en el manifiesto.
+url            = "http://datos.susalud.gob.pe/sites/default/files/RENIPRESS_2026_v6.csv"
+dict_url       = "http://datos.susalud.gob.pe/sites/default/files/Diccionario_Datos_RENIPRESS.xlsx"
+filename       = "RENIPRESS_2026_v6.csv"
+fallback_path  = "data/raw_cache/RENIPRESS_2026_v6.csv.gz"
+accessed_utc   = "2026-09-07"
+sha256         = "0817a7e15273a2ae"   # prefijo; el completo va en data/raw/manifest.json
+sep            = ";"
+license        = "Datos Abiertos del Estado Peruano (ODC-BY). SUSALUD."
 [sources.ccpp]
-url       = "https://www.datosabiertos.gob.pe/sites/default/files/ListadoCentroPobladosMTC.xlsx"
-filename  = "ListadoCentroPobladosMTC.xlsx"
-license   = "Datos Abiertos del Estado Peruano. MTC, sobre base INEI."
-note      = "El encabezado del archivo tiene invertidas las etiquetas de latitud y longitud; ver src/validation.py."
+url            = "https://www.datosabiertos.gob.pe/sites/default/files/ListadoCentroPobladosMTC.xlsx"
+filename       = "ListadoCentroPobladosMTC.xlsx"
+fallback_path  = "data/raw_cache/ListadoCentroPobladosMTC.xlsx"
+accessed_utc   = "2026-09-07"
+sha256         = "e2565e6f6d798313"
+license        = "Datos Abiertos del Estado Peruano. MTC, sobre base INEI."
+note           = "El encabezado del archivo tiene invertidas las etiquetas de latitud y longitud; ver src/validation.py."
 [sources.boundaries]
 url       = "https://data.humdata.org/dataset/54fc7f4d-f4c0-4892-91f6-2fe7c1ecf363/resource/61faa8d6-fbfa-4d44-a94d-8f3b0241277a/download/per_admin_boundaries.shp.zip"
 filename  = "per_admin_boundaries.shp.zip"
+# HDX está detrás de Cloudflare y rechaza peticiones desde algunas redes (devuelve
+# 403 a clientes no navegador). El respaldo versionado es la capa distrital en
+# GeoPackage, que pesa la mitad que el shapefile y conserva la geometría completa
+# (no se simplifica: la verificación punto-en-polígono necesita el borde real).
+fallback_path   = "data/raw_cache/per_admin3.gpkg.gz"
+fallback_target = "data/raw/boundaries/per_admin3.gpkg"
 district_layer_pattern = "admin3"
 # Los pcode de HDX son "PE" + UBIGEO del INEI (PE030101 -> distrito 030101).
 pcode_prefix = "PE"
@@ -288,7 +337,11 @@ license   = "OCHA / HDX Common Operational Datasets, fuente INEI."
 [sources.osm_pbf]
 # Insumo de OSRM (motor oficial). Se descarga dentro del workflow de CI.
 url       = "https://download.geofabrik.de/south-america/peru-latest.osm.pbf"
-mirrors   = ["https://osm.download.movisda.io/south-america/peru-latest.osm.pbf"]
+# No hay espejo verificado de los extractos de Geofabrik para Perú (se probaron
+# openstreetmap.fr, movisda y ftp.gwdg.de: 404). Geofabrik devolvió 502/503 de
+# forma intermitente durante el desarrollo, así que la resiliencia se apoya en
+# los reintentos con espera creciente de src.acquisition._download.
+mirrors   = []
 filename  = "peru-latest.osm.pbf"
 license   = "OpenStreetMap contributors, ODbL 1.0."
 [sources.osm_shp]
@@ -312,6 +365,27 @@ highway_regex   = "^(motorway|trunk|primary|secondary|tertiary|unclassified|resi
 bbox_pad_deg    = 0.15
 tile_size_deg   = 1.0
 license         = "OpenStreetMap contributors, ODbL 1.0."
+[sources.elevation]
+# Altitud para el análisis cruzado (Fase 3). SRTM 30 m servido por OpenTopoData.
+# Se consulta una sola vez y el resultado se versiona en data/processed/, así que
+# ni CI ni una segunda corrida vuelven a golpear la API.
+url          = "https://api.opentopodata.org/v1/srtm30m"
+dataset      = "srtm30m"
+batch        = 100      # máximo de ubicaciones por petición
+rate_limit_s = 1.1      # la política del servicio es 1 petición por segundo
+license      = "NASA SRTM, dominio público. Servido por OpenTopoData (ODbL para el servicio)."
+
+[sources.population_age]
+# Estructura etaria para el análisis cruzado. IMPORTANTE: la versión vigente en
+# HDX solo publica adm0 y adm1, no distritos. Se usa como control departamental y
+# la limitación (falacia ecológica) se declara en el informe.
+url        = "https://data.humdata.org/dataset/0d8f2f78-cb46-4eb8-94eb-100b5388c3ff/resource/6355bd07-91e8-49e0-abbf-4de4036271a9/download/per_admpop_2024.xlsx"
+filename   = "per_admpop_2024.xlsx"
+sheet_adm1 = "per_admpop_adm1_2024"
+under5_col = "T_00_04"
+total_col  = "T_TL"
+license    = "OCHA / HDX Common Operational Datasets — Population Statistics 2024."
+
 [sources.renipress_historic]
 # Innovación (comparación temporal). El Internet Archive no conserva snapshots de
 # los CSV de datos.susalud.gob.pe (verificado con la CDX API: 0 resultados), así que
