@@ -155,7 +155,7 @@ def load_access(profile: str | None = None) -> pd.DataFrame:
 
 
 def enrich_context(access: pd.DataFrame, dlog: DecisionLog) -> pd.DataFrame:
-    """Agrega altitud a cada punto de demanda (insumo del análisis cruzado)."""
+    """Agrega altitud y refina la región natural de cada punto de demanda."""
     cache = CFG.path("processed") / CFG.scoped_name("elevation", "parquet")
     elev = fetch_elevation(
         access["lat"].astype(float).tolist(),
@@ -175,6 +175,65 @@ def enrich_context(access: pd.DataFrame, dlog: DecisionLog) -> pd.DataFrame:
             "la altitud es uno de los dos proxies estándar de pobreza y aislamiento "
             "en el Perú; se cachea para que ni CI ni una segunda corrida golpeen la API"
         ),
+    )
+    return refine_natural_region(access, dlog)
+
+
+def refine_natural_region(access: pd.DataFrame, dlog: DecisionLog) -> pd.DataFrame:
+    """Reasigna la región natural por altitud (etapa 2 de ``[natural_region]``).
+
+    El proxy departamental que asigna la Fase 1 es grueso: nueve departamentos
+    abarcan más de una región natural, así que las provincias altas de Lima
+    contaban como costa y las tierras bajas de Cusco como sierra. Con la altitud
+    SRTM de cada centro poblado la asignación es directa y no cuesta nada extra,
+    porque el dato ya se descargó para el análisis cruzado.
+    """
+    nr = CFG["natural_region"]
+    umbral = float(nr["sierra_min_elev_m"])
+    selva_deps = set(nr["selva_departments"])
+
+    access = access.copy()
+    access["natural_region_proxy"] = access["natural_region"]
+    elev = access["altitude_m"]
+
+    refined = np.where(
+        elev.isna(),
+        access["natural_region_proxy"],  # sin altitud se conserva el proxy
+        np.where(
+            elev >= umbral,
+            "sierra",
+            np.where(access["department"].isin(selva_deps), "selva", "costa"),
+        ),
+    )
+    access["natural_region"] = refined
+
+    changed = access["natural_region"] != access["natural_region_proxy"]
+    pop_changed = float(access.loc[changed, "design_weight"].sum())
+    dlog.record(
+        check="refinamiento de la región natural por altitud",
+        dataset="metrics",
+        n_affected=int(changed.sum()),
+        n_total=len(access),
+        action=(
+            f"{int(changed.sum())} puntos reclasificados "
+            f"({pop_changed:,.0f} habitantes representados)"
+        ),
+        justification=(
+            f"umbral de {umbral:.0f} m s. n. m. sobre la altitud SRTM del centro "
+            "poblado. El proxy departamental asignaba una sola región a cada "
+            "departamento, y nueve de los 25 abarcan más de una: sin este paso las "
+            "provincias altas de Lima contaban como costa y las tierras bajas de "
+            "Cusco como sierra. Se conserva natural_region_proxy para auditar el "
+            "cambio"
+        ),
+        distribucion=";".join(
+            f"{k}={v}" for k, v in access["natural_region"].value_counts().items()
+        ),
+    )
+    LOG.info(
+        "región natural refinada: %d puntos reclasificados; distribución %s",
+        int(changed.sum()),
+        access["natural_region"].value_counts().to_dict(),
     )
     return access
 

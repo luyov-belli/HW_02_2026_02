@@ -119,14 +119,27 @@ departments = [
 ]
 
 [natural_region]
-# Regla para etiquetar región natural. Se aplica en cascada, primero altitud.
-# Sin DEM disponible se usa el proxy oficial de INEI: departamentos de costa/sierra/selva
-# y, para los departamentos mixtos, la altitud del centro poblado si existe.
-costa_max_elev_m  = 500
+# Regla de etiquetado en dos etapas.
+#
+# 1. **Proxy departamental** (src/validation.py). Cada departamento se asigna a la
+#    región que predomina en su población. Es provisional y grueso: nueve de los
+#    25 departamentos abarcan más de una región natural.
+# 2. **Refinamiento por altitud** (src/metrics.py), con la altitud SRTM de cada
+#    centro poblado, que es el dato que de verdad discrimina:
+#       altitud >= sierra_min_elev_m                -> sierra
+#       altitud <  sierra_min_elev_m y dpto de selva -> selva
+#       altitud <  sierra_min_elev_m en los demás    -> costa
+#    Así los distritos altos de Lima quedan como sierra y las tierras bajas de
+#    Cusco como selva, que es lo correcto y lo que el proxy no captaba.
+#    El proxy se conserva en la columna natural_region_proxy para poder auditar
+#    cuántos puntos reclasificó el refinamiento.
 sierra_min_elev_m = 500
+costa_max_elev_m  = 500
 selva_max_elev_m  = 500
-# Departamentos íntegramente de una sola región (INEI):
-costa_departments  = ["CALLAO", "ICA", "LAMBAYEQUE", "LA LIBERTAD", "TUMBES", "PIURA"]
+# Asignación predominante por departamento. Los 25 deben estar exactamente una
+# vez: tests/test_pipeline.py lo verifica, porque olvidar uno lo dejaba como
+# "no_determinada" sin que nada avisara.
+costa_departments  = ["CALLAO", "ICA", "LAMBAYEQUE", "LA LIBERTAD", "LIMA", "TUMBES", "PIURA"]
 sierra_departments = ["APURIMAC", "AYACUCHO", "CUSCO", "HUANCAVELICA", "JUNIN", "PASCO", "PUNO", "ANCASH", "AREQUIPA", "CAJAMARCA", "HUANUCO", "MOQUEGUA", "TACNA"]
 selva_departments  = ["AMAZONAS", "LORETO", "MADRE DE DIOS", "SAN MARTIN", "UCAYALI"]
 

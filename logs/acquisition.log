@@ -50,3 +50,5 @@
 2026-09-06 23:14:21,178 | INFO    | hw02.acquisition       | sondeo Wayback: 0 snapshots de RENIPRESS; se usa inicio_actividad
 2026-09-06 23:14:21,246 | INFO    | hw02.acquisition       | manifiesto escrito con 4 fuentes
 2026-09-06 23:27:39,527 | INFO    | hw02.acquisition       | altitud desde caché: elevation_dev.parquet (198 puntos)
+2026-09-06 23:31:20,684 | INFO    | hw02.acquisition       | altitud desde caché: elevation_dev.parquet (198 puntos)
+2026-09-06 23:31:32,461 | INFO    | hw02.acquisition       | altitud desde caché: elevation_dev.parquet (198 puntos)

@@ -69,6 +69,10 @@ jobs:
       # Los logs de Actions requieren sesión iniciada, pero las *anotaciones* son
       # públicas. run_step vuelca la cola del error a una anotación para que el
       # fallo sea diagnosticable sin permisos sobre el repositorio.
+      # Puerta de calidad antes de gastar 40 minutos construyendo el grafo.
+      - name: Pruebas
+        run: bash scripts/run_step.sh "Pruebas" python -m pytest tests/ -q
+
       - name: Fase 1a — descarga de fuentes tabulares y límites
         run: bash scripts/run_step.sh "Fase 1a" python -m src.acquisition
 

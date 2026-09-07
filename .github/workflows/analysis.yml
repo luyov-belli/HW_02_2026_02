@@ -44,6 +44,9 @@ jobs:
       - name: Instalar dependencias
         run: pip install -r requirements.txt
 
+      - name: Pruebas
+        run: bash scripts/run_step.sh "Pruebas" python -m pytest tests/ -q
+
       - name: Verificar que existe la matriz OD
         id: check
         run: |

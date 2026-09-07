@@ -73,3 +73,7 @@
 2026-09-06 23:08:31,747 | INFO    | hw02.validation        | escrito demand_points_national.parquet (87504 filas, 34 columnas)
 2026-09-06 23:08:31,960 | INFO    | hw02.validation        | escrito demand_sample_national.parquet (5000 filas, 40 columnas)
 2026-09-06 23:08:32,667 | INFO    | hw02.validation        | Fase 1 completa. Archivos en C:\Users\AdriánLeoLuyoVargas\Desktop\HW_02_Luyo\HW_02_2026_02\data\processed
+2026-09-06 23:29:57,429 | WARNING | hw02.validation        | centros poblados: encabezado invertido: se ignoran las etiquetas (lat=Longitud (coord Y), lon=Latitud (coord X))
+2026-09-06 23:29:57,436 | WARNING | hw02.validation        | centros poblados: encabezado consistente con el contenido (lat=Latitud, lon=Longitud)
+2026-09-06 23:31:19,435 | WARNING | hw02.validation        | centros poblados: encabezado invertido: se ignoran las etiquetas (lat=Longitud (coord Y), lon=Latitud (coord X))
+2026-09-06 23:31:19,438 | WARNING | hw02.validation        | centros poblados: encabezado consistente con el contenido (lat=Latitud, lon=Longitud)
