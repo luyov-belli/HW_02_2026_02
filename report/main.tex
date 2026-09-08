@@ -57,6 +57,10 @@ brechas y optimización de cobertura}
 \author{Adrián Leo Luyo Vargas\\\small Data Science with Python — HW\_02, 2026-02}
 \date{\today}
 
+% Sin estirar el espacio vertical para cuadrar la última línea de cada
+% plana: con 8 figuras y 9 tablas, el estirado de LaTeX regalaba una página.
+\raggedbottom
+
 \begin{document}
 \maketitle
 
@@ -339,7 +343,7 @@ con cola larga, y el percentil 90 de \kpiTiempoPnoventa{} minutos la confirma.
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.68\textwidth]{fig1_choropleth_acceso}
+\includegraphics[width=0.60\textwidth]{fig1_choropleth_acceso}
 \caption{Tiempo medio en auto hasta un establecimiento resolutivo, por distrito,
 ponderado por población. Los distritos en gris no tienen polígono en la versión
 vigente de los límites administrativos.}
@@ -430,7 +434,7 @@ desplazamiento no motorizado es realista.}
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.66\textwidth]{fig6_temporal_cobertura}
+\includegraphics[width=0.58\textwidth]{fig6_temporal_cobertura}
 \caption{Cobertura recalculada con el conjunto de establecimientos resolutivos
 ya operativos en cada año, manteniendo fija la red vial de 2026.}
 \label{fig:temporal}
@@ -477,7 +481,7 @@ que no es una exigencia formal:
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.62\textwidth]{fig7_linea_recta_vs_red}
+\includegraphics[width=0.56\textwidth]{fig7_linea_recta_vs_red}
 \caption{Población que un análisis basado en distancia en línea recta
 declararía cubierta y que, por red vial, no lo está.}
 \label{fig:recta}
