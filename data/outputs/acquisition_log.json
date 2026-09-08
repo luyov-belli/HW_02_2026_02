@@ -1,6 +1,6 @@
 {
   "environment": {
-    "timestamp_utc": "2026-09-08T00:25:15+00:00",
+    "timestamp_utc": "2026-09-08T00:32:38+00:00",
     "python": "3.12.14",
     "platform": "Linux-6.17.0-1022-azure-x86_64-with-glibc2.39",
     "pandas": "3.0.5",
@@ -17,7 +17,7 @@
       "share_affected": 1.0,
       "action": "archivo RENIPRESS_2026_v6.csv (17.7 MB), origen: fallback_repositorio",
       "justification": "licencia: Datos Abiertos del Estado Peruano (ODC-BY). SUSALUD.; el portal no respondió y se usó la copia versionada en el repositorio, con SHA-256 registrado para auditoría",
-      "timestamp_utc": "2026-09-08T00:25:07+00:00",
+      "timestamp_utc": "2026-09-08T00:32:31+00:00",
       "sha256": "0817a7e15273a2aeff44b502518f73c30268b525eb76159a5455dd1b0269b6f9",
       "url": "http://datos.susalud.gob.pe/sites/default/files/RENIPRESS_2026_v6.csv",
       "origin": "fallback_repositorio"
@@ -31,7 +31,7 @@
       "share_affected": 1.0,
       "action": "archivo ListadoCentroPobladosMTC.xlsx (11.2 MB), origen: descarga",
       "justification": "licencia: Datos Abiertos del Estado Peruano. MTC, sobre base INEI.",
-      "timestamp_utc": "2026-09-08T00:25:10+00:00",
+      "timestamp_utc": "2026-09-08T00:32:34+00:00",
       "sha256": "e2565e6f6d798313bb044fff34b5e09a0e5610cc66bcde02c70f38c11840937d",
       "url": "https://www.datosabiertos.gob.pe/sites/default/files/ListadoCentroPobladosMTC.xlsx",
       "origin": "descarga"
@@ -45,7 +45,7 @@
       "share_affected": 1.0,
       "action": "archivo per_admin_boundaries.shp.zip (42.9 MB), origen: descarga",
       "justification": "licencia: OCHA / HDX Common Operational Datasets, fuente INEI.",
-      "timestamp_utc": "2026-09-08T00:25:13+00:00",
+      "timestamp_utc": "2026-09-08T00:32:35+00:00",
       "sha256": "1d143891d3bd1392dfe2d006f4f913b0b01290a448b9aee4189a718613706ef8",
       "url": "https://data.humdata.org/dataset/54fc7f4d-f4c0-4892-91f6-2fe7c1ecf363/resource/61faa8d6-fbfa-4d44-a94d-8f3b0241277a/download/per_admin_boundaries.shp.zip",
       "origin": "descarga"
@@ -59,7 +59,7 @@
       "share_affected": 1.0,
       "action": "archivo per_admpop_2024.xlsx (0.0 MB), origen: descarga",
       "justification": "licencia: OCHA / HDX Common Operational Datasets — Population Statistics 2024.",
-      "timestamp_utc": "2026-09-08T00:25:15+00:00",
+      "timestamp_utc": "2026-09-08T00:32:36+00:00",
       "sha256": "f7e922e57579f11c7f9b2d6404beb570051cda13b91406a3a558f7c3d534a897",
       "url": "https://data.humdata.org/dataset/0d8f2f78-cb46-4eb8-94eb-100b5388c3ff/resource/6355bd07-91e8-49e0-abbf-4de4036271a9/download/per_admpop_2024.xlsx",
       "origin": "descarga"
@@ -73,7 +73,7 @@
       "share_affected": 0.0,
       "action": "el Internet Archive no conserva los CSV; la serie histórica se reconstruye con INICIO_ACTIVIDAD",
       "justification": "innovación: evolución de la oferta resolutiva sin costo adicional de ruteo, porque la matriz OD cubre todas las resolutivas actuales",
-      "timestamp_utc": "2026-09-08T00:25:15+00:00",
+      "timestamp_utc": "2026-09-08T00:32:38+00:00",
       "wayback_reachable": true
     }
   ]
