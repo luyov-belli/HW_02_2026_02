@@ -400,6 +400,58 @@ def test_las_tablas_generadas_no_traen_caracteres_que_rompan_latex():
     assert not culpables, f"caracteres no representables en T1: {culpables}"
 
 
+def test_ninguna_macro_de_kpi_lleva_digitos_en_el_nombre():
+    """Regresión: `\\kpiShareHasta30` abortaba pdflatex en el preámbulo.
+
+    Una secuencia de control de TeX solo admite letras. TeX lee
+    ``\\newcommand{\\kpiShareHasta30}`` como la macro ``\\kpiShareHasta`` seguida
+    de los caracteres ``3`` y ``0``, e intenta imprimirlos; en el preámbulo eso da
+    "Missing \\begin{document}". El error señala la primera macro con dígitos, no
+    la causa, y costó dos corridas de CI localizarlo.
+
+    Se comprueban las tres fuentes: el generador, las macros ya generadas y las
+    referencias del informe.
+    """
+    from src.config import PROJECT_ROOT
+    from src.export import REQUIRED_KPIS
+
+    con_digitos = [k for k in REQUIRED_KPIS if re.search(r"\d", k)]
+    assert not con_digitos, f"REQUIRED_KPIS con dígitos: {con_digitos}"
+
+    citadas = set(re.findall(r"\\kpi[A-Za-z]*\d+", _tex()))
+    assert not citadas, f"main.tex cita macros con dígitos: {sorted(citadas)}"
+
+    for kpis in (PROJECT_ROOT / "report" / "tables").glob("kpis.tex"):
+        definidas = re.findall(
+            r"\\newcommand\{\\(kpi[A-Za-z]*\d+)\}", kpis.read_text(encoding="utf-8")
+        )
+        assert not definidas, f"kpis.tex define macros con dígitos: {definidas}"
+
+
+def test_el_informe_solo_cita_macros_que_el_pipeline_declara():
+    """Contrato entre main.tex y export.py.
+
+    Si el informe cita una macro que ``REQUIRED_KPIS`` no declara, no habrá
+    marcador de respaldo y pdflatex abortará con "undefined control sequence" en
+    una corrida donde ese insumo falte.
+    """
+    from src.export import REQUIRED_KPIS
+
+    declaradas = {f"kpi{k}" for k in REQUIRED_KPIS}
+    citadas = set(re.findall(r"\\(kpi[A-Za-z]+)", _tex()))
+    huerfanas = sorted(citadas - declaradas)
+    assert not huerfanas, f"macros citadas y no declaradas: {huerfanas}"
+
+
+def test_macro_suffix_produce_solo_letras():
+    from src.export import macro_suffix
+
+    assert macro_suffix(30) == "TresCero"
+    assert macro_suffix(120) == "UnoDosCero"
+    for n in (0, 5, 60, 90, 1440):
+        assert macro_suffix(n).isalpha()
+
+
 def test_los_encabezados_de_banda_son_texto_plano():
     """El encabezado no debe llevar LaTeX: df.to_latex(escape=True) lo escaparía."""
     from src.export import _header_hasta

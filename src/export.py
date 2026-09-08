@@ -584,9 +584,11 @@ def _table_data_quality() -> None:
 #: sequence" a mitad del documento.
 REQUIRED_KPIS: tuple[str, ...] = (
     "PoblacionTotal", "TiempoMedio", "TiempoMediano", "TiempoPnoventa",
-    "ShareHasta30", "ShareHasta60", "ShareHasta120",
-    "PobHasta30", "PobHasta60", "PobHasta120",
-    "ShareMas120", "PobMas120",
+    # Los nombres llevan los dígitos escritos con letras porque una secuencia de
+    # control de TeX no admite cifras; ver macro_suffix().
+    "ShareHastaTresCero", "ShareHastaSeisCero", "ShareHastaUnoDosCero",
+    "PobHastaTresCero", "PobHastaSeisCero", "PobHastaUnoDosCero",
+    "ShareMasUnoDosCero", "PobMasUnoDosCero",
     "Gini", "GiniUrbano", "GiniRural",
     "TiempoMedioUrbano", "TiempoMedioRural",
     "PeorDistrito", "PeorDistritoDep", "PeorDistritoPob",
@@ -596,6 +598,28 @@ REQUIRED_KPIS: tuple[str, ...] = (
     "QRenipressRowsRaw", "QCcppValid", "QFacilitiesResolutive",
     "QFacilitiesResolutiveByCategory", "QFacilitiesResolutiveOnRecoveredCoords",
 )
+
+
+#: Dígito → palabra, para construir nombres de macro válidos en LaTeX.
+_DIGITO_A_PALABRA = {
+    "0": "Cero", "1": "Uno", "2": "Dos", "3": "Tres", "4": "Cuatro",
+    "5": "Cinco", "6": "Seis", "7": "Siete", "8": "Ocho", "9": "Nueve",
+}
+
+
+def macro_suffix(numero: int) -> str:
+    """Convierte un número en un sufijo de macro formado solo por letras.
+
+    Un nombre de secuencia de control de TeX **solo puede contener letras**. Con
+    ``\\newcommand{\\kpiShareHasta30}``, TeX lee la macro como
+    ``\\kpiShareHasta`` y luego intenta *imprimir* el ``30``, lo que en el
+    preámbulo aborta la compilación con "Missing \\begin{document}". Costó dos
+    corridas de CI localizarlo, porque el error señala la primera macro con
+    dígitos y no la causa.
+
+    ``30 -> "TresCero"``, ``120 -> "UnoDosCero"``.
+    """
+    return "".join(_DIGITO_A_PALABRA[d] for d in str(int(numero)))
 
 
 def kpis() -> dict[str, float]:
@@ -611,10 +635,12 @@ def kpis() -> dict[str, float]:
         vals["TiempoMediano"] = f"{r['t_mediano_min']:.1f}"
         vals["TiempoPnoventa"] = f"{r['t_p90_min']:.1f}"
         for b in bands:
-            vals[f"ShareHasta{b}"] = f"{r[f'share_hasta_{b}min'] * 100:.1f}"
-            vals[f"PobHasta{b}"] = f"{r[f'pob_hasta_{b}min']:,.0f}".replace(",", "\\,")
-        vals[f"ShareMas{bands[-1]}"] = f"{r[f'share_mas_{bands[-1]}min'] * 100:.1f}"
-        vals[f"PobMas{bands[-1]}"] = f"{r[f'pob_mas_{bands[-1]}min']:,.0f}".replace(",", "\\,")
+            s = macro_suffix(b)
+            vals[f"ShareHasta{s}"] = f"{r[f'share_hasta_{b}min'] * 100:.1f}"
+            vals[f"PobHasta{s}"] = f"{r[f'pob_hasta_{b}min']:,.0f}".replace(",", "\\,")
+        ult = macro_suffix(bands[-1])
+        vals[f"ShareMas{ult}"] = f"{r[f'share_mas_{bands[-1]}min'] * 100:.1f}"
+        vals[f"PobMas{ult}"] = f"{r[f'pob_mas_{bands[-1]}min']:,.0f}".replace(",", "\\,")
 
     ineq = _read("inequality")
     if ineq is not None and not ineq.empty:
