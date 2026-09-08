@@ -1,6 +1,6 @@
 {
   "environment": {
-    "timestamp_utc": "2026-09-08T00:33:47+00:00",
+    "timestamp_utc": "2026-09-08T00:42:08+00:00",
     "python": "3.12.14",
     "platform": "Linux-6.17.0-1022-azure-x86_64-with-glibc2.39",
     "pandas": "3.0.5",
@@ -17,7 +17,7 @@
       "share_affected": 0.446843,
       "action": "radio de captación 60 min, decaimiento 'gaussian'; 828 distritos sin ningún resolutivo dentro del radio",
       "justification": "el tiempo al más cercano ignora la congestión. La correlación de Spearman entre el índice 2SFCA y el tiempo medio es -0.92: si fuera −1 el 2SFCA no aportaría nada; la diferencia es la que revela distritos cercanos a un hospital saturado. El nivel absoluto del índice no es interpretable porque la capacidad es un proxy normativo, pero el ordenamiento sí",
-      "timestamp_utc": "2026-09-08T00:33:47+00:00",
+      "timestamp_utc": "2026-09-08T00:42:08+00:00",
       "spearman_sfca_vs_tiempo": -0.9201
     },
     {
@@ -29,7 +29,7 @@
       "share_affected": 0.001491,
       "action": "con 5 ascensos se cubren 328,572 habitantes más dentro de 60 minutos",
       "justification": "algoritmo voraz para cobertura máxima: garantiza al menos 63,2% del óptimo, y la cota superior calculada (suma de las B mejores coberturas individuales) acota la brecha real por arriba. Se prefiere sobre un ILP exacto porque no introduce una dependencia de solver y la brecha resulta pequeña; el orden de elección es además directamente accionable",
-      "timestamp_utc": "2026-09-08T00:33:47+00:00",
+      "timestamp_utc": "2026-09-08T00:42:08+00:00",
       "umbral_min": 60.0
     }
   ]

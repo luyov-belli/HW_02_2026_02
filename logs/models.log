@@ -40,3 +40,8 @@
 2026-09-08 00:33:47,807 | INFO    | hw02.models            | escrito sfca_district_national.csv (1853 filas)
 2026-09-08 00:33:47,808 | INFO    | hw02.models            | escrito mclp_frontier_national.csv (4 filas)
 2026-09-08 00:33:47,810 | INFO    | hw02.models            | escrito mclp_sequence_national.csv (50 filas)
+2026-09-08 00:42:08,782 | INFO    | hw02.models            | MCLP: 2268 puntos descubiertos (15.1% de la población), 1083 candidatas útiles
+2026-09-08 00:42:08,906 | INFO    | hw02.models            | escrito sfca_points_national.csv (5000 filas)
+2026-09-08 00:42:08,912 | INFO    | hw02.models            | escrito sfca_district_national.csv (1853 filas)
+2026-09-08 00:42:08,913 | INFO    | hw02.models            | escrito mclp_frontier_national.csv (4 filas)
+2026-09-08 00:42:08,914 | INFO    | hw02.models            | escrito mclp_sequence_national.csv (50 filas)
