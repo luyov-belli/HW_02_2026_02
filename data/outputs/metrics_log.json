@@ -1,6 +1,6 @@
 {
   "environment": {
-    "timestamp_utc": "2026-09-07T14:21:09+00:00",
+    "timestamp_utc": "2026-09-07T23:59:19+00:00",
     "python": "3.12.14",
     "platform": "Linux-6.17.0-1022-azure-x86_64-with-glibc2.39",
     "pandas": "3.0.5",
@@ -21,7 +21,7 @@
       "share_affected": 1.0,
       "action": "SRTM 30 m consultado vía OpenTopoData y versionado en data/processed",
       "justification": "la altitud es uno de los dos proxies estándar de pobreza y aislamiento en el Perú; se cachea para que ni CI ni una segunda corrida golpeen la API",
-      "timestamp_utc": "2026-09-07T14:20:59+00:00"
+      "timestamp_utc": "2026-09-07T23:59:14+00:00"
     },
     {
       "stage": "metrics",
@@ -32,7 +32,7 @@
       "share_affected": 0.1914,
       "action": "957 puntos reclasificados (2,659,156 habitantes representados)",
       "justification": "umbral de 500 m s. n. m. sobre la altitud SRTM del centro poblado. El proxy departamental asignaba una sola región a cada departamento, y nueve de los 25 abarcan más de una: sin este paso las provincias altas de Lima contaban como costa y las tierras bajas de Cusco como sierra. Se conserva natural_region_proxy para auditar el cambio",
-      "timestamp_utc": "2026-09-07T14:20:59+00:00",
+      "timestamp_utc": "2026-09-07T23:59:14+00:00",
       "distribucion": "sierra=3779;costa=837;selva=384"
     },
     {
@@ -44,7 +44,7 @@
       "share_affected": 0.478,
       "action": "media rural 70.7 min vs. urbana 14.7 min",
       "justification": "la clasificación es la del INEI que trae el propio listado de centros poblados (regla 'inei_classification'), no un umbral inventado; el umbral de población solo actúa como respaldo para los registros sin ese campo, y su uso está contado en el reporte de calidad",
-      "timestamp_utc": "2026-09-07T14:21:06+00:00",
+      "timestamp_utc": "2026-09-07T23:59:17+00:00",
       "ratio_rural_urbano": 4.815
     },
     {
@@ -56,7 +56,7 @@
       "share_affected": 0.976241,
       "action": "construidas 7 variables distritales",
       "justification": "no se incluye pobreza monetaria ni población menor de 5 años a nivel distrital: el portal del INEI no respondió en la fecha de acceso y la versión vigente de las estadísticas de población de HDX solo llega a nivel departamental (verificado). Se usan en su lugar ruralidad y altitud, los dos proxies estándar en la literatura peruana, y la ausencia se declara en Limitaciones",
-      "timestamp_utc": "2026-09-07T14:21:07+00:00"
+      "timestamp_utc": "2026-09-07T23:59:17+00:00"
     },
     {
       "stage": "metrics",
@@ -67,7 +67,7 @@
       "share_affected": 1.0,
       "action": "asociaciones con |rho| ≥ 0.15 marcadas como reportables",
       "justification": "Spearman sobre distritos, no sobre puntos de demanda, para no darle más peso a los distritos con más centros poblados muestreados. Ninguna de estas asociaciones identifica un efecto causal: el diseño es transversal y sin variación exógena",
-      "timestamp_utc": "2026-09-07T14:21:07+00:00"
+      "timestamp_utc": "2026-09-07T23:59:18+00:00"
     },
     {
       "stage": "metrics",
@@ -78,7 +78,7 @@
       "share_affected": 0.326087,
       "action": "210 establecimientos resolutivos nuevos entre 2010 y 2026; la cobertura a 60 min varía +1.26%",
       "justification": "serie reconstruida con INICIO_ACTIVIDAD, sin costo adicional de ruteo. Supone que ningún resolutivo cerró, porque RENIPRESS publicado no permite detectar cierres; por eso subestima la mejora",
-      "timestamp_utc": "2026-09-07T14:21:09+00:00"
+      "timestamp_utc": "2026-09-07T23:59:19+00:00"
     }
   ]
 }

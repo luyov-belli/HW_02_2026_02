@@ -1,6 +1,6 @@
 {
   "environment": {
-    "timestamp_utc": "2026-09-07T13:54:02+00:00",
+    "timestamp_utc": "2026-09-07T23:59:13+00:00",
     "python": "3.12.14",
     "platform": "Linux-6.17.0-1022-azure-x86_64-with-glibc2.39",
     "pandas": "3.0.5",
@@ -30,7 +30,7 @@
       "share_affected": 1.0,
       "action": "distritos retenidos para el alcance 'national'",
       "justification": "HDX v01 (valid_on 2020-07-14) trae 1873 distritos; se filtra a los 25 departamentos del alcance",
-      "timestamp_utc": "2026-09-07T13:53:04+00:00",
+      "timestamp_utc": "2026-09-07T23:58:34+00:00",
       "departments": "AMAZONAS;ANCASH;APURIMAC;AREQUIPA;AYACUCHO;CAJAMARCA;CALLAO;CUSCO;HUANCAVELICA;HUANUCO;ICA;JUNIN;LA LIBERTAD;LAMBAYEQUE;LIMA;LORETO;MADRE DE DIOS;MOQUEGUA;PASCO;PIURA;PUNO;SAN MARTIN;TACNA;TUMBES;UCAYALI"
     },
     {
@@ -42,7 +42,7 @@
       "share_affected": 0.0,
       "action": "archivo decodificado con 'utf-8'",
       "justification": "se probaron utf-8, utf-8-sig, latin-1 y cp1252 en orden; 0 campos con síntomas de doble codificación",
-      "timestamp_utc": "2026-09-07T13:53:04+00:00",
+      "timestamp_utc": "2026-09-07T23:58:34+00:00",
       "encoding_used": "utf-8"
     },
     {
@@ -54,7 +54,7 @@
       "share_affected": 0.023203,
       "action": "se reporta y no se repara",
       "justification": "el archivo publicado no contiene ni un solo byte de 'ñ' ni de vocal acentuada en ninguna codificación: el sistema de origen exportó reemplazando cada carácter no ASCII por '?', pérdida irreversible (no es mojibake, que sí sería recuperable). Reconstruir 'SE?OR' como 'SEÑOR' es una inferencia y en casos como 'MAR?A' sería una invención, así que no se repara. Sin impacto analítico: los nombres son solo de presentación y ningún cruce los usa como clave —los cruces van por COD_IPRESS y UBIGEO",
-      "timestamp_utc": "2026-09-07T13:53:04+00:00"
+      "timestamp_utc": "2026-09-07T23:58:34+00:00"
     },
     {
       "stage": "validation",
@@ -65,7 +65,7 @@
       "share_affected": 0.0,
       "action": "se conserva la primera aparición y se descartan las repetidas",
       "justification": "clave declarada en config.md: ['COD_IPRESS']",
-      "timestamp_utc": "2026-09-07T13:53:04+00:00"
+      "timestamp_utc": "2026-09-07T23:58:34+00:00"
     },
     {
       "stage": "validation",
@@ -76,7 +76,7 @@
       "share_affected": 0.0,
       "action": "descartadas IPRESS fuera del alcance 'national'",
       "justification": "alcance activo: AMAZONAS, ANCASH, APURIMAC, AREQUIPA, AYACUCHO, CAJAMARCA, CALLAO, CUSCO, HUANCAVELICA, HUANUCO, ICA, JUNIN, LA LIBERTAD, LAMBAYEQUE, LIMA, LORETO, MADRE DE DIOS, MOQUEGUA, PASCO, PIURA, PUNO, SAN MARTIN, TACNA, TUMBES, UCAYALI",
-      "timestamp_utc": "2026-09-07T13:53:04+00:00"
+      "timestamp_utc": "2026-09-07T23:58:34+00:00"
     },
     {
       "stage": "validation",
@@ -87,7 +87,7 @@
       "share_affected": 0.002607,
       "action": "marcados como no operativos (no se eliminan, se excluyen del ruteo)",
       "justification": "ESTADO es 'ACTIVO' en el 100% de los registros y SITUACION es 'REGISTRADO' en el 100%, por lo que el único campo con poder discriminante es CONDICION. Se documenta como limitación: RENIPRESS publicado no permite identificar cierres.",
-      "timestamp_utc": "2026-09-07T13:53:04+00:00",
+      "timestamp_utc": "2026-09-07T23:58:34+00:00",
       "estado_values": "ACTIVO",
       "condicion_values": "ACTIVO;ANOTACION;INOPERATIVO"
     },
@@ -100,7 +100,7 @@
       "share_affected": 0.182272,
       "action": "tratadas como no resolutivas",
       "justification": "CATEGORIA = '0' no corresponde a ninguna categoría de la NT 021-MINSA; asumir resolutividad sobreestimaría la oferta",
-      "timestamp_utc": "2026-09-07T13:53:04+00:00"
+      "timestamp_utc": "2026-09-07T23:58:34+00:00"
     },
     {
       "stage": "validation",
@@ -111,7 +111,7 @@
       "share_affected": 0.263203,
       "action": "marcadas para recuperación por capital distrital",
       "justification": "una coordenada (0,0) es el Golfo de Guinea, no un error recuperable por reproyección; se trata igual que un nulo",
-      "timestamp_utc": "2026-09-07T13:53:04+00:00"
+      "timestamp_utc": "2026-09-07T23:58:35+00:00"
     },
     {
       "stage": "validation",
@@ -122,7 +122,7 @@
       "share_affected": 0.0,
       "action": "par (lat, lon) invertido",
       "justification": "se invierte solo cuando el par original cae fuera del bbox del Perú y el par invertido cae dentro; el criterio es no ambiguo porque el Perú no interseca su propio bbox transpuesto",
-      "timestamp_utc": "2026-09-07T13:53:04+00:00"
+      "timestamp_utc": "2026-09-07T23:58:35+00:00"
     },
     {
       "stage": "validation",
@@ -133,7 +133,7 @@
       "share_affected": 0.0,
       "action": "coordenadas anuladas y enviadas a recuperación",
       "justification": "bbox declarado en config.md: (-81.4, -18.4, -68.6, -0.04)",
-      "timestamp_utc": "2026-09-07T13:53:04+00:00"
+      "timestamp_utc": "2026-09-07T23:58:35+00:00"
     },
     {
       "stage": "validation",
@@ -144,7 +144,7 @@
       "share_affected": 0.030481,
       "action": "marcado, no descartado",
       "justification": "tolerancia de 0.02° (~2.2 km) para bordes; el desacuerdo puede venir del polígono (HDX 2020) o del UBIGEO declarado, así que descartar sesgaría hacia distritos con límites desactualizados",
-      "timestamp_utc": "2026-09-07T13:53:15+00:00"
+      "timestamp_utc": "2026-09-07T23:58:43+00:00"
     },
     {
       "stage": "validation",
@@ -155,7 +155,7 @@
       "share_affected": 0.004802,
       "action": "conservado; se agrega a nivel provincial en la Fase 3",
       "justification": "distritos creados después de 2020-07-14 no existen en la versión vigente de los límites de HDX/INEI",
-      "timestamp_utc": "2026-09-07T13:53:15+00:00"
+      "timestamp_utc": "2026-09-07T23:58:43+00:00"
     },
     {
       "stage": "validation",
@@ -166,7 +166,7 @@
       "share_affected": 0.999151,
       "action": "7061 de 7067 registros recuperados",
       "justification": "recuperación por centroide del centro poblado capital del distrito declarado; el error introducido se acota por el radio del distrito y se propaga como banda de incertidumbre en la Fase 3",
-      "timestamp_utc": "2026-09-07T13:53:15+00:00"
+      "timestamp_utc": "2026-09-07T23:58:43+00:00"
     },
     {
       "stage": "validation",
@@ -177,7 +177,7 @@
       "share_affected": 1.0,
       "action": "latitud <- 'Longitud (coord Y)', longitud <- 'Latitud (coord X)'",
       "justification": "encabezado invertido: se ignoran las etiquetas. Puntuación como etiquetado = 0.000, como invertido = 2.000 (fracción de valores dentro del rango esperado de cada eje, que son disjuntos en el Perú)",
-      "timestamp_utc": "2026-09-07T13:53:39+00:00"
+      "timestamp_utc": "2026-09-07T23:58:57+00:00"
     },
     {
       "stage": "validation",
@@ -188,7 +188,7 @@
       "share_affected": 0.003612,
       "action": "se usa CLASIFICACIÓN INEI cuando existe; en su ausencia, umbral de 2000 habitantes",
       "justification": "la regla primaria es la clasificación oficial del INEI, no un umbral propio; el umbral es solo respaldo y se reporta cuántos casos lo usaron",
-      "timestamp_utc": "2026-09-07T13:53:40+00:00"
+      "timestamp_utc": "2026-09-07T23:58:58+00:00"
     },
     {
       "stage": "validation",
@@ -199,7 +199,7 @@
       "share_affected": 0.0001,
       "action": "descartados centros poblados fuera del alcance 'national'",
       "justification": "alcance activo: AMAZONAS, ANCASH, APURIMAC, AREQUIPA, AYACUCHO, CAJAMARCA, CALLAO, CUSCO, HUANCAVELICA, HUANUCO, ICA, JUNIN, LA LIBERTAD, LAMBAYEQUE, LIMA, LORETO, MADRE DE DIOS, MOQUEGUA, PASCO, PIURA, PUNO, SAN MARTIN, TACNA, TUMBES, UCAYALI",
-      "timestamp_utc": "2026-09-07T13:53:40+00:00"
+      "timestamp_utc": "2026-09-07T23:58:58+00:00"
     },
     {
       "stage": "validation",
@@ -210,7 +210,7 @@
       "share_affected": 0.0,
       "action": "descartados del universo de demanda",
       "justification": "un punto de demanda sin ubicación no puede rutearse; su población se reporta aparte como cobertura no evaluable",
-      "timestamp_utc": "2026-09-07T13:53:40+00:00"
+      "timestamp_utc": "2026-09-07T23:58:58+00:00"
     },
     {
       "stage": "validation",
@@ -221,7 +221,7 @@
       "share_affected": 0.0,
       "action": "par invertido registro a registro",
       "justification": "independiente de la inversión sistemática del encabezado; captura errores de captura individuales",
-      "timestamp_utc": "2026-09-07T13:53:40+00:00"
+      "timestamp_utc": "2026-09-07T23:58:58+00:00"
     },
     {
       "stage": "validation",
@@ -232,7 +232,7 @@
       "share_affected": 0.0,
       "action": "descartados",
       "justification": "bbox declarado en config.md: (-81.4, -18.4, -68.6, -0.04)",
-      "timestamp_utc": "2026-09-07T13:53:40+00:00"
+      "timestamp_utc": "2026-09-07T23:58:58+00:00"
     },
     {
       "stage": "validation",
@@ -243,7 +243,7 @@
       "share_affected": 0.008166,
       "action": "marcado, no descartado",
       "justification": "tolerancia de 0.02° (~2.2 km) para bordes; el desacuerdo puede venir del polígono (HDX 2020) o del UBIGEO declarado, así que descartar sesgaría hacia distritos con límites desactualizados",
-      "timestamp_utc": "2026-09-07T13:53:52+00:00"
+      "timestamp_utc": "2026-09-07T23:59:07+00:00"
     },
     {
       "stage": "validation",
@@ -254,7 +254,7 @@
       "share_affected": 0.001891,
       "action": "conservado; se agrega a nivel provincial en la Fase 3",
       "justification": "distritos creados después de 2020-07-14 no existen en la versión vigente de los límites de HDX/INEI",
-      "timestamp_utc": "2026-09-07T13:53:52+00:00"
+      "timestamp_utc": "2026-09-07T23:59:07+00:00"
     },
     {
       "stage": "validation",
@@ -265,7 +265,7 @@
       "share_affected": 0.124321,
       "action": "descartados del universo de demanda",
       "justification": "no aportan peso a ningún agregado poblacional y consumirían cupos del límite de 5 000 puntos ruteables",
-      "timestamp_utc": "2026-09-07T13:53:52+00:00"
+      "timestamp_utc": "2026-09-07T23:59:07+00:00"
     },
     {
       "stage": "validation",
@@ -276,7 +276,7 @@
       "share_affected": 0.05714,
       "action": "2003 puntos de certeza (capitales y ≥ 2000 hab.) + 2997 PPS estratificados por departamento × área",
       "justification": "límite del enunciado: 5000 puntos ruteables. Los pesos de diseño suman 27,776,818 habitantes frente a 27,776,818 del universo (100.0000%); los agregados poblacionales siguen siendo estimadores de Horvitz–Thompson no sesgados. Implicancia: los centros poblados rurales muy pequeños están representados por análogos ponderados, no individualmente.",
-      "timestamp_utc": "2026-09-07T13:54:01+00:00",
+      "timestamp_utc": "2026-09-07T23:59:12+00:00",
       "n_strata": 2400,
       "weight_sum": 27776818.0,
       "universe_population": 27776818
@@ -290,7 +290,7 @@
       "share_affected": 0.382083,
       "action": "marcados los distritos con < 3 puntos Y menos del 60% de su población en el estrato de certeza",
       "justification": "1044 distritos tienen menos de 3 puntos, pero en la mayoría la capital concentra la población, de modo que la estimación sigue siendo firme. El ranking de brechas críticas debe distinguir un distrito realmente mal cubierto de uno mal muestreado, no penalizar a los distritos concentrados. Todo distrito del alcance tiene al menos su capital en la muestra.",
-      "timestamp_utc": "2026-09-07T13:54:01+00:00",
+      "timestamp_utc": "2026-09-07T23:59:12+00:00",
       "n_districts_below_k_points": 1044,
       "direct_coverage_threshold": 0.6
     }
