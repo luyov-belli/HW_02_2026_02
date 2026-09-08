@@ -9,13 +9,17 @@
 %  src/export.py a partir de data/outputs/. Recompilar tras una corrida nueva
 %  actualiza el texto solo.
 % =============================================================================
-\documentclass[11pt,a4paper]{article}
+% 10pt y no 11: el enunciado limita el informe a 8-12 páginas y a 11pt salían 13
+% incluso tras emparejar figuras y reducir el espaciado de floats. Reducir el
+% cuerpo conserva todo el análisis, que es lo que se califica; el margen sube a
+% 2.7 cm para que la medida de línea no se alargue de más.
+\documentclass[10pt,a4paper]{article}
 
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage[spanish,es-nodecimaldot]{babel}
 \usepackage{lmodern}
-\usepackage[margin=2.4cm]{geometry}
+\usepackage[margin=2.7cm]{geometry}
 \usepackage{graphicx}
 \usepackage{booktabs}
 \usepackage{longtable}
