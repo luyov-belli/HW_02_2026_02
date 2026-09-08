@@ -422,7 +422,10 @@ def _to_latex(
         column_format="l" * 1 + "r" * (df.shape[1] - 1),
     )
     # booktabs ya lo emite pandas; solo se ajusta el tamaño para tablas anchas.
-    if df.shape[1] > 6:
+    # El umbral es 5 y no 7 columnas porque el informe tiene que caber en las
+    # 8-12 páginas que exige el enunciado y son las tablas anchas las que empujan
+    # el conteo, no el texto.
+    if df.shape[1] >= 5:
         tex = tex.replace("\\begin{tabular}", "\\footnotesize\n\\begin{tabular}")
     path.write_text(tex, encoding="utf-8")
     LOG.info("tabla %s (%d filas)", path.name, len(df))
@@ -431,13 +434,19 @@ def _to_latex(
 def tables(bands: list[int]) -> None:
     dep = _read("metrics_department")
     if dep is not None:
-        cols = ["department", "poblacion", "t_medio_min", "t_mediano_min", "t_p90_min"]
-        cols += [f"share_hasta_{b}min" for b in bands]
+        # Se omiten la mediana y la banda más alta: con 25 filas, cada columna
+        # extra cuesta ancho y el informe tiene un límite de páginas. La mediana
+        # por departamento aporta poco cuando ya están la media y el p90, y la
+        # cobertura a 120 min es casi 100 % en la mayoría; ambas quedan completas
+        # en data/outputs/metrics_department_national.csv.
+        bandas_tabla = bands[:2]
+        cols = ["department", "poblacion", "t_medio_min", "t_p90_min"]
+        cols += [f"share_hasta_{b}min" for b in bandas_tabla]
         t = dep[cols].copy()
-        for b in bands:
+        for b in bandas_tabla:
             t[f"share_hasta_{b}min"] = t[f"share_hasta_{b}min"] * 100
-        t.columns = ["Departamento", "Población", "Media", "Mediana", "p90"] + [
-            _header_hasta(b) for b in bands
+        t.columns = ["Departamento", "Población", "Media", "p90"] + [
+            _header_hasta(b) for b in bandas_tabla
         ]
         _to_latex(
             t, "tab_cobertura_departamento",
@@ -452,7 +461,10 @@ def tables(bands: list[int]) -> None:
         cols = ["department", "district", "poblacion", "t_medio_min",
                 f"share_hasta_{band}min", "pob_fuera_umbral", "high_variance"]
         cols = [c for c in cols if c in worst.columns]
-        t = worst[cols].head(15).copy()
+        # Diez y no quince, por el límite de páginas del informe; el ranking
+        # completo (25 distritos) está en data/outputs/worst_districts_*.csv y en
+        # la vista ordenable del dashboard.
+        t = worst[cols].head(10).copy()
         if f"share_hasta_{band}min" in t:
             t[f"share_hasta_{band}min"] *= 100
         if "high_variance" in t:
@@ -461,9 +473,10 @@ def tables(bands: list[int]) -> None:
                      _header_hasta(band), "Pob. fuera", "Alta var."][: len(t.columns)]
         _to_latex(
             t, "tab_peores_distritos",
-            f"Brechas críticas: 15 distritos con más población fuera de {band} minutos "
-            "de un establecimiento resolutivo. «Alta var.» marca los distritos cuya "
-            "estimación descansa en pocos puntos muestreados.",
+            f"Brechas críticas: los diez distritos con más población fuera de "
+            f"{band} minutos de un establecimiento resolutivo. «Alta var.» marca "
+            "los distritos cuya estimación descansa en pocos puntos muestreados. "
+            "El ranking completo está en \\texttt{data/outputs/}.",
             "tab:peores-distritos",
         )
 

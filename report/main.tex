@@ -140,30 +140,27 @@ de ruteo desde cero.
 \caption{Fuentes utilizadas. Las fechas de acceso, tamaños y sumas SHA-256 de
 cada archivo quedan registradas en \texttt{data/raw/manifest.json}.}
 \label{tab:fuentes}
-\begin{tabular}{p{3.4cm}p{4.1cm}p{2.2cm}p{4.4cm}}
+% Sin columna «Rol»: el papel de cada insumo se explica en el texto que sigue y
+% esa columna era la más ancha de las cuatro.
+\begin{tabular}{p{3.2cm}p{7.4cm}p{3.6cm}}
 \toprule
-\textbf{Insumo} & \textbf{Fuente} & \textbf{Licencia} & \textbf{Rol} \\
+\textbf{Insumo} & \textbf{Fuente} & \textbf{Licencia} \\
 \midrule
-Establecimientos de salud &
+Establecimientos de salud (oferta) &
 RENIPRESS / SUSALUD, \texttt{RENIPRESS\_2026\_v6.csv} (act.\ 21-ago-2026) &
-Datos Abiertos del Estado Peruano &
-Oferta: categoría, condición, institución y coordenadas \\
-Centros poblados &
+Datos Abiertos del Estado Peruano \\
+Centros poblados (demanda) &
 MTC sobre base INEI, \texttt{Listado\-Centro\-Poblados\-MTC.xlsx} &
-Datos Abiertos del Estado Peruano &
-Demanda: población, viviendas, clasificación urbano/rural, coordenadas \\
-Límites administrativos &
+Datos Abiertos del Estado Peruano \\
+Límites distritales &
 OCHA/HDX \emph{Common Operational Datasets}, base INEI, v01 &
-CC-BY (HDX) &
-Polígonos distritales para validación y agregación \\
+CC-BY (HDX) \\
 Red vial &
 OpenStreetMap, extracto de Perú de Geofabrik &
-ODbL 1.0 &
-Grafo de ruteo de OSRM \\
+ODbL 1.0 \\
 Altitud &
 SRTM 30\,m vía OpenTopoData &
-Dominio público (NASA) &
-Variable del análisis cruzado \\
+Dominio público (NASA) \\
 \bottomrule
 \end{tabular}
 \end{table}
