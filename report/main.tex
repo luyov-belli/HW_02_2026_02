@@ -15,19 +15,26 @@
 \usepackage[T1]{fontenc}
 \usepackage[spanish,es-nodecimaldot]{babel}
 \usepackage{lmodern}
-\usepackage[margin=2.6cm]{geometry}
+\usepackage[margin=2.4cm]{geometry}
 \usepackage{graphicx}
 \usepackage{booktabs}
 \usepackage{longtable}
 \usepackage{amsmath}
 \usepackage{siunitx}
 \usepackage{caption}
+\usepackage{subcaption}
 \usepackage{microtype}
 \usepackage[hidelinks]{hyperref}
 \usepackage{enumitem}
 
 \graphicspath{{figures/}}
-\captionsetup{font=small,labelfont=bf}
+\captionsetup{font=small,labelfont=bf,skip=4pt}
+\captionsetup[sub]{font=small,skip=3pt}
+% Márgenes de float más estrechos: con ocho figuras y nueve tablas, los
+% valores por defecto de LaTeX dejaban planas medio vacías.
+\setlength{\textfloatsep}{10pt plus 2pt minus 2pt}
+\setlength{\intextsep}{10pt plus 2pt minus 2pt}
+\setlength{\floatsep}{8pt plus 2pt minus 2pt}
 \setlist{noitemsep,topsep=3pt}
 \sisetup{group-separator={\,},group-minimum-digits=4}
 
@@ -332,20 +339,11 @@ con cola larga, y el percentil 90 de \kpiTiempoPnoventa{} minutos la confirma.
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.72\textwidth]{fig1_choropleth_acceso}
+\includegraphics[width=0.68\textwidth]{fig1_choropleth_acceso}
 \caption{Tiempo medio en auto hasta un establecimiento resolutivo, por distrito,
 ponderado por población. Los distritos en gris no tienen polígono en la versión
 vigente de los límites administrativos.}
 \label{fig:mapa}
-\end{figure}
-
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=0.86\textwidth]{fig2_cobertura_acumulada}
-\caption{Cobertura acumulada por tiempo de acceso, urbano frente a rural. La
-distancia horizontal entre las dos curvas es la brecha de acceso a cada nivel de
-cobertura, no un promedio.}
-\label{fig:ecdf}
 \end{figure}
 
 \subsection{Desigualdad y contraste urbano--rural}
@@ -355,13 +353,28 @@ El Gini del tiempo de acceso es \kpiGini{} a escala nacional, con
 población rural tarda \kpiTiempoMedioRural{} minutos en promedio frente a
 \kpiTiempoMedioUrbano{} minutos de la urbana.
 
+% Las dos figuras se leen juntas: la ECDF muestra la brecha a cada nivel de
+% cobertura y la Lorenz, cómo se concentra esa carga. Van emparejadas para no
+% gastar dos planas en floats.
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.52\textwidth]{fig3_lorenz}
-\caption{Curva de Lorenz del tiempo de viaje. El eje horizontal ordena a la
-población de menor a mayor tiempo de acceso; la separación respecto de la
-diagonal es la concentración de la carga de desplazamiento en una minoría.}
-\label{fig:lorenz}
+\begin{minipage}[b]{0.56\textwidth}
+  \centering
+  \includegraphics[width=\linewidth]{fig2_cobertura_acumulada}
+  \subcaption{Cobertura acumulada, urbano frente a rural. La distancia
+  horizontal entre curvas es la brecha a cada nivel de cobertura, no un
+  promedio.}
+  \label{fig:ecdf}
+\end{minipage}\hfill
+\begin{minipage}[b]{0.40\textwidth}
+  \centering
+  \includegraphics[width=\linewidth]{fig3_lorenz}
+  \subcaption{Curva de Lorenz del tiempo de viaje. La separación respecto de la
+  diagonal es la concentración de la carga de desplazamiento en una minoría.}
+  \label{fig:lorenz}
+\end{minipage}
+\caption{Distribución y concentración del tiempo de acceso.}
+\label{fig:distribucion}
 \end{figure}
 
 \inputtable{tab_cobertura_departamento}
@@ -382,7 +395,7 @@ con mayor brecha absoluta es \kpiPeorDistrito{} (\kpiPeorDistritoDep{}), con
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.86\textwidth]{fig4_acceso_vs_altitud}
+\includegraphics[width=0.68\textwidth]{fig4_acceso_vs_altitud}
 \caption{Tiempo medio de acceso frente a altitud del distrito, por región
 natural. El área de cada punto es la población distrital.}
 \label{fig:altitud}
@@ -405,7 +418,7 @@ porque la altitud correlaciona con pobreza y dispersión del poblamiento.
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.86\textwidth]{fig8_multimodal}
+\includegraphics[width=0.70\textwidth]{fig8_multimodal}
 \caption{Distribución del tiempo al establecimiento resolutivo más cercano por
 modo de transporte. Los perfiles a pie y en bicicleta se calculan sobre una
 submuestra que privilegia los puntos urbanos, porque es donde el supuesto de
@@ -417,7 +430,7 @@ desplazamiento no motorizado es realista.}
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.82\textwidth]{fig6_temporal_cobertura}
+\includegraphics[width=0.66\textwidth]{fig6_temporal_cobertura}
 \caption{Cobertura recalculada con el conjunto de establecimientos resolutivos
 ya operativos en cada año, manteniendo fija la red vial de 2026.}
 \label{fig:temporal}
@@ -437,7 +450,7 @@ ningún resolutivo cerró —RENIPRESS publicado no lo registra—, de modo que 
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.9\textwidth]{fig5_mclp_secuencia}
+\includegraphics[width=0.72\textwidth]{fig5_mclp_secuencia}
 \caption{Población adicional cubierta dentro de una hora por cada ascenso de un
 establecimiento I-3/I-4 a resolutivo, en el orden que elige el algoritmo de
 cobertura máxima.}
@@ -464,7 +477,7 @@ que no es una exigencia formal:
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.72\textwidth]{fig7_linea_recta_vs_red}
+\includegraphics[width=0.62\textwidth]{fig7_linea_recta_vs_red}
 \caption{Población que un análisis basado en distancia en línea recta
 declararía cubierta y que, por red vial, no lo está.}
 \label{fig:recta}
