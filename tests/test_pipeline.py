@@ -25,6 +25,7 @@ from src.models import recompute_coverage
 from src.routing import haversine_matrix
 from src.utils import (
     coerce_id_columns,
+    facility_labels,
     lossy_ascii_score,
     mojibake_score,
     safe_row_idxmin,
@@ -248,6 +249,44 @@ def test_idxmin_seguro_devuelve_todo_na_si_la_matriz_esta_vacia_de_valores():
     assert safe_row_idxmin(mat).isna().all()
 
 
+def test_las_etiquetas_de_establecimiento_toleran_campos_vacios():
+    """Regresión: el simulador de escenarios reventaba con datos nacionales.
+
+    ``"texto" + NaN`` es ``NaN`` en pandas, así que un solo campo vacío convertía
+    la etiqueta en float y ``sorted()`` lanzaba
+    ``TypeError: '<' not supported between 'float' and 'str'``. Con un solo
+    departamento no había campos vacíos y el fallo no se veía.
+    """
+    cat = pd.DataFrame(
+        {
+            "COD_IPRESS": ["00000001", "00000002"],
+            "NOMBRE": ["SAN JUAN", None],
+            "CATEGORIA": ["I-3", "I-4"],
+            "DISTRITO": ["ATE", "LINCE"],
+            "DEPARTAMENTO": ["LIMA", None],
+        }
+    )
+    etiquetas = facility_labels(cat)
+    assert all(isinstance(e, str) for e in etiquetas)
+    assert sorted(etiquetas)  # no debe lanzar
+    assert "sin dato" in etiquetas.iloc[1]
+
+
+def test_las_etiquetas_de_establecimiento_son_unicas():
+    """Dos establecimientos idénticos salvo el código no deben colapsarse."""
+    cat = pd.DataFrame(
+        {
+            "COD_IPRESS": ["00000001", "00000002"],
+            "NOMBRE": ["SAN JUAN"] * 2,
+            "CATEGORIA": ["I-3"] * 2,
+            "DISTRITO": ["ATE"] * 2,
+            "DEPARTAMENTO": ["LIMA"] * 2,
+        }
+    )
+    etiquetas = facility_labels(cat)
+    assert etiquetas.nunique() == 2
+
+
 def test_detecta_doble_codificacion():
     assert mojibake_score(pd.Series(["CAÃ‘AVERAL", "NORMAL"])) == 1
 
@@ -369,6 +408,114 @@ def test_toda_figura_generada_se_usa_en_el_informe():
     figs = sorted(p.stem for p in (PROJECT_ROOT / "report" / "figures").glob("*.pdf"))
     sin_usar = [f for f in figs if f not in tex]
     assert not sin_usar, f"figuras generadas pero no incluidas: {sin_usar}"
+
+
+#: T1 + inputenc cubre en la práctica Latin-1 más unos pocos signos tipográficos.
+_TEX_SEGUROS = set("—–‘’“”…")
+
+
+def _caracteres_no_compilables(texto: str) -> set[str]:
+    return {c for c in texto if ord(c) > 0xFF and c not in _TEX_SEGUROS}
+
+
+def test_las_tablas_generadas_no_traen_caracteres_que_rompan_latex():
+    """Regresión: «≤» (U+2264) en tres encabezados abortaba pdflatex.
+
+    ``inputenc`` con T1 no puede representar U+2264 y detiene la compilación con
+    "Unicode character ≤ not set up for use with LaTeX". En las figuras el mismo
+    símbolo es correcto, porque matplotlib no tiene esa limitación; el error solo
+    aparece al pasar por LaTeX, y el log de pdflatex no es público en CI.
+    """
+    from src.config import PROJECT_ROOT
+
+    culpables: dict[str, set[str]] = {}
+    for path in (PROJECT_ROOT / "report" / "tables").glob("*.tex"):
+        malos = _caracteres_no_compilables(path.read_text(encoding="utf-8"))
+        if malos:
+            culpables[path.name] = malos
+    malos_tex = _caracteres_no_compilables(_tex())
+    if malos_tex:
+        culpables["main.tex"] = malos_tex
+    assert not culpables, f"caracteres no representables en T1: {culpables}"
+
+
+def test_ninguna_macro_de_kpi_lleva_digitos_en_el_nombre():
+    """Regresión: `\\kpiShareHasta30` abortaba pdflatex en el preámbulo.
+
+    Una secuencia de control de TeX solo admite letras. TeX lee
+    ``\\newcommand{\\kpiShareHasta30}`` como la macro ``\\kpiShareHasta`` seguida
+    de los caracteres ``3`` y ``0``, e intenta imprimirlos; en el preámbulo eso da
+    "Missing \\begin{document}". El error señala la primera macro con dígitos, no
+    la causa, y costó dos corridas de CI localizarlo.
+
+    Se comprueban las tres fuentes: el generador, las macros ya generadas y las
+    referencias del informe.
+    """
+    from src.config import PROJECT_ROOT
+    from src.export import REQUIRED_KPIS
+
+    con_digitos = [k for k in REQUIRED_KPIS if re.search(r"\d", k)]
+    assert not con_digitos, f"REQUIRED_KPIS con dígitos: {con_digitos}"
+
+    citadas = set(re.findall(r"\\kpi[A-Za-z]*\d+", _tex()))
+    assert not citadas, f"main.tex cita macros con dígitos: {sorted(citadas)}"
+
+    for kpis in (PROJECT_ROOT / "report" / "tables").glob("kpis.tex"):
+        definidas = re.findall(
+            r"\\newcommand\{\\(kpi[A-Za-z]*\d+)\}", kpis.read_text(encoding="utf-8")
+        )
+        assert not definidas, f"kpis.tex define macros con dígitos: {definidas}"
+
+
+def test_el_informe_solo_cita_macros_que_el_pipeline_declara():
+    """Contrato entre main.tex y export.py.
+
+    Si el informe cita una macro que ``REQUIRED_KPIS`` no declara, no habrá
+    marcador de respaldo y pdflatex abortará con "undefined control sequence" en
+    una corrida donde ese insumo falte.
+    """
+    from src.export import REQUIRED_KPIS
+
+    declaradas = {f"kpi{k}" for k in REQUIRED_KPIS}
+    citadas = set(re.findall(r"\\(kpi[A-Za-z]+)", _tex()))
+    huerfanas = sorted(citadas - declaradas)
+    assert not huerfanas, f"macros citadas y no declaradas: {huerfanas}"
+
+
+def test_macro_suffix_produce_solo_letras():
+    from src.export import macro_suffix
+
+    assert macro_suffix(30) == "TresCero"
+    assert macro_suffix(120) == "UnoDosCero"
+    for n in (0, 5, 60, 90, 1440):
+        assert macro_suffix(n).isalpha()
+
+
+def test_los_encabezados_de_banda_son_texto_plano():
+    """El encabezado no debe llevar LaTeX: df.to_latex(escape=True) lo escaparía."""
+    from src.export import _header_hasta
+
+    h = _header_hasta(60)
+    assert "≤" not in h
+    assert "\\" not in h
+    assert "%" in h and "60" in h
+
+
+def test_las_corridas_de_prueba_no_escriben_en_los_artefactos_oficiales():
+    """Regresión: pytest dejaba líneas dentro de logs/validation.log, un entregable.
+
+    Los directorios con nombres de archivo fijos (logs, salidas, figuras, tablas)
+    tienen que desviarse a un sufijo cuando la corrida no es el estudio. Los que
+    ya llevan el alcance en el nombre del archivo no deben desviarse, porque el
+    dashboard los busca por ese nombre.
+    """
+    # create=False: una prueba no debe dejar directorios detrás, y el paso de
+    # commit de CI hace `git add -f report`, que ignoraría el .gitignore.
+    assert CFG.artifact_suffix == "_test"
+    for key in ("logs", "outputs", "figures", "tables"):
+        assert CFG.path(key, create=False).name.endswith("_test"), key
+    for key in ("processed", "raw"):
+        assert not CFG.path(key, create=False).name.endswith("_test"), key
 
 
 # ----------------------------------------------------------------- configuración

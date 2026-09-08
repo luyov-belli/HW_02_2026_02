@@ -31,3 +31,17 @@ Corridas
    commit.
 7. 2026-09-07 — recálculo de la matriz nacional con `safe_row_idxmin` y el
    workflow ya extendido a las fases 3 a 5 y la compilación del PDF.
+8. 2026-09-07 13:10 (sobre `main`, tras mergear el PR #2) — **el ruteo salió
+   entero**: los tres perfiles de OSRM, el análisis multimodal y las fases 3 a 5.
+   Fallaron los dos últimos pasos:
+   - `Compilar el informe`, exit 12. Causa encontrada por inspección, sin
+     necesidad del log: tres encabezados de tabla llevaban `≤` (U+2264), que la
+     codificación T1 de LaTeX no puede representar, e `inputenc` aborta.
+   - `Commit de resultados`, exit 128, así que los 27 minutos de grafos se
+     perdieron otra vez pese al `if: !cancelled()`.
+   Correcciones: el commit de datos pasa a ejecutarse **antes** de compilar el
+   PDF (lo caro se salva primero), la mecánica de git se movió a
+   `scripts/commit_outputs.sh` con rutas explícitas y reintento con rebase, y se
+   agregó un paso que publica el error de pdflatex como anotación pública.
+9. 2026-09-07 — esta corrida. Debe dejar en `data/outputs/` la matriz OD nacional
+   y en `report/` el PDF compilado.

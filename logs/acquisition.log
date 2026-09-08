@@ -52,3 +52,127 @@
 2026-09-06 23:27:39,527 | INFO    | hw02.acquisition       | altitud desde caché: elevation_dev.parquet (198 puntos)
 2026-09-06 23:31:20,684 | INFO    | hw02.acquisition       | altitud desde caché: elevation_dev.parquet (198 puntos)
 2026-09-06 23:31:32,461 | INFO    | hw02.acquisition       | altitud desde caché: elevation_dev.parquet (198 puntos)
+2026-09-07 13:50:53,419 | INFO    | hw02.acquisition       | descargando http://datos.susalud.gob.pe/sites/default/files/RENIPRESS_2026_v6.csv -> RENIPRESS_2026_v6.csv
+2026-09-07 13:51:39,109 | WARNING | hw02.acquisition       | intento 1 falló para http://datos.susalud.gob.pe/sites/default/files/RENIPRESS_2026_v6.csv: HTTPConnectionPool(host='datos.susalud.gob.pe', port=80): Max retries exceeded with url: /sites/default/files/RENIPRESS_2026_v6.csv (Caused by ConnectTimeoutError(<HTTPConnection(host='datos.susalud.gob.pe', port=80) at 0x7f7465d7b740>, 'Connection to datos.susalud.gob.pe timed out. (connect timeout=45)'))
+2026-09-07 13:52:34,477 | WARNING | hw02.acquisition       | intento 2 falló para http://datos.susalud.gob.pe/sites/default/files/RENIPRESS_2026_v6.csv: HTTPConnectionPool(host='datos.susalud.gob.pe', port=80): Max retries exceeded with url: /sites/default/files/RENIPRESS_2026_v6.csv (Caused by ConnectTimeoutError(<HTTPConnection(host='datos.susalud.gob.pe', port=80) at 0x7f7465b65880>, 'Connection to datos.susalud.gob.pe timed out. (connect timeout=45)'))
+2026-09-07 13:52:54,478 | WARNING | hw02.acquisition       | descarga de 'renipress' fallida (no se pudo descargar http://datos.susalud.gob.pe/sites/default/files/RENIPRESS_2026_v6.csv ni sus espejos: HTTPConnectio); se usa la copia versionada RENIPRESS_2026_v6.csv.gz
+2026-09-07 13:52:54,533 | INFO    | hw02.acquisition       | RENIPRESS_2026_v6.csv listo (17.7 MB, origen: fallback_repositorio)
+2026-09-07 13:52:54,534 | INFO    | hw02.acquisition       | descargando https://www.datosabiertos.gob.pe/sites/default/files/ListadoCentroPobladosMTC.xlsx -> ListadoCentroPobladosMTC.xlsx
+2026-09-07 13:52:58,609 | INFO    | hw02.acquisition       | ListadoCentroPobladosMTC.xlsx listo (11.2 MB, origen: descarga)
+2026-09-07 13:52:58,610 | INFO    | hw02.acquisition       | descargando https://data.humdata.org/dataset/54fc7f4d-f4c0-4892-91f6-2fe7c1ecf363/resource/61faa8d6-fbfa-4d44-a94d-8f3b0241277a/download/per_admin_boundaries.shp.zip -> per_admin_boundaries.shp.zip
+2026-09-07 13:53:01,739 | INFO    | hw02.acquisition       | per_admin_boundaries.shp.zip listo (42.9 MB, origen: descarga)
+2026-09-07 13:53:01,740 | INFO    | hw02.acquisition       | fuente 'overpass' es un servicio, no un archivo: se omite aquí
+2026-09-07 13:53:01,740 | INFO    | hw02.acquisition       | fuente 'elevation' es un servicio, no un archivo: se omite aquí
+2026-09-07 13:53:01,740 | INFO    | hw02.acquisition       | descargando https://data.humdata.org/dataset/0d8f2f78-cb46-4eb8-94eb-100b5388c3ff/resource/6355bd07-91e8-49e0-abbf-4de4036271a9/download/per_admpop_2024.xlsx -> per_admpop_2024.xlsx
+2026-09-07 13:53:03,128 | INFO    | hw02.acquisition       | per_admpop_2024.xlsx listo (0.0 MB, origen: descarga)
+2026-09-07 13:53:03,129 | INFO    | hw02.acquisition       | extrayendo 30 miembros de per_admin_boundaries.shp.zip
+2026-09-07 13:53:03,639 | INFO    | hw02.acquisition       | sondeo Wayback: 0 snapshots de RENIPRESS; se usa inicio_actividad
+2026-09-07 13:53:03,650 | INFO    | hw02.acquisition       | manifiesto escrito con 4 fuentes
+2026-09-07 13:54:03,243 | INFO    | hw02.acquisition       | descargando https://download.geofabrik.de/south-america/peru-latest.osm.pbf -> peru-latest.osm.pbf
+2026-09-07 13:54:24,301 | INFO    | hw02.acquisition       | peru-latest.osm.pbf listo (255.8 MB, origen: descarga)
+2026-09-07 13:54:25,816 | INFO    | hw02.acquisition       | sondeo Wayback: 0 snapshots de RENIPRESS; se usa inicio_actividad
+2026-09-07 13:54:25,826 | INFO    | hw02.acquisition       | manifiesto escrito con 1 fuentes
+2026-09-07 14:19:45,082 | INFO    | hw02.acquisition       | consultando altitud de 4999 puntos únicos en 50 lotes
+2026-09-07 14:20:59,722 | INFO    | hw02.acquisition       | altitud resuelta para 4999 de 4999 puntos
+2026-09-07 23:56:24,981 | INFO    | hw02.acquisition       | descargando http://datos.susalud.gob.pe/sites/default/files/RENIPRESS_2026_v6.csv -> RENIPRESS_2026_v6.csv
+2026-09-07 23:57:10,323 | WARNING | hw02.acquisition       | intento 1 falló para http://datos.susalud.gob.pe/sites/default/files/RENIPRESS_2026_v6.csv: HTTPConnectionPool(host='datos.susalud.gob.pe', port=80): Max retries exceeded with url: /sites/default/files/RENIPRESS_2026_v6.csv (Caused by ConnectTimeoutError(<HTTPConnection(host='datos.susalud.gob.pe', port=80) at 0x7f02ae7e0b90>, 'Connection to datos.susalud.gob.pe timed out. (connect timeout=45)'))
+2026-09-07 23:58:05,661 | WARNING | hw02.acquisition       | intento 2 falló para http://datos.susalud.gob.pe/sites/default/files/RENIPRESS_2026_v6.csv: HTTPConnectionPool(host='datos.susalud.gob.pe', port=80): Max retries exceeded with url: /sites/default/files/RENIPRESS_2026_v6.csv (Caused by ConnectTimeoutError(<HTTPConnection(host='datos.susalud.gob.pe', port=80) at 0x7f0295e59f40>, 'Connection to datos.susalud.gob.pe timed out. (connect timeout=45)'))
+2026-09-07 23:58:25,661 | WARNING | hw02.acquisition       | descarga de 'renipress' fallida (no se pudo descargar http://datos.susalud.gob.pe/sites/default/files/RENIPRESS_2026_v6.csv ni sus espejos: HTTPConnectio); se usa la copia versionada RENIPRESS_2026_v6.csv.gz
+2026-09-07 23:58:25,706 | INFO    | hw02.acquisition       | RENIPRESS_2026_v6.csv listo (17.7 MB, origen: fallback_repositorio)
+2026-09-07 23:58:25,706 | INFO    | hw02.acquisition       | descargando https://www.datosabiertos.gob.pe/sites/default/files/ListadoCentroPobladosMTC.xlsx -> ListadoCentroPobladosMTC.xlsx
+2026-09-07 23:58:29,833 | INFO    | hw02.acquisition       | ListadoCentroPobladosMTC.xlsx listo (11.2 MB, origen: descarga)
+2026-09-07 23:58:29,833 | INFO    | hw02.acquisition       | descargando https://data.humdata.org/dataset/54fc7f4d-f4c0-4892-91f6-2fe7c1ecf363/resource/61faa8d6-fbfa-4d44-a94d-8f3b0241277a/download/per_admin_boundaries.shp.zip -> per_admin_boundaries.shp.zip
+2026-09-07 23:58:31,616 | INFO    | hw02.acquisition       | per_admin_boundaries.shp.zip listo (42.9 MB, origen: descarga)
+2026-09-07 23:58:31,616 | INFO    | hw02.acquisition       | fuente 'overpass' es un servicio, no un archivo: se omite aquí
+2026-09-07 23:58:31,616 | INFO    | hw02.acquisition       | fuente 'elevation' es un servicio, no un archivo: se omite aquí
+2026-09-07 23:58:31,617 | INFO    | hw02.acquisition       | descargando https://data.humdata.org/dataset/0d8f2f78-cb46-4eb8-94eb-100b5388c3ff/resource/6355bd07-91e8-49e0-abbf-4de4036271a9/download/per_admpop_2024.xlsx -> per_admpop_2024.xlsx
+2026-09-07 23:58:32,810 | INFO    | hw02.acquisition       | per_admpop_2024.xlsx listo (0.0 MB, origen: descarga)
+2026-09-07 23:58:32,811 | INFO    | hw02.acquisition       | extrayendo 30 miembros de per_admin_boundaries.shp.zip
+2026-09-07 23:58:34,056 | INFO    | hw02.acquisition       | sondeo Wayback: 0 snapshots de RENIPRESS; se usa inicio_actividad
+2026-09-07 23:58:34,064 | INFO    | hw02.acquisition       | manifiesto escrito con 4 fuentes
+2026-09-07 23:59:14,248 | INFO    | hw02.acquisition       | altitud desde caché: elevation_national.parquet (4999 puntos)
+2026-09-08 00:06:04,030 | INFO    | hw02.acquisition       | descargando http://datos.susalud.gob.pe/sites/default/files/RENIPRESS_2026_v6.csv -> RENIPRESS_2026_v6.csv
+2026-09-08 00:06:49,407 | WARNING | hw02.acquisition       | intento 1 falló para http://datos.susalud.gob.pe/sites/default/files/RENIPRESS_2026_v6.csv: HTTPConnectionPool(host='datos.susalud.gob.pe', port=80): Max retries exceeded with url: /sites/default/files/RENIPRESS_2026_v6.csv (Caused by ConnectTimeoutError(<HTTPConnection(host='datos.susalud.gob.pe', port=80) at 0x7f6723937bc0>, 'Connection to datos.susalud.gob.pe timed out. (connect timeout=45)'))
+2026-09-08 00:07:44,772 | WARNING | hw02.acquisition       | intento 2 falló para http://datos.susalud.gob.pe/sites/default/files/RENIPRESS_2026_v6.csv: HTTPConnectionPool(host='datos.susalud.gob.pe', port=80): Max retries exceeded with url: /sites/default/files/RENIPRESS_2026_v6.csv (Caused by ConnectTimeoutError(<HTTPConnection(host='datos.susalud.gob.pe', port=80) at 0x7f672396d850>, 'Connection to datos.susalud.gob.pe timed out. (connect timeout=45)'))
+2026-09-08 00:08:04,773 | WARNING | hw02.acquisition       | descarga de 'renipress' fallida (no se pudo descargar http://datos.susalud.gob.pe/sites/default/files/RENIPRESS_2026_v6.csv ni sus espejos: HTTPConnectio); se usa la copia versionada RENIPRESS_2026_v6.csv.gz
+2026-09-08 00:08:04,828 | INFO    | hw02.acquisition       | RENIPRESS_2026_v6.csv listo (17.7 MB, origen: fallback_repositorio)
+2026-09-08 00:08:04,828 | INFO    | hw02.acquisition       | descargando https://www.datosabiertos.gob.pe/sites/default/files/ListadoCentroPobladosMTC.xlsx -> ListadoCentroPobladosMTC.xlsx
+2026-09-08 00:08:09,990 | INFO    | hw02.acquisition       | ListadoCentroPobladosMTC.xlsx listo (11.2 MB, origen: descarga)
+2026-09-08 00:08:09,991 | INFO    | hw02.acquisition       | descargando https://data.humdata.org/dataset/54fc7f4d-f4c0-4892-91f6-2fe7c1ecf363/resource/61faa8d6-fbfa-4d44-a94d-8f3b0241277a/download/per_admin_boundaries.shp.zip -> per_admin_boundaries.shp.zip
+2026-09-08 00:08:13,192 | INFO    | hw02.acquisition       | per_admin_boundaries.shp.zip listo (42.9 MB, origen: descarga)
+2026-09-08 00:08:13,192 | INFO    | hw02.acquisition       | fuente 'overpass' es un servicio, no un archivo: se omite aquí
+2026-09-08 00:08:13,192 | INFO    | hw02.acquisition       | fuente 'elevation' es un servicio, no un archivo: se omite aquí
+2026-09-08 00:08:13,193 | INFO    | hw02.acquisition       | descargando https://data.humdata.org/dataset/0d8f2f78-cb46-4eb8-94eb-100b5388c3ff/resource/6355bd07-91e8-49e0-abbf-4de4036271a9/download/per_admpop_2024.xlsx -> per_admpop_2024.xlsx
+2026-09-08 00:08:14,471 | INFO    | hw02.acquisition       | per_admpop_2024.xlsx listo (0.0 MB, origen: descarga)
+2026-09-08 00:08:14,472 | INFO    | hw02.acquisition       | extrayendo 30 miembros de per_admin_boundaries.shp.zip
+2026-09-08 00:08:15,372 | INFO    | hw02.acquisition       | sondeo Wayback: 0 snapshots de RENIPRESS; se usa inicio_actividad
+2026-09-08 00:08:15,382 | INFO    | hw02.acquisition       | manifiesto escrito con 4 fuentes
+2026-09-08 00:09:14,463 | INFO    | hw02.acquisition       | altitud desde caché: elevation_national.parquet (4999 puntos)
+2026-09-08 00:15:25,923 | INFO    | hw02.acquisition       | descargando http://datos.susalud.gob.pe/sites/default/files/RENIPRESS_2026_v6.csv -> RENIPRESS_2026_v6.csv
+2026-09-08 00:16:11,468 | WARNING | hw02.acquisition       | intento 1 falló para http://datos.susalud.gob.pe/sites/default/files/RENIPRESS_2026_v6.csv: HTTPConnectionPool(host='datos.susalud.gob.pe', port=80): Max retries exceeded with url: /sites/default/files/RENIPRESS_2026_v6.csv (Caused by ConnectTimeoutError(<HTTPConnection(host='datos.susalud.gob.pe', port=80) at 0x7f25ec360680>, 'Connection to datos.susalud.gob.pe timed out. (connect timeout=45)'))
+2026-09-08 00:17:06,745 | WARNING | hw02.acquisition       | intento 2 falló para http://datos.susalud.gob.pe/sites/default/files/RENIPRESS_2026_v6.csv: HTTPConnectionPool(host='datos.susalud.gob.pe', port=80): Max retries exceeded with url: /sites/default/files/RENIPRESS_2026_v6.csv (Caused by ConnectTimeoutError(<HTTPConnection(host='datos.susalud.gob.pe', port=80) at 0x7f25e7769a00>, 'Connection to datos.susalud.gob.pe timed out. (connect timeout=45)'))
+2026-09-08 00:17:26,746 | WARNING | hw02.acquisition       | descarga de 'renipress' fallida (no se pudo descargar http://datos.susalud.gob.pe/sites/default/files/RENIPRESS_2026_v6.csv ni sus espejos: HTTPConnectio); se usa la copia versionada RENIPRESS_2026_v6.csv.gz
+2026-09-08 00:17:26,801 | INFO    | hw02.acquisition       | RENIPRESS_2026_v6.csv listo (17.7 MB, origen: fallback_repositorio)
+2026-09-08 00:17:26,802 | INFO    | hw02.acquisition       | descargando https://www.datosabiertos.gob.pe/sites/default/files/ListadoCentroPobladosMTC.xlsx -> ListadoCentroPobladosMTC.xlsx
+2026-09-08 00:17:29,655 | INFO    | hw02.acquisition       | ListadoCentroPobladosMTC.xlsx listo (11.2 MB, origen: descarga)
+2026-09-08 00:17:29,656 | INFO    | hw02.acquisition       | descargando https://data.humdata.org/dataset/54fc7f4d-f4c0-4892-91f6-2fe7c1ecf363/resource/61faa8d6-fbfa-4d44-a94d-8f3b0241277a/download/per_admin_boundaries.shp.zip -> per_admin_boundaries.shp.zip
+2026-09-08 00:17:31,727 | INFO    | hw02.acquisition       | per_admin_boundaries.shp.zip listo (42.9 MB, origen: descarga)
+2026-09-08 00:17:31,727 | INFO    | hw02.acquisition       | fuente 'overpass' es un servicio, no un archivo: se omite aquí
+2026-09-08 00:17:31,727 | INFO    | hw02.acquisition       | fuente 'elevation' es un servicio, no un archivo: se omite aquí
+2026-09-08 00:17:31,727 | INFO    | hw02.acquisition       | descargando https://data.humdata.org/dataset/0d8f2f78-cb46-4eb8-94eb-100b5388c3ff/resource/6355bd07-91e8-49e0-abbf-4de4036271a9/download/per_admpop_2024.xlsx -> per_admpop_2024.xlsx
+2026-09-08 00:17:32,866 | INFO    | hw02.acquisition       | per_admpop_2024.xlsx listo (0.0 MB, origen: descarga)
+2026-09-08 00:17:32,868 | INFO    | hw02.acquisition       | extrayendo 30 miembros de per_admin_boundaries.shp.zip
+2026-09-08 00:17:36,090 | INFO    | hw02.acquisition       | sondeo Wayback: 0 snapshots de RENIPRESS; se usa inicio_actividad
+2026-09-08 00:17:36,100 | INFO    | hw02.acquisition       | manifiesto escrito con 4 fuentes
+2026-09-08 00:18:36,214 | INFO    | hw02.acquisition       | altitud desde caché: elevation_national.parquet (4999 puntos)
+2026-09-08 00:23:05,771 | INFO    | hw02.acquisition       | descargando http://datos.susalud.gob.pe/sites/default/files/RENIPRESS_2026_v6.csv -> RENIPRESS_2026_v6.csv
+2026-09-08 00:23:51,372 | WARNING | hw02.acquisition       | intento 1 falló para http://datos.susalud.gob.pe/sites/default/files/RENIPRESS_2026_v6.csv: HTTPConnectionPool(host='datos.susalud.gob.pe', port=80): Max retries exceeded with url: /sites/default/files/RENIPRESS_2026_v6.csv (Caused by ConnectTimeoutError(<HTTPConnection(host='datos.susalud.gob.pe', port=80) at 0x7ff05cf73a70>, 'Connection to datos.susalud.gob.pe timed out. (connect timeout=45)'))
+2026-09-08 00:24:47,008 | WARNING | hw02.acquisition       | intento 2 falló para http://datos.susalud.gob.pe/sites/default/files/RENIPRESS_2026_v6.csv: HTTPConnectionPool(host='datos.susalud.gob.pe', port=80): Max retries exceeded with url: /sites/default/files/RENIPRESS_2026_v6.csv (Caused by ConnectTimeoutError(<HTTPConnection(host='datos.susalud.gob.pe', port=80) at 0x7ff057822420>, 'Connection to datos.susalud.gob.pe timed out. (connect timeout=45)'))
+2026-09-08 00:25:07,009 | WARNING | hw02.acquisition       | descarga de 'renipress' fallida (no se pudo descargar http://datos.susalud.gob.pe/sites/default/files/RENIPRESS_2026_v6.csv ni sus espejos: HTTPConnectio); se usa la copia versionada RENIPRESS_2026_v6.csv.gz
+2026-09-08 00:25:07,054 | INFO    | hw02.acquisition       | RENIPRESS_2026_v6.csv listo (17.7 MB, origen: fallback_repositorio)
+2026-09-08 00:25:07,055 | INFO    | hw02.acquisition       | descargando https://www.datosabiertos.gob.pe/sites/default/files/ListadoCentroPobladosMTC.xlsx -> ListadoCentroPobladosMTC.xlsx
+2026-09-08 00:25:10,330 | INFO    | hw02.acquisition       | ListadoCentroPobladosMTC.xlsx listo (11.2 MB, origen: descarga)
+2026-09-08 00:25:10,330 | INFO    | hw02.acquisition       | descargando https://data.humdata.org/dataset/54fc7f4d-f4c0-4892-91f6-2fe7c1ecf363/resource/61faa8d6-fbfa-4d44-a94d-8f3b0241277a/download/per_admin_boundaries.shp.zip -> per_admin_boundaries.shp.zip
+2026-09-08 00:25:13,510 | INFO    | hw02.acquisition       | per_admin_boundaries.shp.zip listo (42.9 MB, origen: descarga)
+2026-09-08 00:25:13,510 | INFO    | hw02.acquisition       | fuente 'overpass' es un servicio, no un archivo: se omite aquí
+2026-09-08 00:25:13,511 | INFO    | hw02.acquisition       | fuente 'elevation' es un servicio, no un archivo: se omite aquí
+2026-09-08 00:25:13,511 | INFO    | hw02.acquisition       | descargando https://data.humdata.org/dataset/0d8f2f78-cb46-4eb8-94eb-100b5388c3ff/resource/6355bd07-91e8-49e0-abbf-4de4036271a9/download/per_admpop_2024.xlsx -> per_admpop_2024.xlsx
+2026-09-08 00:25:15,023 | INFO    | hw02.acquisition       | per_admpop_2024.xlsx listo (0.0 MB, origen: descarga)
+2026-09-08 00:25:15,024 | INFO    | hw02.acquisition       | extrayendo 30 miembros de per_admin_boundaries.shp.zip
+2026-09-08 00:25:15,627 | INFO    | hw02.acquisition       | sondeo Wayback: 0 snapshots de RENIPRESS; se usa inicio_actividad
+2026-09-08 00:25:15,635 | INFO    | hw02.acquisition       | manifiesto escrito con 4 fuentes
+2026-09-08 00:26:01,618 | INFO    | hw02.acquisition       | altitud desde caché: elevation_national.parquet (4999 puntos)
+2026-09-08 00:30:30,412 | INFO    | hw02.acquisition       | descargando http://datos.susalud.gob.pe/sites/default/files/RENIPRESS_2026_v6.csv -> RENIPRESS_2026_v6.csv
+2026-09-08 00:31:15,703 | WARNING | hw02.acquisition       | intento 1 falló para http://datos.susalud.gob.pe/sites/default/files/RENIPRESS_2026_v6.csv: HTTPConnectionPool(host='datos.susalud.gob.pe', port=80): Max retries exceeded with url: /sites/default/files/RENIPRESS_2026_v6.csv (Caused by ConnectTimeoutError(<HTTPConnection(host='datos.susalud.gob.pe', port=80) at 0x7f59e5597590>, 'Connection to datos.susalud.gob.pe timed out. (connect timeout=45)'))
+2026-09-08 00:32:11,233 | WARNING | hw02.acquisition       | intento 2 falló para http://datos.susalud.gob.pe/sites/default/files/RENIPRESS_2026_v6.csv: HTTPConnectionPool(host='datos.susalud.gob.pe', port=80): Max retries exceeded with url: /sites/default/files/RENIPRESS_2026_v6.csv (Caused by ConnectTimeoutError(<HTTPConnection(host='datos.susalud.gob.pe', port=80) at 0x7f59dace1730>, 'Connection to datos.susalud.gob.pe timed out. (connect timeout=45)'))
+2026-09-08 00:32:31,234 | WARNING | hw02.acquisition       | descarga de 'renipress' fallida (no se pudo descargar http://datos.susalud.gob.pe/sites/default/files/RENIPRESS_2026_v6.csv ni sus espejos: HTTPConnectio); se usa la copia versionada RENIPRESS_2026_v6.csv.gz
+2026-09-08 00:32:31,292 | INFO    | hw02.acquisition       | RENIPRESS_2026_v6.csv listo (17.7 MB, origen: fallback_repositorio)
+2026-09-08 00:32:31,293 | INFO    | hw02.acquisition       | descargando https://www.datosabiertos.gob.pe/sites/default/files/ListadoCentroPobladosMTC.xlsx -> ListadoCentroPobladosMTC.xlsx
+2026-09-08 00:32:34,263 | INFO    | hw02.acquisition       | ListadoCentroPobladosMTC.xlsx listo (11.2 MB, origen: descarga)
+2026-09-08 00:32:34,263 | INFO    | hw02.acquisition       | descargando https://data.humdata.org/dataset/54fc7f4d-f4c0-4892-91f6-2fe7c1ecf363/resource/61faa8d6-fbfa-4d44-a94d-8f3b0241277a/download/per_admin_boundaries.shp.zip -> per_admin_boundaries.shp.zip
+2026-09-08 00:32:35,658 | INFO    | hw02.acquisition       | per_admin_boundaries.shp.zip listo (42.9 MB, origen: descarga)
+2026-09-08 00:32:35,658 | INFO    | hw02.acquisition       | fuente 'overpass' es un servicio, no un archivo: se omite aquí
+2026-09-08 00:32:35,658 | INFO    | hw02.acquisition       | fuente 'elevation' es un servicio, no un archivo: se omite aquí
+2026-09-08 00:32:35,658 | INFO    | hw02.acquisition       | descargando https://data.humdata.org/dataset/0d8f2f78-cb46-4eb8-94eb-100b5388c3ff/resource/6355bd07-91e8-49e0-abbf-4de4036271a9/download/per_admpop_2024.xlsx -> per_admpop_2024.xlsx
+2026-09-08 00:32:36,665 | INFO    | hw02.acquisition       | per_admpop_2024.xlsx listo (0.0 MB, origen: descarga)
+2026-09-08 00:32:36,667 | INFO    | hw02.acquisition       | extrayendo 30 miembros de per_admin_boundaries.shp.zip
+2026-09-08 00:32:38,514 | INFO    | hw02.acquisition       | sondeo Wayback: 0 snapshots de RENIPRESS; se usa inicio_actividad
+2026-09-08 00:32:38,524 | INFO    | hw02.acquisition       | manifiesto escrito con 4 fuentes
+2026-09-08 00:33:37,347 | INFO    | hw02.acquisition       | altitud desde caché: elevation_national.parquet (4999 puntos)
+2026-09-08 00:39:14,690 | INFO    | hw02.acquisition       | descargando http://datos.susalud.gob.pe/sites/default/files/RENIPRESS_2026_v6.csv -> RENIPRESS_2026_v6.csv
+2026-09-08 00:40:00,012 | WARNING | hw02.acquisition       | intento 1 falló para http://datos.susalud.gob.pe/sites/default/files/RENIPRESS_2026_v6.csv: HTTPConnectionPool(host='datos.susalud.gob.pe', port=80): Max retries exceeded with url: /sites/default/files/RENIPRESS_2026_v6.csv (Caused by ConnectTimeoutError(<HTTPConnection(host='datos.susalud.gob.pe', port=80) at 0x7f0e9ffecaa0>, 'Connection to datos.susalud.gob.pe timed out. (connect timeout=45)'))
+2026-09-08 00:40:55,196 | WARNING | hw02.acquisition       | intento 2 falló para http://datos.susalud.gob.pe/sites/default/files/RENIPRESS_2026_v6.csv: HTTPConnectionPool(host='datos.susalud.gob.pe', port=80): Max retries exceeded with url: /sites/default/files/RENIPRESS_2026_v6.csv (Caused by ConnectTimeoutError(<HTTPConnection(host='datos.susalud.gob.pe', port=80) at 0x7f0e87605e50>, 'Connection to datos.susalud.gob.pe timed out. (connect timeout=45)'))
+2026-09-08 00:41:15,196 | WARNING | hw02.acquisition       | descarga de 'renipress' fallida (no se pudo descargar http://datos.susalud.gob.pe/sites/default/files/RENIPRESS_2026_v6.csv ni sus espejos: HTTPConnectio); se usa la copia versionada RENIPRESS_2026_v6.csv.gz
+2026-09-08 00:41:15,241 | INFO    | hw02.acquisition       | RENIPRESS_2026_v6.csv listo (17.7 MB, origen: fallback_repositorio)
+2026-09-08 00:41:15,241 | INFO    | hw02.acquisition       | descargando https://www.datosabiertos.gob.pe/sites/default/files/ListadoCentroPobladosMTC.xlsx -> ListadoCentroPobladosMTC.xlsx
+2026-09-08 00:41:18,951 | INFO    | hw02.acquisition       | ListadoCentroPobladosMTC.xlsx listo (11.2 MB, origen: descarga)
+2026-09-08 00:41:18,951 | INFO    | hw02.acquisition       | descargando https://data.humdata.org/dataset/54fc7f4d-f4c0-4892-91f6-2fe7c1ecf363/resource/61faa8d6-fbfa-4d44-a94d-8f3b0241277a/download/per_admin_boundaries.shp.zip -> per_admin_boundaries.shp.zip
+2026-09-08 00:41:20,979 | INFO    | hw02.acquisition       | per_admin_boundaries.shp.zip listo (42.9 MB, origen: descarga)
+2026-09-08 00:41:20,979 | INFO    | hw02.acquisition       | fuente 'overpass' es un servicio, no un archivo: se omite aquí
+2026-09-08 00:41:20,979 | INFO    | hw02.acquisition       | fuente 'elevation' es un servicio, no un archivo: se omite aquí
+2026-09-08 00:41:20,980 | INFO    | hw02.acquisition       | descargando https://data.humdata.org/dataset/0d8f2f78-cb46-4eb8-94eb-100b5388c3ff/resource/6355bd07-91e8-49e0-abbf-4de4036271a9/download/per_admpop_2024.xlsx -> per_admpop_2024.xlsx
+2026-09-08 00:41:21,900 | INFO    | hw02.acquisition       | per_admpop_2024.xlsx listo (0.0 MB, origen: descarga)
+2026-09-08 00:41:21,901 | INFO    | hw02.acquisition       | extrayendo 30 miembros de per_admin_boundaries.shp.zip
+2026-09-08 00:41:23,759 | INFO    | hw02.acquisition       | sondeo Wayback: 0 snapshots de RENIPRESS; se usa inicio_actividad
+2026-09-08 00:41:23,767 | INFO    | hw02.acquisition       | manifiesto escrito con 4 fuentes
+2026-09-08 00:42:02,144 | INFO    | hw02.acquisition       | altitud desde caché: elevation_national.parquet (4999 puntos)

@@ -10,3 +10,38 @@
 2026-09-06 23:27:42,433 | INFO    | hw02.models            | escrito sfca_district_dev.csv (13 filas)
 2026-09-06 23:27:42,435 | INFO    | hw02.models            | escrito mclp_frontier_dev.csv (4 filas)
 2026-09-06 23:27:42,437 | INFO    | hw02.models            | escrito mclp_sequence_dev.csv (3 filas)
+2026-09-07 14:21:12,336 | INFO    | hw02.models            | MCLP: 2268 puntos descubiertos (15.1% de la población), 1083 candidatas útiles
+2026-09-07 14:21:12,564 | INFO    | hw02.models            | escrito sfca_points_national.csv (5000 filas)
+2026-09-07 14:21:12,573 | INFO    | hw02.models            | escrito sfca_district_national.csv (1853 filas)
+2026-09-07 14:21:12,574 | INFO    | hw02.models            | escrito mclp_frontier_national.csv (4 filas)
+2026-09-07 14:21:12,576 | INFO    | hw02.models            | escrito mclp_sequence_national.csv (50 filas)
+2026-09-07 23:59:21,055 | INFO    | hw02.models            | MCLP: 2268 puntos descubiertos (15.1% de la población), 1083 candidatas útiles
+2026-09-07 23:59:21,183 | INFO    | hw02.models            | escrito sfca_points_national.csv (5000 filas)
+2026-09-07 23:59:21,189 | INFO    | hw02.models            | escrito sfca_district_national.csv (1853 filas)
+2026-09-07 23:59:21,189 | INFO    | hw02.models            | escrito mclp_frontier_national.csv (4 filas)
+2026-09-07 23:59:21,190 | INFO    | hw02.models            | escrito mclp_sequence_national.csv (50 filas)
+2026-09-08 00:09:26,925 | INFO    | hw02.models            | MCLP: 2268 puntos descubiertos (15.1% de la población), 1083 candidatas útiles
+2026-09-08 00:09:27,153 | INFO    | hw02.models            | escrito sfca_points_national.csv (5000 filas)
+2026-09-08 00:09:27,162 | INFO    | hw02.models            | escrito sfca_district_national.csv (1853 filas)
+2026-09-08 00:09:27,163 | INFO    | hw02.models            | escrito mclp_frontier_national.csv (4 filas)
+2026-09-08 00:09:27,164 | INFO    | hw02.models            | escrito mclp_sequence_national.csv (50 filas)
+2026-09-08 00:18:48,819 | INFO    | hw02.models            | MCLP: 2268 puntos descubiertos (15.1% de la población), 1083 candidatas útiles
+2026-09-08 00:18:49,044 | INFO    | hw02.models            | escrito sfca_points_national.csv (5000 filas)
+2026-09-08 00:18:49,053 | INFO    | hw02.models            | escrito sfca_district_national.csv (1853 filas)
+2026-09-08 00:18:49,053 | INFO    | hw02.models            | escrito mclp_frontier_national.csv (4 filas)
+2026-09-08 00:18:49,055 | INFO    | hw02.models            | escrito mclp_sequence_national.csv (50 filas)
+2026-09-08 00:26:09,528 | INFO    | hw02.models            | MCLP: 2268 puntos descubiertos (15.1% de la población), 1083 candidatas útiles
+2026-09-08 00:26:09,675 | INFO    | hw02.models            | escrito sfca_points_national.csv (5000 filas)
+2026-09-08 00:26:09,681 | INFO    | hw02.models            | escrito sfca_district_national.csv (1853 filas)
+2026-09-08 00:26:09,682 | INFO    | hw02.models            | escrito mclp_frontier_national.csv (4 filas)
+2026-09-08 00:26:09,683 | INFO    | hw02.models            | escrito mclp_sequence_national.csv (50 filas)
+2026-09-08 00:33:47,609 | INFO    | hw02.models            | MCLP: 2268 puntos descubiertos (15.1% de la población), 1083 candidatas útiles
+2026-09-08 00:33:47,799 | INFO    | hw02.models            | escrito sfca_points_national.csv (5000 filas)
+2026-09-08 00:33:47,807 | INFO    | hw02.models            | escrito sfca_district_national.csv (1853 filas)
+2026-09-08 00:33:47,808 | INFO    | hw02.models            | escrito mclp_frontier_national.csv (4 filas)
+2026-09-08 00:33:47,810 | INFO    | hw02.models            | escrito mclp_sequence_national.csv (50 filas)
+2026-09-08 00:42:08,782 | INFO    | hw02.models            | MCLP: 2268 puntos descubiertos (15.1% de la población), 1083 candidatas útiles
+2026-09-08 00:42:08,906 | INFO    | hw02.models            | escrito sfca_points_national.csv (5000 filas)
+2026-09-08 00:42:08,912 | INFO    | hw02.models            | escrito sfca_district_national.csv (1853 filas)
+2026-09-08 00:42:08,913 | INFO    | hw02.models            | escrito mclp_frontier_national.csv (4 filas)
+2026-09-08 00:42:08,914 | INFO    | hw02.models            | escrito mclp_sequence_national.csv (50 filas)

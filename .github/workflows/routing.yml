@@ -116,11 +116,36 @@ jobs:
           bash scripts/run_step.sh "Innovación"        python -m src.models
           bash scripts/run_step.sh "Fase 5 exportación" python -m src.export
 
+      # Se commitea aquí, ANTES de compilar el PDF. Todo lo caro ya está hecho: la
+      # matriz OD son ~27 minutos de construcción de grafos. Si LaTeX falla, la
+      # corrida siguiente puede iterar sobre el PDF con analysis.yml en cinco
+      # minutos en vez de reconstruir los tres grafos otra vez.
+      - name: Commit de datos, figuras y tablas
+        if: ${{ !cancelled() }}
+        run: |
+          bash scripts/commit_outputs.sh \
+            "ci: matriz OD, métricas y figuras (OSRM, alcance ${HW02_SCOPE})" \
+            data/outputs data/processed data/raw/manifest.json logs \
+            report/figures report/tables
+
       - name: Compilar el informe
+        id: latex
+        continue-on-error: true
         uses: xu-cheng/latex-action@v3
         with:
           root_file: main.tex
           working_directory: report
+
+      - name: Diagnóstico de LaTeX
+        if: ${{ always() && steps.latex.outcome == 'failure' }}
+        run: bash scripts/latex_diag.sh
+
+      - name: Commit del informe compilado
+        if: ${{ always() && steps.latex.outcome == 'success' }}
+        run: |
+          bash scripts/commit_outputs.sh \
+            "ci: informe compilado (alcance ${HW02_SCOPE})" \
+            report/main.pdf
 
       - name: Resumen de la Fase 2
         if: always()
@@ -160,22 +185,24 @@ jobs:
           retention-days: 30
           if-no-files-found: warn
 
-      # Se commitea aunque un paso posterior al ruteo haya fallado. Construir los
-      # tres grafos de OSRM cuesta ~27 minutos de runner y las matrices son
-      # válidas por sí mismas: si lo que falla es un resumen, una figura o el PDF,
-      # descartar el ruteo obliga a repetir todo para arreglar algo que no tiene
-      # relación. El job sigue marcándose en rojo, así que el fallo no se oculta.
-      - name: Commit de resultados
+      # Red de seguridad: si algún paso intermedio abortó antes de llegar a los
+      # dos commits de arriba, aquí se rescata lo que haya llegado a generarse.
+      - name: Rescate de artefactos sin commitear
         if: ${{ !cancelled() }}
         run: |
-          git config user.name  "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -f data/outputs data/processed logs report
-          if git diff --cached --quiet; then
-            echo "sin cambios que commitear"
-          else
-            estado="${{ job.status }}"
-            git commit -m "ci: matriz OD y validación (OSRM, alcance ${HW02_SCOPE}, job ${estado})"
-            git pull --rebase origin "${GITHUB_REF_NAME}"
-            git push origin "HEAD:${GITHUB_REF_NAME}"
+          bash scripts/commit_outputs.sh \
+            "ci: rescate de artefactos (alcance ${HW02_SCOPE}, job ${{ job.status }})" \
+            data/outputs data/processed logs report/figures report/tables
+
+      # `continue-on-error` en el paso de LaTeX evita perder el ruteo, pero deja
+      # el job en verde aunque no haya PDF. El PDF compilado es un entregable
+      # obligatorio, así que se falla aquí, al final: los datos ya están
+      # commiteados y el rojo señala lo único que quedó pendiente.
+      - name: Exigir el informe compilado
+        if: ${{ !cancelled() }}
+        run: |
+          if [ ! -f report/main.pdf ]; then
+            echo "::error title=Informe::no se generó report/main.pdf; ver el diagnóstico de LaTeX"
+            exit 1
           fi
+          echo "report/main.pdf presente ($(du -h report/main.pdf | cut -f1))"

@@ -44,3 +44,129 @@
 2026-09-06 23:27:46,259 | INFO    | hw02.export            | tabla tab_temporal.tex (4 filas)
 2026-09-06 23:27:46,268 | INFO    | hw02.export            | tabla tab_calidad_datos.tex (16 filas)
 2026-09-06 23:27:46,292 | INFO    | hw02.export            | kpis.tex con 43 macros
+2026-09-07 14:21:19,080 | INFO    | hw02.export            | figura fig1_choropleth_acceso.pdf
+2026-09-07 14:21:19,378 | INFO    | hw02.export            | figura fig2_cobertura_acumulada.pdf
+2026-09-07 14:21:19,653 | INFO    | hw02.export            | figura fig3_lorenz.pdf
+2026-09-07 14:21:20,592 | INFO    | hw02.export            | figura fig4_acceso_vs_altitud.pdf
+2026-09-07 14:21:20,928 | INFO    | hw02.export            | figura fig5_mclp_secuencia.pdf
+2026-09-07 14:21:21,295 | INFO    | hw02.export            | figura fig6_temporal_cobertura.pdf
+2026-09-07 14:21:21,575 | INFO    | hw02.export            | figura fig7_linea_recta_vs_red.pdf
+2026-09-07 14:21:21,797 | INFO    | hw02.export            | figura fig8_multimodal.pdf
+2026-09-07 14:21:21,870 | INFO    | hw02.export            | tabla tab_cobertura_departamento.tex (25 filas)
+2026-09-07 14:21:21,879 | INFO    | hw02.export            | tabla tab_peores_distritos.tex (15 filas)
+2026-09-07 14:21:21,884 | INFO    | hw02.export            | tabla tab_urbano_rural.tex (6 filas)
+2026-09-07 14:21:21,888 | INFO    | hw02.export            | tabla tab_analisis_cruzado.tex (7 filas)
+2026-09-07 14:21:21,892 | INFO    | hw02.export            | tabla tab_snapping.tex (2 filas)
+2026-09-07 14:21:21,896 | INFO    | hw02.export            | tabla tab_multimodal.tex (2 filas)
+2026-09-07 14:21:21,900 | INFO    | hw02.export            | tabla tab_mclp.tex (4 filas)
+2026-09-07 14:21:21,905 | INFO    | hw02.export            | tabla tab_temporal.tex (4 filas)
+2026-09-07 14:21:21,911 | INFO    | hw02.export            | tabla tab_calidad_datos.tex (16 filas)
+2026-09-07 14:21:21,923 | INFO    | hw02.export            | kpis.tex con 43 macros
+2026-09-07 23:59:25,571 | INFO    | hw02.export            | figura fig1_choropleth_acceso.pdf
+2026-09-07 23:59:25,743 | INFO    | hw02.export            | figura fig2_cobertura_acumulada.pdf
+2026-09-07 23:59:25,901 | INFO    | hw02.export            | figura fig3_lorenz.pdf
+2026-09-07 23:59:26,362 | INFO    | hw02.export            | figura fig4_acceso_vs_altitud.pdf
+2026-09-07 23:59:26,537 | INFO    | hw02.export            | figura fig5_mclp_secuencia.pdf
+2026-09-07 23:59:26,737 | INFO    | hw02.export            | figura fig6_temporal_cobertura.pdf
+2026-09-07 23:59:26,890 | INFO    | hw02.export            | figura fig7_linea_recta_vs_red.pdf
+2026-09-07 23:59:27,010 | INFO    | hw02.export            | figura fig8_multimodal.pdf
+2026-09-07 23:59:27,054 | INFO    | hw02.export            | tabla tab_cobertura_departamento.tex (25 filas)
+2026-09-07 23:59:27,059 | INFO    | hw02.export            | tabla tab_peores_distritos.tex (15 filas)
+2026-09-07 23:59:27,062 | INFO    | hw02.export            | tabla tab_urbano_rural.tex (6 filas)
+2026-09-07 23:59:27,064 | INFO    | hw02.export            | tabla tab_analisis_cruzado.tex (7 filas)
+2026-09-07 23:59:27,067 | INFO    | hw02.export            | tabla tab_snapping.tex (2 filas)
+2026-09-07 23:59:27,069 | INFO    | hw02.export            | tabla tab_multimodal.tex (2 filas)
+2026-09-07 23:59:27,072 | INFO    | hw02.export            | tabla tab_mclp.tex (4 filas)
+2026-09-07 23:59:27,075 | INFO    | hw02.export            | tabla tab_temporal.tex (4 filas)
+2026-09-07 23:59:27,079 | INFO    | hw02.export            | tabla tab_calidad_datos.tex (16 filas)
+2026-09-07 23:59:27,086 | INFO    | hw02.export            | kpis.tex con 43 macros
+2026-09-08 00:09:33,482 | INFO    | hw02.export            | figura fig1_choropleth_acceso.pdf
+2026-09-08 00:09:33,768 | INFO    | hw02.export            | figura fig2_cobertura_acumulada.pdf
+2026-09-08 00:09:34,023 | INFO    | hw02.export            | figura fig3_lorenz.pdf
+2026-09-08 00:09:34,919 | INFO    | hw02.export            | figura fig4_acceso_vs_altitud.pdf
+2026-09-08 00:09:35,232 | INFO    | hw02.export            | figura fig5_mclp_secuencia.pdf
+2026-09-08 00:09:35,567 | INFO    | hw02.export            | figura fig6_temporal_cobertura.pdf
+2026-09-08 00:09:35,820 | INFO    | hw02.export            | figura fig7_linea_recta_vs_red.pdf
+2026-09-08 00:09:36,029 | INFO    | hw02.export            | figura fig8_multimodal.pdf
+2026-09-08 00:09:36,106 | INFO    | hw02.export            | tabla tab_cobertura_departamento.tex (25 filas)
+2026-09-08 00:09:36,114 | INFO    | hw02.export            | tabla tab_peores_distritos.tex (15 filas)
+2026-09-08 00:09:36,119 | INFO    | hw02.export            | tabla tab_urbano_rural.tex (6 filas)
+2026-09-08 00:09:36,123 | INFO    | hw02.export            | tabla tab_analisis_cruzado.tex (7 filas)
+2026-09-08 00:09:36,127 | INFO    | hw02.export            | tabla tab_snapping.tex (2 filas)
+2026-09-08 00:09:36,131 | INFO    | hw02.export            | tabla tab_multimodal.tex (2 filas)
+2026-09-08 00:09:36,135 | INFO    | hw02.export            | tabla tab_mclp.tex (4 filas)
+2026-09-08 00:09:36,139 | INFO    | hw02.export            | tabla tab_temporal.tex (4 filas)
+2026-09-08 00:09:36,145 | INFO    | hw02.export            | tabla tab_calidad_datos.tex (16 filas)
+2026-09-08 00:09:36,156 | INFO    | hw02.export            | kpis.tex con 43 macros
+2026-09-08 00:18:55,423 | INFO    | hw02.export            | figura fig1_choropleth_acceso.pdf
+2026-09-08 00:18:55,709 | INFO    | hw02.export            | figura fig2_cobertura_acumulada.pdf
+2026-09-08 00:18:55,962 | INFO    | hw02.export            | figura fig3_lorenz.pdf
+2026-09-08 00:18:56,868 | INFO    | hw02.export            | figura fig4_acceso_vs_altitud.pdf
+2026-09-08 00:18:57,190 | INFO    | hw02.export            | figura fig5_mclp_secuencia.pdf
+2026-09-08 00:18:57,538 | INFO    | hw02.export            | figura fig6_temporal_cobertura.pdf
+2026-09-08 00:18:57,791 | INFO    | hw02.export            | figura fig7_linea_recta_vs_red.pdf
+2026-09-08 00:18:58,003 | INFO    | hw02.export            | figura fig8_multimodal.pdf
+2026-09-08 00:18:58,075 | INFO    | hw02.export            | tabla tab_cobertura_departamento.tex (25 filas)
+2026-09-08 00:18:58,083 | INFO    | hw02.export            | tabla tab_peores_distritos.tex (15 filas)
+2026-09-08 00:18:58,088 | INFO    | hw02.export            | tabla tab_urbano_rural.tex (6 filas)
+2026-09-08 00:18:58,092 | INFO    | hw02.export            | tabla tab_analisis_cruzado.tex (7 filas)
+2026-09-08 00:18:58,096 | INFO    | hw02.export            | tabla tab_snapping.tex (2 filas)
+2026-09-08 00:18:58,099 | INFO    | hw02.export            | tabla tab_multimodal.tex (2 filas)
+2026-09-08 00:18:58,103 | INFO    | hw02.export            | tabla tab_mclp.tex (4 filas)
+2026-09-08 00:18:58,108 | INFO    | hw02.export            | tabla tab_temporal.tex (4 filas)
+2026-09-08 00:18:58,114 | INFO    | hw02.export            | tabla tab_calidad_datos.tex (16 filas)
+2026-09-08 00:18:58,126 | INFO    | hw02.export            | kpis.tex con 43 macros
+2026-09-08 00:26:14,954 | INFO    | hw02.export            | figura fig1_choropleth_acceso.pdf
+2026-09-08 00:26:15,164 | INFO    | hw02.export            | figura fig2_cobertura_acumulada.pdf
+2026-09-08 00:26:15,365 | INFO    | hw02.export            | figura fig3_lorenz.pdf
+2026-09-08 00:26:15,944 | INFO    | hw02.export            | figura fig4_acceso_vs_altitud.pdf
+2026-09-08 00:26:16,176 | INFO    | hw02.export            | figura fig5_mclp_secuencia.pdf
+2026-09-08 00:26:16,428 | INFO    | hw02.export            | figura fig6_temporal_cobertura.pdf
+2026-09-08 00:26:16,621 | INFO    | hw02.export            | figura fig7_linea_recta_vs_red.pdf
+2026-09-08 00:26:16,776 | INFO    | hw02.export            | figura fig8_multimodal.pdf
+2026-09-08 00:26:16,837 | INFO    | hw02.export            | tabla tab_cobertura_departamento.tex (25 filas)
+2026-09-08 00:26:16,843 | INFO    | hw02.export            | tabla tab_peores_distritos.tex (15 filas)
+2026-09-08 00:26:16,847 | INFO    | hw02.export            | tabla tab_urbano_rural.tex (6 filas)
+2026-09-08 00:26:16,850 | INFO    | hw02.export            | tabla tab_analisis_cruzado.tex (7 filas)
+2026-09-08 00:26:16,853 | INFO    | hw02.export            | tabla tab_snapping.tex (2 filas)
+2026-09-08 00:26:16,855 | INFO    | hw02.export            | tabla tab_multimodal.tex (2 filas)
+2026-09-08 00:26:16,858 | INFO    | hw02.export            | tabla tab_mclp.tex (4 filas)
+2026-09-08 00:26:16,861 | INFO    | hw02.export            | tabla tab_temporal.tex (4 filas)
+2026-09-08 00:26:16,866 | INFO    | hw02.export            | tabla tab_calidad_datos.tex (16 filas)
+2026-09-08 00:26:16,874 | INFO    | hw02.export            | kpis.tex con 43 macros
+2026-09-08 00:33:54,603 | INFO    | hw02.export            | figura fig1_choropleth_acceso.pdf
+2026-09-08 00:33:54,875 | INFO    | hw02.export            | figura fig2_cobertura_acumulada.pdf
+2026-09-08 00:33:55,127 | INFO    | hw02.export            | figura fig3_lorenz.pdf
+2026-09-08 00:33:55,882 | INFO    | hw02.export            | figura fig4_acceso_vs_altitud.pdf
+2026-09-08 00:33:56,185 | INFO    | hw02.export            | figura fig5_mclp_secuencia.pdf
+2026-09-08 00:33:56,513 | INFO    | hw02.export            | figura fig6_temporal_cobertura.pdf
+2026-09-08 00:33:56,761 | INFO    | hw02.export            | figura fig7_linea_recta_vs_red.pdf
+2026-09-08 00:33:56,964 | INFO    | hw02.export            | figura fig8_multimodal.pdf
+2026-09-08 00:33:57,031 | INFO    | hw02.export            | tabla tab_cobertura_departamento.tex (25 filas)
+2026-09-08 00:33:57,039 | INFO    | hw02.export            | tabla tab_peores_distritos.tex (15 filas)
+2026-09-08 00:33:57,043 | INFO    | hw02.export            | tabla tab_urbano_rural.tex (6 filas)
+2026-09-08 00:33:57,047 | INFO    | hw02.export            | tabla tab_analisis_cruzado.tex (7 filas)
+2026-09-08 00:33:57,050 | INFO    | hw02.export            | tabla tab_snapping.tex (2 filas)
+2026-09-08 00:33:57,054 | INFO    | hw02.export            | tabla tab_multimodal.tex (2 filas)
+2026-09-08 00:33:57,058 | INFO    | hw02.export            | tabla tab_mclp.tex (4 filas)
+2026-09-08 00:33:57,062 | INFO    | hw02.export            | tabla tab_temporal.tex (4 filas)
+2026-09-08 00:33:57,067 | INFO    | hw02.export            | tabla tab_calidad_datos.tex (16 filas)
+2026-09-08 00:33:57,078 | INFO    | hw02.export            | kpis.tex con 43 macros
+2026-09-08 00:42:13,084 | INFO    | hw02.export            | figura fig1_choropleth_acceso.pdf
+2026-09-08 00:42:13,249 | INFO    | hw02.export            | figura fig2_cobertura_acumulada.pdf
+2026-09-08 00:42:13,392 | INFO    | hw02.export            | figura fig3_lorenz.pdf
+2026-09-08 00:42:13,830 | INFO    | hw02.export            | figura fig4_acceso_vs_altitud.pdf
+2026-09-08 00:42:13,998 | INFO    | hw02.export            | figura fig5_mclp_secuencia.pdf
+2026-09-08 00:42:14,182 | INFO    | hw02.export            | figura fig6_temporal_cobertura.pdf
+2026-09-08 00:42:14,320 | INFO    | hw02.export            | figura fig7_linea_recta_vs_red.pdf
+2026-09-08 00:42:14,437 | INFO    | hw02.export            | figura fig8_multimodal.pdf
+2026-09-08 00:42:14,480 | INFO    | hw02.export            | tabla tab_cobertura_departamento.tex (25 filas)
+2026-09-08 00:42:14,484 | INFO    | hw02.export            | tabla tab_peores_distritos.tex (10 filas)
+2026-09-08 00:42:14,487 | INFO    | hw02.export            | tabla tab_urbano_rural.tex (6 filas)
+2026-09-08 00:42:14,489 | INFO    | hw02.export            | tabla tab_analisis_cruzado.tex (7 filas)
+2026-09-08 00:42:14,492 | INFO    | hw02.export            | tabla tab_snapping.tex (2 filas)
+2026-09-08 00:42:14,494 | INFO    | hw02.export            | tabla tab_multimodal.tex (2 filas)
+2026-09-08 00:42:14,497 | INFO    | hw02.export            | tabla tab_mclp.tex (4 filas)
+2026-09-08 00:42:14,500 | INFO    | hw02.export            | tabla tab_temporal.tex (4 filas)
+2026-09-08 00:42:14,503 | INFO    | hw02.export            | tabla tab_calidad_datos.tex (16 filas)
+2026-09-08 00:42:14,510 | INFO    | hw02.export            | kpis.tex con 43 macros

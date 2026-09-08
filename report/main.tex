@@ -9,25 +9,36 @@
 %  src/export.py a partir de data/outputs/. Recompilar tras una corrida nueva
 %  actualiza el texto solo.
 % =============================================================================
-\documentclass[11pt,a4paper]{article}
+% 10pt y no 11: el enunciado limita el informe a 8-12 páginas y a 11pt salían 13
+% incluso tras emparejar figuras y reducir el espaciado de floats. Reducir el
+% cuerpo conserva todo el análisis, que es lo que se califica; el margen sube a
+% 2.7 cm para que la medida de línea no se alargue de más.
+\documentclass[10pt,a4paper]{article}
 
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage[spanish,es-nodecimaldot]{babel}
 \usepackage{lmodern}
-\usepackage[margin=2.6cm]{geometry}
+\usepackage[margin=2.7cm]{geometry}
 \usepackage{graphicx}
 \usepackage{booktabs}
 \usepackage{longtable}
 \usepackage{amsmath}
 \usepackage{siunitx}
 \usepackage{caption}
+\usepackage{subcaption}
 \usepackage{microtype}
 \usepackage[hidelinks]{hyperref}
 \usepackage{enumitem}
 
 \graphicspath{{figures/}}
-\captionsetup{font=small,labelfont=bf}
+\captionsetup{font=small,labelfont=bf,skip=4pt}
+\captionsetup[sub]{font=small,skip=3pt}
+% Márgenes de float más estrechos: con ocho figuras y nueve tablas, los
+% valores por defecto de LaTeX dejaban planas medio vacías.
+\setlength{\textfloatsep}{10pt plus 2pt minus 2pt}
+\setlength{\intextsep}{10pt plus 2pt minus 2pt}
+\setlength{\floatsep}{8pt plus 2pt minus 2pt}
 \setlist{noitemsep,topsep=3pt}
 \sisetup{group-separator={\,},group-minimum-digits=4}
 
@@ -50,6 +61,10 @@ brechas y optimización de cobertura}
 \author{Adrián Leo Luyo Vargas\\\small Data Science with Python — HW\_02, 2026-02}
 \date{\today}
 
+% Sin estirar el espacio vertical para cuadrar la última línea de cada
+% plana: con 8 figuras y 9 tablas, el estirado de LaTeX regalaba una página.
+\raggedbottom
+
 \begin{document}
 \maketitle
 
@@ -64,9 +79,9 @@ representan \kpiPoblacionTotal{} habitantes mediante un diseño muestral con
 pesos, hasta el establecimiento de salud resolutivo más cercano (categoría II-1
 o superior, operativo) en los 25 departamentos del Perú, ruteando sobre
 OpenStreetMap con OSRM. El tiempo mediano ponderado es \kpiTiempoMediano{}
-minutos y el percentil 90, \kpiTiempoPnoventa{}. El \kpiShareHasta30\,\% de la
-población está a 30 minutos o menos y el \kpiShareHasta60\,\% a una hora;
-\kpiPobMas120{} personas (\kpiShareMas120\,\%) viven a más de dos horas. El Gini
+minutos y el percentil 90, \kpiTiempoPnoventa{}. El \kpiShareHastaTresCero\,\% de la
+población está a 30 minutos o menos y el \kpiShareHastaSeisCero\,\% a una hora;
+\kpiPobMasUnoDosCero{} personas (\kpiShareMasUnoDosCero\,\%) viven a más de dos horas. El Gini
 del acceso es \kpiGini{}. La población rural tarda \kpiTiempoMedioRural{}
 minutos frente a \kpiTiempoMedioUrbano{} de la urbana. Un análisis en línea
 recta declararía cubierta dentro de una hora a \kpiPobReclasificada{} personas
@@ -125,30 +140,27 @@ de ruteo desde cero.
 \caption{Fuentes utilizadas. Las fechas de acceso, tamaños y sumas SHA-256 de
 cada archivo quedan registradas en \texttt{data/raw/manifest.json}.}
 \label{tab:fuentes}
-\begin{tabular}{p{3.4cm}p{4.1cm}p{2.2cm}p{4.4cm}}
+% Sin columna «Rol»: el papel de cada insumo se explica en el texto que sigue y
+% esa columna era la más ancha de las cuatro.
+\begin{tabular}{p{3.2cm}p{7.4cm}p{3.6cm}}
 \toprule
-\textbf{Insumo} & \textbf{Fuente} & \textbf{Licencia} & \textbf{Rol} \\
+\textbf{Insumo} & \textbf{Fuente} & \textbf{Licencia} \\
 \midrule
-Establecimientos de salud &
+Establecimientos de salud (oferta) &
 RENIPRESS / SUSALUD, \texttt{RENIPRESS\_2026\_v6.csv} (act.\ 21-ago-2026) &
-Datos Abiertos del Estado Peruano &
-Oferta: categoría, condición, institución y coordenadas \\
-Centros poblados &
+Datos Abiertos del Estado Peruano \\
+Centros poblados (demanda) &
 MTC sobre base INEI, \texttt{Listado\-Centro\-Poblados\-MTC.xlsx} &
-Datos Abiertos del Estado Peruano &
-Demanda: población, viviendas, clasificación urbano/rural, coordenadas \\
-Límites administrativos &
+Datos Abiertos del Estado Peruano \\
+Límites distritales &
 OCHA/HDX \emph{Common Operational Datasets}, base INEI, v01 &
-CC-BY (HDX) &
-Polígonos distritales para validación y agregación \\
+CC-BY (HDX) \\
 Red vial &
 OpenStreetMap, extracto de Perú de Geofabrik &
-ODbL 1.0 &
-Grafo de ruteo de OSRM \\
+ODbL 1.0 \\
 Altitud &
 SRTM 30\,m vía OpenTopoData &
-Dominio público (NASA) &
-Variable del análisis cruzado \\
+Dominio público (NASA) \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -295,12 +307,12 @@ análisis de la tabla~\ref{tab:snapping} no cuesta peticiones adicionales.
 
 Los pares sin ruta se tratan con una política explícita en tres pasos:
 reintento con radio de enganche ampliado; imputación por distancia en línea
-recta penalizada ($\times 1{,}35$ a \SI{25}{\km\per\hour}); y, si el origen está
-a más de \SI{20}{\km} de cualquier vía, \textbf{no se imputa}: se marca como
+recta penalizada ($\times 1{,}35$ a \SI{25}{\kilo\metre\per\hour}); y, si el origen está
+a más de \SI{20}{\kilo\metre} de cualquier vía, \textbf{no se imputa}: se marca como
 «sin acceso vial» y se reporta por separado. La asimetría es deliberada. No
 imputar nada dejaría distritos enteros fuera de los agregados y sesgaría la
 cobertura al alza; imputar un tiempo de auto a un punto que no tiene carretera
-a \SI{20}{\km} inventaría infraestructura inexistente.
+a \SI{20}{\kilo\metre} inventaría infraestructura inexistente.
 
 \inputtable{tab_snapping}
 
@@ -323,29 +335,20 @@ actúa como respaldo y su uso está contado en el reporte de calidad.
 \subsection{El panorama nacional}
 
 De los \kpiPoblacionTotal{} habitantes representados, el
-\kpiShareHasta30\,\% alcanza un establecimiento resolutivo en \num{30} minutos o
-menos y el \kpiShareHasta60\,\% en una hora. En el otro extremo,
-\kpiPobMas120{} personas —el \kpiShareMas120\,\% de la población— viven a más de
+\kpiShareHastaTresCero\,\% alcanza un establecimiento resolutivo en \num{30} minutos o
+menos y el \kpiShareHastaSeisCero\,\% en una hora. En el otro extremo,
+\kpiPobMasUnoDosCero{} personas —el \kpiShareMasUnoDosCero\,\% de la población— viven a más de
 dos horas por carretera. La media ponderada es de \kpiTiempoMedio{} minutos y la
 mediana de \kpiTiempoMediano{}; la brecha entre ambas ya indica una distribución
 con cola larga, y el percentil 90 de \kpiTiempoPnoventa{} minutos la confirma.
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.72\textwidth]{fig1_choropleth_acceso}
+\includegraphics[width=0.60\textwidth]{fig1_choropleth_acceso}
 \caption{Tiempo medio en auto hasta un establecimiento resolutivo, por distrito,
 ponderado por población. Los distritos en gris no tienen polígono en la versión
 vigente de los límites administrativos.}
 \label{fig:mapa}
-\end{figure}
-
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=0.86\textwidth]{fig2_cobertura_acumulada}
-\caption{Cobertura acumulada por tiempo de acceso, urbano frente a rural. La
-distancia horizontal entre las dos curvas es la brecha de acceso a cada nivel de
-cobertura, no un promedio.}
-\label{fig:ecdf}
 \end{figure}
 
 \subsection{Desigualdad y contraste urbano--rural}
@@ -355,13 +358,28 @@ El Gini del tiempo de acceso es \kpiGini{} a escala nacional, con
 población rural tarda \kpiTiempoMedioRural{} minutos en promedio frente a
 \kpiTiempoMedioUrbano{} minutos de la urbana.
 
+% Las dos figuras se leen juntas: la ECDF muestra la brecha a cada nivel de
+% cobertura y la Lorenz, cómo se concentra esa carga. Van emparejadas para no
+% gastar dos planas en floats.
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.52\textwidth]{fig3_lorenz}
-\caption{Curva de Lorenz del tiempo de viaje. El eje horizontal ordena a la
-población de menor a mayor tiempo de acceso; la separación respecto de la
-diagonal es la concentración de la carga de desplazamiento en una minoría.}
-\label{fig:lorenz}
+\begin{minipage}[b]{0.56\textwidth}
+  \centering
+  \includegraphics[width=\linewidth]{fig2_cobertura_acumulada}
+  \subcaption{Cobertura acumulada, urbano frente a rural. La distancia
+  horizontal entre curvas es la brecha a cada nivel de cobertura, no un
+  promedio.}
+  \label{fig:ecdf}
+\end{minipage}\hfill
+\begin{minipage}[b]{0.40\textwidth}
+  \centering
+  \includegraphics[width=\linewidth]{fig3_lorenz}
+  \subcaption{Curva de Lorenz del tiempo de viaje. La separación respecto de la
+  diagonal es la concentración de la carga de desplazamiento en una minoría.}
+  \label{fig:lorenz}
+\end{minipage}
+\caption{Distribución y concentración del tiempo de acceso.}
+\label{fig:distribucion}
 \end{figure}
 
 \inputtable{tab_cobertura_departamento}
@@ -382,7 +400,7 @@ con mayor brecha absoluta es \kpiPeorDistrito{} (\kpiPeorDistritoDep{}), con
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.86\textwidth]{fig4_acceso_vs_altitud}
+\includegraphics[width=0.68\textwidth]{fig4_acceso_vs_altitud}
 \caption{Tiempo medio de acceso frente a altitud del distrito, por región
 natural. El área de cada punto es la población distrital.}
 \label{fig:altitud}
@@ -405,7 +423,7 @@ porque la altitud correlaciona con pobreza y dispersión del poblamiento.
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.86\textwidth]{fig8_multimodal}
+\includegraphics[width=0.70\textwidth]{fig8_multimodal}
 \caption{Distribución del tiempo al establecimiento resolutivo más cercano por
 modo de transporte. Los perfiles a pie y en bicicleta se calculan sobre una
 submuestra que privilegia los puntos urbanos, porque es donde el supuesto de
@@ -417,7 +435,7 @@ desplazamiento no motorizado es realista.}
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.82\textwidth]{fig6_temporal_cobertura}
+\includegraphics[width=0.58\textwidth]{fig6_temporal_cobertura}
 \caption{Cobertura recalculada con el conjunto de establecimientos resolutivos
 ya operativos en cada año, manteniendo fija la red vial de 2026.}
 \label{fig:temporal}
@@ -437,7 +455,7 @@ ningún resolutivo cerró —RENIPRESS publicado no lo registra—, de modo que 
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.9\textwidth]{fig5_mclp_secuencia}
+\includegraphics[width=0.72\textwidth]{fig5_mclp_secuencia}
 \caption{Población adicional cubierta dentro de una hora por cada ascenso de un
 establecimiento I-3/I-4 a resolutivo, en el orden que elige el algoritmo de
 cobertura máxima.}
@@ -464,7 +482,7 @@ que no es una exigencia formal:
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.72\textwidth]{fig7_linea_recta_vs_red}
+\includegraphics[width=0.56\textwidth]{fig7_linea_recta_vs_red}
 \caption{Población que un análisis basado en distancia en línea recta
 declararía cubierta y que, por red vial, no lo está.}
 \label{fig:recta}
@@ -514,7 +532,7 @@ transporte real es fluvial y, para emergencias, aéreo. Un tiempo de auto de sei
 horas hacia un centro poblado del Bajo Amazonas no es «seis horas»: es
 «inaccesible por carretera», y el viaje real puede ser más corto en lancha o
 mucho más largo en época de estiaje. El pipeline marca estos puntos como «sin
-acceso vial» cuando están a más de \SI{20}{\km} de cualquier vía, pero no modela
+acceso vial» cuando están a más de \SI{20}{\kilo\metre} de cualquier vía, pero no modela
 la red fluvial. Se decidió declararlo como limitación en lugar de modelarlo a
 medias, porque un modelo fluvial sin datos de embarcaderos, caudales
 estacionales y frecuencias de servicio produciría cifras con apariencia de
@@ -585,8 +603,8 @@ lejos de suficiente.
 \section{Conclusiones y recomendaciones}
 
 \begin{enumerate}
-\item \textbf{La cobertura nacional a una hora es de \kpiShareHasta60\,\% y la
-cola importa más que el promedio.} \kpiPobMas120{} personas están a más de dos
+\item \textbf{La cobertura nacional a una hora es de \kpiShareHastaSeisCero\,\% y la
+cola importa más que el promedio.} \kpiPobMasUnoDosCero{} personas están a más de dos
 horas de un establecimiento resolutivo. El promedio nacional de
 \kpiTiempoMedio{} minutos oculta ese grupo; el percentil 90 de
 \kpiTiempoPnoventa{} minutos lo hace visible. Recomendación: fijar metas sobre

@@ -83,11 +83,17 @@ jobs:
         run: bash scripts/run_step.sh "Fase 5" python -m src.export
 
       - name: Compilar el informe
+        id: latex
         if: steps.check.outputs.existe == 'si'
+        continue-on-error: true
         uses: xu-cheng/latex-action@v3
         with:
           root_file: main.tex
           working_directory: report
+
+      - name: Diagnóstico de LaTeX
+        if: ${{ always() && steps.latex.outcome == 'failure' }}
+        run: bash scripts/latex_diag.sh
 
       - name: Resumen
         if: always() && steps.check.outputs.existe == 'si'
@@ -130,15 +136,20 @@ jobs:
           if-no-files-found: warn
 
       - name: Commit de resultados
-        if: steps.check.outputs.existe == 'si'
+        if: ${{ !cancelled() && steps.check.outputs.existe == 'si' }}
         run: |
-          git config user.name  "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -f data/outputs data/processed logs report
-          if git diff --cached --quiet; then
-            echo "sin cambios que commitear"
-          else
-            git commit -m "ci: métricas, modelos e informe (alcance ${HW02_SCOPE})"
-            git pull --rebase origin "${GITHUB_REF_NAME}"
-            git push origin "HEAD:${GITHUB_REF_NAME}"
+          bash scripts/commit_outputs.sh \
+            "ci: métricas, modelos e informe (alcance ${HW02_SCOPE})" \
+            data/outputs data/processed logs \
+            report/figures report/tables report/main.pdf
+
+      # El PDF compilado es entregable obligatorio; `continue-on-error` en el paso
+      # de LaTeX no debe dejar el job en verde sin él.
+      - name: Exigir el informe compilado
+        if: ${{ !cancelled() && steps.check.outputs.existe == 'si' }}
+        run: |
+          if [ ! -f report/main.pdf ]; then
+            echo "::error title=Informe::no se generó report/main.pdf; ver el diagnóstico de LaTeX"
+            exit 1
           fi
+          echo "report/main.pdf presente ($(du -h report/main.pdf | cut -f1))"

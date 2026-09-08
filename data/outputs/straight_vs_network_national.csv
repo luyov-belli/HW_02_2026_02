@@ -1,0 +1,14 @@
+metrica,valor
+n_origenes,4875.0
+velocidad_naif_supuesta_kmh,40.0
+mediana_min_red,50.41999816894531
+mediana_min_linea_recta,35.517591593785724
+factor_desvio_tiempo_mediano,1.446856141090393
+factor_desvio_tiempo_p90,2.4833056926727295
+indice_desvio_distancia_mediano,1.6152009963989258
+indice_desvio_distancia_p90,2.5725510120391846
+n_con_distancia_de_red,4885.0
+share_cambia_establecimiento_mas_cercano,0.3413333333333333
+poblacion_reclasificada_30min,1181381.6071428573
+poblacion_reclasificada_60min,1707635.4325396824
+poblacion_reclasificada_120min,1110210.7833333332

@@ -1,57 +1,57 @@
 {
   "environment": {
-    "timestamp_utc": "2026-09-07T03:57:47+00:00",
-    "python": "3.14.6",
-    "platform": "Windows-11-10.0.26200-SP0",
+    "timestamp_utc": "2026-09-07T14:15:50+00:00",
+    "python": "3.12.14",
+    "platform": "Linux-6.17.0-1022-azure-x86_64-with-glibc2.39",
     "pandas": "3.0.5",
-    "scope_mode": "dev"
+    "scope_mode": "national"
   },
   "counters": {},
   "decisions": [
     {
       "stage": "routing_foot",
       "dataset": "od_foot",
-      "check": "uso de caché de ruteo",
-      "n_affected": 594,
-      "n_total": 594,
+      "check": "cálculo de matriz de ruteo",
+      "n_affected": 747600,
+      "n_total": 747600,
       "share_affected": 1.0,
-      "action": "leído de disco: table_graph_foot_9fee4b12e8041aa5.npz",
-      "justification": "la segunda corrida no vuelve a consultar el motor de ruteo; la clave de caché es el hash de (motor, perfil, coordenadas)",
-      "timestamp_utc": "2026-09-07T03:57:47+00:00"
+      "action": "1200×623 pares en 35 s",
+      "justification": "motor osrm, perfil foot; guardado en table_osrm_foot_55eee513c1721b45.npz",
+      "timestamp_utc": "2026-09-07T14:15:50+00:00"
     },
     {
       "stage": "routing_foot",
       "dataset": "od_foot",
       "check": "pares sin ruta en la red",
-      "n_affected": 282,
-      "n_total": 594,
-      "share_affected": 0.474747,
-      "action": "282 pares imputados por línea recta penalizada (×1.35 a 25 km/h); 0 orígenes marcados sin acceso vial",
+      "n_affected": 459379,
+      "n_total": 747600,
+      "share_affected": 0.614472,
+      "action": "439092 pares imputados por línea recta penalizada (×1.35 a 25 km/h); 36 orígenes marcados sin acceso vial",
       "justification": "no imputar dejaría distritos enteros fuera de los agregados y sesgaría la cobertura al alza; imputar a un origen que está a más de 20 km de cualquier vía inventaría infraestructura inexistente, así que ese caso se reporta por separado en lugar de rellenarse",
-      "timestamp_utc": "2026-09-07T03:57:47+00:00"
+      "timestamp_utc": "2026-09-07T14:15:50+00:00"
     },
     {
       "stage": "routing_foot",
       "dataset": "od_foot",
       "check": "análisis de snapping",
-      "n_affected": 11,
-      "n_total": 201,
-      "share_affected": 0.054726,
+      "n_affected": 104,
+      "n_total": 1823,
+      "share_affected": 0.057049,
       "action": "puntos enganchados a más de 2000 m de su coordenada declarada",
       "justification": "un enganche largo significa que el punto se está ruteando desde una vía que no es la suya; se reporta la distribución completa (media, mediana, p95, máximo) en lugar de un solo promedio",
-      "timestamp_utc": "2026-09-07T03:57:47+00:00",
-      "snap_mean_demand_m": 499.8
+      "timestamp_utc": "2026-09-07T14:15:50+00:00",
+      "snap_mean_demand_m": 2442.0
     },
     {
       "stage": "routing_foot",
       "dataset": "od_foot",
       "check": "restricción de destinos del perfil secundario",
-      "n_affected": 3,
-      "n_total": 3,
-      "share_affected": 1.0,
+      "n_affected": 623,
+      "n_total": 644,
+      "share_affected": 0.967391,
       "action": "unión de los 15 establecimientos más cercanos en auto",
       "justification": "rutear a pie los 644 establecimientos del país generaría trayectos de días sin cambiar el mínimo; k=15 hace despreciable el riesgo de perder el más cercano a pie",
-      "timestamp_utc": "2026-09-07T03:57:47+00:00"
+      "timestamp_utc": "2026-09-07T14:15:50+00:00"
     }
   ]
 }

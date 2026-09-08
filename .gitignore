@@ -20,6 +20,12 @@ data/cache/
 # pipeline completo en segundos y sus resultados NO son resultados del estudio;
 # versionarlos invitaría a confundir metrics_national_dev.csv con la corrida
 # nacional. Los alcances "national" y "regions" sí se versionan.
+#
+# Config.path() manda todo el alcance "dev" a directorios paralelos, así que basta
+# con ignorar esos. Las líneas por patrón se mantienen para las salidas que ya
+# llevan el alcance en el nombre.
+data/outputs_dev/
+data/outputs_test/
 data/outputs/*_dev.csv
 data/outputs/*_dev.json
 data/outputs/*_dev*.parquet
@@ -31,12 +37,21 @@ osrm/
 *.osrm*
 
 # Figuras y tablas del informe: las genera src/export.py y su contenido depende
-# del alcance de la corrida. Se ignoran aquí para que una corrida de prueba en el
-# alcance "dev" no las versione; los workflows las agregan con `git add -f`
-# después de generarlas con los datos nacionales, así que las que llegan al
-# repositorio son siempre las oficiales.
+# del alcance de la corrida. Los workflows las agregan con `git add -f` después
+# de generarlas con los datos nacionales, así que las que llegan al repositorio
+# son siempre las oficiales.
+#
+# Ojo: como están force-added, ya son archivos *rastreados* y estas dos líneas no
+# impiden que una corrida local las sobrescriba. La protección de verdad está en
+# Config.path(), que en el alcance "dev" escribe en los directorios de abajo.
 report/figures/
 report/tables/
+report/figures_dev/
+report/tables_dev/
+report/figures_test/
+report/tables_test/
+logs_dev/
+logs_test/
 
 # LaTeX
 report/*.aux

@@ -17,6 +17,7 @@ from __future__ import annotations
 
 import os
 import re
+import sys
 import tomllib
 from pathlib import Path
 from typing import Any
@@ -86,9 +87,45 @@ class Config:
         return "no_determinada"
 
     # ------------------------------------------------------------------ rutas
+    #: Directorios cuyos archivos NO llevan el alcance en el nombre y que sí se
+    #: versionan, así que una corrida de prueba los sobrescribiría: las figuras y
+    #: tablas porque el informe LaTeX las referencia con nombre fijo
+    #: (``fig1_choropleth_acceso``), y los logs porque son un entregable y
+    #: ``logs/<etapa>.log`` se abre en modo *append*. El aislamiento tiene que ser
+    #: por directorio, no por nombre de archivo. ``outputs`` entra por lo mismo:
+    #: los registros de decisiones (``data_quality_report.json``,
+    #: ``routing_log_car.csv``, …) llevan nombre fijo porque el dashboard y el
+    #: informe los buscan así.
+    _SCOPE_ISOLATED = ("figures", "tables", "logs", "outputs")
+
+    @property
+    def artifact_suffix(self) -> str:
+        """Sufijo de directorio para las corridas que no son el estudio.
+
+        Devuelve ``"_dev"`` en el alcance de prueba, ``"_test"`` bajo pytest y
+        cadena vacía en las corridas reales. Sin esto, dos atajos cómodos
+        corrompen artefactos versionados en silencio:
+
+        * ``HW02_SCOPE=dev python -m src.export`` sobrescribe las figuras
+          nacionales con las de un solo departamento, y como el informe las
+          referencia por nombre fijo, nada cambia de nombre para avisar. Ya
+          ocurrió una vez.
+        * ``pytest`` corre sin alcance declarado, así que ejercitar las funciones
+          reales de validación deja líneas de prueba dentro de
+          ``logs/validation.log``, que es un entregable.
+        """
+        if "pytest" in sys.modules:
+            return "_test"
+        if self.mode == "dev":
+            return "_dev"
+        return ""
+
     def path(self, key: str, *parts: str, create: bool = True) -> Path:
         """Ruta absoluta a partir de ``[paths]``; crea el directorio si falta."""
         base = PROJECT_ROOT / self._data["paths"][key]
+        suffix = self.artifact_suffix
+        if suffix and key in self._SCOPE_ISOLATED:
+            base = base.with_name(base.name + suffix)
         if create:
             base.mkdir(parents=True, exist_ok=True)
         return base.joinpath(*parts) if parts else base

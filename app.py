@@ -27,7 +27,7 @@ import streamlit as st
 from src.config import CFG
 from src.metrics import gini, weighted_mean, weighted_quantile
 from src.models import recompute_coverage
-from src.utils import read_output_csv
+from src.utils import facility_labels, read_output_csv
 
 # --- paleta de referencia (la misma del informe) ----------------------------
 INK, INK_2, MUTED = "#0b0b0b", "#52514e", "#898781"
@@ -625,11 +625,10 @@ with TABS[3]:
             [["COD_IPRESS", "NOMBRE", "CATEGORIA", "DEPARTAMENTO", "PROVINCIA", "DISTRITO"]]
             .drop_duplicates()
         )
-        catalog["etiqueta"] = (
-            catalog["NOMBRE"].str.title() + "  ·  " + catalog["CATEGORIA"]
-            + "  ·  " + catalog["DISTRITO"].str.title()
-            + ", " + catalog["DEPARTAMENTO"].str.title()
-        )
+        # facility_labels vive en src/utils.py para poder probarlo: importar este
+        # archivo ejecuta el dashboard completo. Tolera campos vacíos e incluye el
+        # código para que la etiqueta sea única; ver su docstring.
+        catalog["etiqueta"] = facility_labels(catalog)
         label_to_id = dict(zip(catalog["etiqueta"], catalog["COD_IPRESS"], strict=True))
 
         col_a, col_b = st.columns([3, 2])

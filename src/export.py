@@ -393,6 +393,21 @@ def fig_cross_mode() -> None:
 
 
 # -------------------------------------------------------------------- tablas
+def _header_hasta(band: int) -> str:
+    """Encabezado de una banda de cobertura, en texto plano.
+
+    Dice "hasta N min" y no "≤N min" a propósito. ``≤`` es U+2264, que no existe
+    en la codificación T1 de LaTeX: ``inputenc`` aborta la compilación con
+    "Unicode character ≤ not set up for use with LaTeX". En las figuras sí se usa
+    el símbolo, porque matplotlib no tiene esa limitación.
+
+    Tampoco lleva ``\\%`` escapado a mano: :func:`_to_latex` pasa ``escape=True``
+    a ``df.to_latex``, que ya convierte ``%`` en ``\\%``. Escaparlo aquí lo
+    escapaba dos veces y el encabezado salía como ``\\textbackslash \\%``.
+    """
+    return f"hasta {band} min (%)"
+
+
 def _to_latex(
     df: pd.DataFrame, name: str, caption: str, label: str, floatfmt: str = "%.1f"
 ) -> None:
@@ -407,7 +422,10 @@ def _to_latex(
         column_format="l" * 1 + "r" * (df.shape[1] - 1),
     )
     # booktabs ya lo emite pandas; solo se ajusta el tamaño para tablas anchas.
-    if df.shape[1] > 6:
+    # El umbral es 5 y no 7 columnas porque el informe tiene que caber en las
+    # 8-12 páginas que exige el enunciado y son las tablas anchas las que empujan
+    # el conteo, no el texto.
+    if df.shape[1] >= 5:
         tex = tex.replace("\\begin{tabular}", "\\footnotesize\n\\begin{tabular}")
     path.write_text(tex, encoding="utf-8")
     LOG.info("tabla %s (%d filas)", path.name, len(df))
@@ -416,13 +434,19 @@ def _to_latex(
 def tables(bands: list[int]) -> None:
     dep = _read("metrics_department")
     if dep is not None:
-        cols = ["department", "poblacion", "t_medio_min", "t_mediano_min", "t_p90_min"]
-        cols += [f"share_hasta_{b}min" for b in bands]
+        # Se omiten la mediana y la banda más alta: con 25 filas, cada columna
+        # extra cuesta ancho y el informe tiene un límite de páginas. La mediana
+        # por departamento aporta poco cuando ya están la media y el p90, y la
+        # cobertura a 120 min es casi 100 % en la mayoría; ambas quedan completas
+        # en data/outputs/metrics_department_national.csv.
+        bandas_tabla = bands[:2]
+        cols = ["department", "poblacion", "t_medio_min", "t_p90_min"]
+        cols += [f"share_hasta_{b}min" for b in bandas_tabla]
         t = dep[cols].copy()
-        for b in bands:
+        for b in bandas_tabla:
             t[f"share_hasta_{b}min"] = t[f"share_hasta_{b}min"] * 100
-        t.columns = ["Departamento", "Población", "Media", "Mediana", "p90"] + [
-            f"≤{b} min (\\%)" for b in bands
+        t.columns = ["Departamento", "Población", "Media", "p90"] + [
+            _header_hasta(b) for b in bandas_tabla
         ]
         _to_latex(
             t, "tab_cobertura_departamento",
@@ -437,18 +461,22 @@ def tables(bands: list[int]) -> None:
         cols = ["department", "district", "poblacion", "t_medio_min",
                 f"share_hasta_{band}min", "pob_fuera_umbral", "high_variance"]
         cols = [c for c in cols if c in worst.columns]
-        t = worst[cols].head(15).copy()
+        # Diez y no quince, por el límite de páginas del informe; el ranking
+        # completo (25 distritos) está en data/outputs/worst_districts_*.csv y en
+        # la vista ordenable del dashboard.
+        t = worst[cols].head(10).copy()
         if f"share_hasta_{band}min" in t:
             t[f"share_hasta_{band}min"] *= 100
         if "high_variance" in t:
             t["high_variance"] = np.where(t["high_variance"].fillna(False), "sí", "no")
         t.columns = ["Departamento", "Distrito", "Población", "Media (min)",
-                     f"≤{band} min (\\%)", "Pob. fuera", "Alta var."][: len(t.columns)]
+                     _header_hasta(band), "Pob. fuera", "Alta var."][: len(t.columns)]
         _to_latex(
             t, "tab_peores_distritos",
-            f"Brechas críticas: 15 distritos con más población fuera de {band} minutos "
-            "de un establecimiento resolutivo. «Alta var.» marca los distritos cuya "
-            "estimación descansa en pocos puntos muestreados.",
+            f"Brechas críticas: los diez distritos con más población fuera de "
+            f"{band} minutos de un establecimiento resolutivo. «Alta var.» marca "
+            "los distritos cuya estimación descansa en pocos puntos muestreados. "
+            "El ranking completo está en \\texttt{data/outputs/}.",
             "tab:peores-distritos",
         )
 
@@ -470,7 +498,8 @@ def tables(bands: list[int]) -> None:
     if cross is not None:
         t = cross[["variable", "n_distritos", "spearman_rho",
                    "t_medio_quintil_inferior", "t_medio_quintil_superior"]].copy()
-        t.columns = ["Variable", "Distritos", "Spearman $\\rho$",
+        # Texto plano: con escape=True, "$\rho$" saldría como "$\textbackslash rho$".
+        t.columns = ["Variable", "Distritos", "Rho de Spearman",
                      "Quintil inferior", "Quintil superior"]
         _to_latex(
             t, "tab_analisis_cruzado",
@@ -511,7 +540,7 @@ def tables(bands: list[int]) -> None:
         t = mclp[["presupuesto", "ganancia_vs_base", "share_cubierta",
                   "cota_superior_optimo", "brecha_maxima_vs_cota"]].copy()
         t["share_cubierta"] *= 100
-        t.columns = ["Ascensos", "Población ganada", "Cobertura (\\%)",
+        t.columns = ["Ascensos", "Población ganada", "Cobertura (%)",
                      "Cota superior", "Brecha máx."]
         _to_latex(
             t, "tab_mclp",
@@ -527,7 +556,7 @@ def tables(bands: list[int]) -> None:
         t = tmp[["anio", "n_resolutivas"] + [f"share_hasta_{b}min" for b in bands]].copy()
         for b in bands:
             t[f"share_hasta_{b}min"] *= 100
-        t.columns = ["Año", "Resolutivos"] + [f"≤{b} min (\\%)" for b in bands]
+        t.columns = ["Año", "Resolutivos"] + [_header_hasta(b) for b in bands]
         _to_latex(
             t, "tab_temporal",
             "Cobertura reconstruida con el conjunto de establecimientos resolutivos "
@@ -548,7 +577,10 @@ def _table_data_quality() -> None:
     keep = df[df["n_affected"] > 0][["dataset", "check", "n_affected", "share_affected"]]
     keep = keep.copy()
     keep["share_affected"] = keep["share_affected"].astype(float) * 100
-    keep.columns = ["Fuente", "Verificación", "Registros", "\\% del total"]
+    # Sin barra invertida: _to_latex llama a df.to_latex(escape=True), que ya
+    # convierte "%" en "\%". Escaparlo aquí lo escapaba dos veces y el encabezado
+    # salía como "\textbackslash \%", es decir un "\%" literal en el PDF.
+    keep.columns = ["Fuente", "Verificación", "Registros", "% del total"]
     _to_latex(
         keep, "tab_calidad_datos",
         "Reporte de calidad de datos: verificaciones que detectaron al menos un "
@@ -565,9 +597,11 @@ def _table_data_quality() -> None:
 #: sequence" a mitad del documento.
 REQUIRED_KPIS: tuple[str, ...] = (
     "PoblacionTotal", "TiempoMedio", "TiempoMediano", "TiempoPnoventa",
-    "ShareHasta30", "ShareHasta60", "ShareHasta120",
-    "PobHasta30", "PobHasta60", "PobHasta120",
-    "ShareMas120", "PobMas120",
+    # Los nombres llevan los dígitos escritos con letras porque una secuencia de
+    # control de TeX no admite cifras; ver macro_suffix().
+    "ShareHastaTresCero", "ShareHastaSeisCero", "ShareHastaUnoDosCero",
+    "PobHastaTresCero", "PobHastaSeisCero", "PobHastaUnoDosCero",
+    "ShareMasUnoDosCero", "PobMasUnoDosCero",
     "Gini", "GiniUrbano", "GiniRural",
     "TiempoMedioUrbano", "TiempoMedioRural",
     "PeorDistrito", "PeorDistritoDep", "PeorDistritoPob",
@@ -577,6 +611,28 @@ REQUIRED_KPIS: tuple[str, ...] = (
     "QRenipressRowsRaw", "QCcppValid", "QFacilitiesResolutive",
     "QFacilitiesResolutiveByCategory", "QFacilitiesResolutiveOnRecoveredCoords",
 )
+
+
+#: Dígito → palabra, para construir nombres de macro válidos en LaTeX.
+_DIGITO_A_PALABRA = {
+    "0": "Cero", "1": "Uno", "2": "Dos", "3": "Tres", "4": "Cuatro",
+    "5": "Cinco", "6": "Seis", "7": "Siete", "8": "Ocho", "9": "Nueve",
+}
+
+
+def macro_suffix(numero: int) -> str:
+    """Convierte un número en un sufijo de macro formado solo por letras.
+
+    Un nombre de secuencia de control de TeX **solo puede contener letras**. Con
+    ``\\newcommand{\\kpiShareHasta30}``, TeX lee la macro como
+    ``\\kpiShareHasta`` y luego intenta *imprimir* el ``30``, lo que en el
+    preámbulo aborta la compilación con "Missing \\begin{document}". Costó dos
+    corridas de CI localizarlo, porque el error señala la primera macro con
+    dígitos y no la causa.
+
+    ``30 -> "TresCero"``, ``120 -> "UnoDosCero"``.
+    """
+    return "".join(_DIGITO_A_PALABRA[d] for d in str(int(numero)))
 
 
 def kpis() -> dict[str, float]:
@@ -592,10 +648,12 @@ def kpis() -> dict[str, float]:
         vals["TiempoMediano"] = f"{r['t_mediano_min']:.1f}"
         vals["TiempoPnoventa"] = f"{r['t_p90_min']:.1f}"
         for b in bands:
-            vals[f"ShareHasta{b}"] = f"{r[f'share_hasta_{b}min'] * 100:.1f}"
-            vals[f"PobHasta{b}"] = f"{r[f'pob_hasta_{b}min']:,.0f}".replace(",", "\\,")
-        vals[f"ShareMas{bands[-1]}"] = f"{r[f'share_mas_{bands[-1]}min'] * 100:.1f}"
-        vals[f"PobMas{bands[-1]}"] = f"{r[f'pob_mas_{bands[-1]}min']:,.0f}".replace(",", "\\,")
+            s = macro_suffix(b)
+            vals[f"ShareHasta{s}"] = f"{r[f'share_hasta_{b}min'] * 100:.1f}"
+            vals[f"PobHasta{s}"] = f"{r[f'pob_hasta_{b}min']:,.0f}".replace(",", "\\,")
+        ult = macro_suffix(bands[-1])
+        vals[f"ShareMas{ult}"] = f"{r[f'share_mas_{bands[-1]}min'] * 100:.1f}"
+        vals[f"PobMas{ult}"] = f"{r[f'pob_mas_{bands[-1]}min']:,.0f}".replace(",", "\\,")
 
     ineq = _read("inequality")
     if ineq is not None and not ineq.empty:
