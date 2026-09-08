@@ -25,6 +25,7 @@ from src.models import recompute_coverage
 from src.routing import haversine_matrix
 from src.utils import (
     coerce_id_columns,
+    facility_labels,
     lossy_ascii_score,
     mojibake_score,
     safe_row_idxmin,
@@ -246,6 +247,44 @@ def test_idxmin_tolera_filas_sin_ningun_valor():
 def test_idxmin_seguro_devuelve_todo_na_si_la_matriz_esta_vacia_de_valores():
     mat = pd.DataFrame(np.nan, index=["a", "b"], columns=["x", "y"])
     assert safe_row_idxmin(mat).isna().all()
+
+
+def test_las_etiquetas_de_establecimiento_toleran_campos_vacios():
+    """Regresión: el simulador de escenarios reventaba con datos nacionales.
+
+    ``"texto" + NaN`` es ``NaN`` en pandas, así que un solo campo vacío convertía
+    la etiqueta en float y ``sorted()`` lanzaba
+    ``TypeError: '<' not supported between 'float' and 'str'``. Con un solo
+    departamento no había campos vacíos y el fallo no se veía.
+    """
+    cat = pd.DataFrame(
+        {
+            "COD_IPRESS": ["00000001", "00000002"],
+            "NOMBRE": ["SAN JUAN", None],
+            "CATEGORIA": ["I-3", "I-4"],
+            "DISTRITO": ["ATE", "LINCE"],
+            "DEPARTAMENTO": ["LIMA", None],
+        }
+    )
+    etiquetas = facility_labels(cat)
+    assert all(isinstance(e, str) for e in etiquetas)
+    assert sorted(etiquetas)  # no debe lanzar
+    assert "sin dato" in etiquetas.iloc[1]
+
+
+def test_las_etiquetas_de_establecimiento_son_unicas():
+    """Dos establecimientos idénticos salvo el código no deben colapsarse."""
+    cat = pd.DataFrame(
+        {
+            "COD_IPRESS": ["00000001", "00000002"],
+            "NOMBRE": ["SAN JUAN"] * 2,
+            "CATEGORIA": ["I-3"] * 2,
+            "DISTRITO": ["ATE"] * 2,
+            "DEPARTAMENTO": ["LIMA"] * 2,
+        }
+    )
+    etiquetas = facility_labels(cat)
+    assert etiquetas.nunique() == 2
 
 
 def test_detecta_doble_codificacion():

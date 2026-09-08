@@ -204,6 +204,38 @@ def read_output_csv(path: str | Path, **kwargs: Any) -> pd.DataFrame:
     return coerce_id_columns(pd.read_csv(path, **kwargs))
 
 
+def facility_labels(catalog: pd.DataFrame) -> pd.Series:
+    """Etiquetas legibles y **únicas** de establecimientos, tolerantes a nulos.
+
+    Dos trampas, las dos encontradas al pasar del alcance de prueba al nacional:
+
+    * En pandas, ``"texto" + NaN`` devuelve ``NaN``. Con un solo campo vacío la
+      etiqueta entera pasaba a ser ``float``, y ordenar la lista resultante
+      lanzaba ``TypeError: '<' not supported between 'float' and 'str'``. En un
+      solo departamento no había ningún campo vacío, así que el fallo no aparecía.
+    * Dos establecimientos pueden compartir nombre, categoría y distrito. Si la
+      etiqueta no incluye el código, el diccionario etiqueta → código los colapsa
+      en silencio y el simulador de escenarios asciende el establecimiento
+      equivocado.
+    """
+    def parte(col: str, titulo: bool = False) -> pd.Series:
+        s = catalog[col].astype("string")
+        if titulo:
+            s = s.str.title()
+        # El relleno va después de capitalizar: en minúscula se lee como
+        # marcador, mientras que "Sin Dato" parecería el nombre real del
+        # establecimiento.
+        return s.fillna("sin dato")
+
+    return (
+        parte("NOMBRE", titulo=True)
+        + "  ·  " + parte("CATEGORIA")
+        + "  ·  " + parte("DISTRITO", titulo=True)
+        + ", " + parte("DEPARTAMENTO", titulo=True)
+        + "  ·  " + parte("COD_IPRESS")
+    )
+
+
 def safe_row_idxmin(df: pd.DataFrame) -> pd.Series:
     """``df.idxmin(axis=1)`` tolerante a filas completamente NaN.
 
